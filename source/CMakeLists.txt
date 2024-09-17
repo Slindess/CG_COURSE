@@ -13,7 +13,7 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
 
 set(UI_FILES mainWindow.ui)
-set(SOURCE_FILES main.cpp MainWindow.cpp)
+set(SOURCE_FILES main.cpp MainWindow.cpp Drawer/QtDrawer.cpp)
 # Укажите исполняемый файл и исходные файлы
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${UI_FILES})
 

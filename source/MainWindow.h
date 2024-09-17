@@ -9,6 +9,7 @@
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include "Drawer/QtDrawer.h"
 #include "ui_mainwindow.h"
 
 class MainWindow : public QMainWindow
@@ -22,8 +23,8 @@ public:
 
 private:
     Ui::MainWindow *ui; // Указатель на сгенерированный класс из ui
-    QGraphicsScene *scene;
-    QGraphicsView *view;
+    std::shared_ptr<QGraphicsScene> scene;
+    std::shared_ptr<QtDrawer> drawer;
 };
 
 
