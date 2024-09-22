@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     scene->setSceneRect(0, 0, cont.width(), cont.height());
     drawer = std::make_shared<QtDrawer>(scene);
     drawer->setColor(255, 0, 0);
+
     drawer->drawLine(0, 0, 400, 400);
 }
 

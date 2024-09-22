@@ -13,7 +13,13 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
 
 set(UI_FILES mainWindow.ui)
-set(SOURCE_FILES main.cpp MainWindow.cpp Drawer/QtDrawer.cpp)
+set(SOURCE_FILES main.cpp MainWindow.cpp Drawer/QtDrawer.cpp
+        Utils/Color.h
+        Components/BaseComponent.h Components/BaseComponent.cpp
+        Components/Concrete/Line.cpp Components/Concrete/Line.h
+        Objects/BaseObject.cpp Objects/BaseObject.h
+        Objects/Concrete/CarcasObject.cpp Objects/Concrete/CarcasObject.h)
+
 # Укажите исполняемый файл и исходные файлы
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${UI_FILES})
 
