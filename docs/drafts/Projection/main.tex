@@ -1,0 +1,38 @@
+\input{gost.tex}
+
+\title{Рассчет проекции}
+
+\begin{document}
+\maketitle
+
+\section{2D без вращения}
+\subsection{Для y}
+Дано: \\
+$y_{screen}, z_{screen}$ - координаты центра экрана. \\
+$y_{view}, z_{view}$ - координаты камеры. \\
+$y_{point}, z_{point}$ - координаты наблюдаемой точки. \\
+Выведенная формула: \\
+$y_x = y_{screen} - \frac{ (y_{screen} - y_{point}) \cdot (z_{view} - z_{screen})}{ z_{view} - z_{point} }$ \\
+Обозначим $z_{view} - z_{screen} = d$ \\
+$y_x = y_{screen} - d \cdot \frac{ y_{screen} - y_{point}}{ z_{view} - z_{point} }$
+
+\subsection{Для x}
+Дано: \\
+$x_{screen}, z_{screen}$ - координаты центра экрана. \\
+$x_{view}, z_{view}$ - координаты камеры. \\
+$x_{point}, z_{point}$ - координаты наблюдаемой точки. \\
+Выведенная формула: \\
+$x_x = x_{screen} + \frac{ (x_{point} - x_{screen}) \cdot (z_{view} - z_{screen})}{ z_{view} - z_{point} }$ \\
+Обозначим $z_{view} - z_{screen} = d$ \\
+$x_x = x_{screen} + d \cdot \frac{ x_{point} - x_{screen}}{ z_{view} - z_{point} }$ 
+
+\section{2D с вращением}
+$\alpha$ - Угол тангажа (наклон камеры относительно OX).  \\
+$\beta$ - Угол рыскания (наклон камеры относительно OY). \\
+$z'_{point} = y_{point} \cdot \sin{\alpha} + z_{point} \cdot \cos{\alpha}$ \\
+$x''_{point} = x_{point} \cdot \cos{\beta} + z'_{point} \cdot \sin{\beta}$ \\
+$y''_{point} = y_{point} \cdot \cos{\alpha} - z_{point} \cdot \sin{\alpha}$ \\
+$z''_{point} = -x_{point} \cdot \sin{\beta} + z'_{point} \cdot \cos{\beta}$ \\
+Тогда $x''_{point}$ и остальные подставляем вместо $x_{point}$ соответственно.
+
+\end{document}
