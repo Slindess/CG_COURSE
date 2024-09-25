@@ -3,7 +3,6 @@
 
 class BaseDrawAdapter
 {
-
 };
 
 #endif //CG_BASEDRAWADAPTER_H

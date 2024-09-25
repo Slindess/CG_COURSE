@@ -1,0 +1,33 @@
+\documentclass[a4paper, 14pt]{article}
+\usepackage[T2A]{fontenc}  % Поддержка кириллицы
+\usepackage[utf8]{inputenc}  % Кодировка utf-8
+\usepackage[russian]{babel}  % Поддержка русского языка
+\usepackage{setspace}  % Пакет для изменения межстрочного интервала
+\usepackage{geometry}  % Пакет для настройки полей страниц
+
+
+% Настройка полей документа
+\geometry{
+  left=30mm,  % Левое поле
+  right=10mm,  % Правое поле
+  top=20mm,  % Верхнее поле
+  bottom=20mm  % Нижнее поле
+}
+
+% Настройка шрифтов
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\onehalfspacing
+
+\setlength{\parindent}{1.5cm}  % Отступ в начале абзаца
+%\setlength{\parskip}{0em}
+
+\sloppy
+
+\usepackage{indentfirst}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}  % Очищаем текущие настройки стиля
+\fancyfoot[C]{\thepage}  % Установка нумерации по центру внизу страницы
+%\thispagestyle{empty} - уберет нумерацию на конкретной странице (можно использовать на титульнике).

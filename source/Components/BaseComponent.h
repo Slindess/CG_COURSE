@@ -4,7 +4,8 @@
 /* Составляющая объекта */
 class BaseComponent
 {
-
+public:
+    virtual ~BaseComponent() = default;
 };
 
 

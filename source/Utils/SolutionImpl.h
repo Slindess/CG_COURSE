@@ -2,8 +2,6 @@
 #define CG_SOLUTIONIMPL_H
 
 #include <map>
-#include <pair>
-#include <initializer>
 
 template <typename T, typename U>
 class SolutionImpl
@@ -11,7 +9,7 @@ class SolutionImpl
 public:
     SolutionImpl(std::initializer_list<std::pair<T, U>> l);
     void Add(std::pair<T, U>);
-    U Solute(T key)
+    U Solute(T key);
     ~SolutionImpl();
 
 private:
