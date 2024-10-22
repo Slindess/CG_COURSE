@@ -11,6 +11,10 @@
 #include <limits>
 #include <iostream>
 #include <thread>
+#include <mutex> // Не забудьте добавить этот заголовок
+
+// Определяем мьютекс для синхронизации
+std::mutex bufferMutex;
 
 std::vector<double> cross(const std::vector<double>& a, const std::vector<double>& b) {
     return {
@@ -30,6 +34,7 @@ bool RayIntersectsTriangle(
         const std::vector<double>& rayDir,
         const Polygon& polygon,
         double t0,
+        double *tt,
         std::vector<double>& intersectionPoint)
 {
     // Координаты вершин треугольника
@@ -91,6 +96,7 @@ bool RayIntersectsTriangle(
             rayOrigin[1] + t * rayDir[1],
             rayOrigin[2] + t * rayDir[2]
     };
+    *tt = t;
 
     return true; // Пересечение найдено
 }
@@ -146,9 +152,15 @@ void PolygonDrawAdapter::Draw(std::shared_ptr<Scene> scene, std::shared_ptr<Came
 }
 */
 
+
 void ProcessRays(int startX, int endX, const std::shared_ptr<Scene>& scene, const std::shared_ptr<Camera>& camera, std::shared_ptr<QtDrawer> drawer, std::vector<std::vector<Color>> &buff)
 {
-    LightSource lightSource(0, 0, 1.0);
+    LightSource lightSource(-10.0, -10.0, 10.0); // Источник света
+
+    // Задаём параметры для specular (зеркальных бликов)
+    double specularExponent = 50.0;  // Определяет "резкость" бликов
+    double specularStrength = 0.5;   // Влияние specular составляющей
+
     for (int x = startX; x < endX; ++x)
     {
         for (int y = 0; y < camera->height; ++y)
@@ -166,15 +178,26 @@ void ProcessRays(int startX, int endX, const std::shared_ptr<Scene>& scene, cons
             rayDir[2] /= magnitude;
 
             double t0 = (camera->z_view - rayOrigin[2]) / rayDir[2];
+            double tmin = 10000.0;
+            double t = 0.0;
 
-            for (const auto& object : scene->objects) {
-                for (const auto& component : object->GetComponents()) {
+            for (const auto& object : scene->objects)
+            {
+                for (const auto& component : object->GetComponents())
+                {
                     auto polygon = std::dynamic_pointer_cast<Polygon>(component);
-                    if (polygon) {
+                    if (polygon)
+                    {
                         std::vector<double> intersectionPoint;
-                        if (RayIntersectsTriangle(rayOrigin, rayDir, *polygon, t0, intersectionPoint)) {
+                        if (RayIntersectsTriangle(rayOrigin, rayDir, *polygon, t0, &t, intersectionPoint))
+                        {
+                            if (t > tmin)
+                                break;
+
+                            tmin = t;
                             double imageX = physX;
                             double imageY = physY;
+
                             Color illuminatedColor = polygon->color;
 
                             std::vector<double> v0 = { polygon->x1, polygon->y1, polygon->z1 };
@@ -185,7 +208,7 @@ void ProcessRays(int startX, int endX, const std::shared_ptr<Scene>& scene, cons
                             std::vector<double> edge1 = { v1[0] - v0[0], v1[1] - v0[1], v1[2] - v0[2] };
                             std::vector<double> edge2 = { v2[0] - v0[0], v2[1] - v0[1], v2[2] - v0[2] };
 
-                            // Вычисляем векторное произведение для нормали
+                            // Вычисляем нормаль полигона
                             std::vector<double> normal = {
                                     edge1[1] * edge2[2] - edge1[2] * edge2[1],
                                     edge1[2] * edge2[0] - edge1[0] * edge2[2],
@@ -194,28 +217,55 @@ void ProcessRays(int startX, int endX, const std::shared_ptr<Scene>& scene, cons
 
                             // Нормализуем нормаль
                             double normMagnitude = sqrt(normal[0] * normal[0] + normal[1] * normal[1] + normal[2] * normal[2]);
-                            if (normMagnitude > 0) {
+                            if (normMagnitude > 0)
+                            {
                                 normal[0] /= normMagnitude;
                                 normal[1] /= normMagnitude;
                                 normal[2] /= normMagnitude;
                             }
+
+                            // Направление света
                             std::vector<double> lightDir = lightSource.getDirection();
                             double lightMagnitude = sqrt(lightDir[0] * lightDir[0] + lightDir[1] * lightDir[1] + lightDir[2] * lightDir[2]);
                             lightDir[0] /= lightMagnitude;
                             lightDir[1] /= lightMagnitude;
                             lightDir[2] /= lightMagnitude;
 
-                            // Рассчитываем интенсивность света
+                            // Рассчитываем интенсивность света (diffuse)
                             double dotProduct = normal[0] * lightDir[0] + normal[1] * lightDir[1] + normal[2] * lightDir[2];
                             double intensity = std::max(0.0, dotProduct);
 
-                            illuminatedColor.r = std::min(255.0, illuminatedColor.r * intensity);
-                            illuminatedColor.g = std::min(255.0, illuminatedColor.g * intensity);
-                            illuminatedColor.b = std::min(255.0, illuminatedColor.b * intensity);
+                            // Устанавливаем минимальный уровень освещенности
+                            double minIntensity = 0.2;
+                            double diffuseIntensity = std::max(intensity, minIntensity);
 
-                            //drawer->setColor(0, 0, 255);
-                            //drawer->drawPoint(imageX, imageY);
-                            buff[imageX + camera->width / 2][imageY + camera->height / 2] = illuminatedColor;
+                            // Вычисляем отражённое направление (reflectDir)
+                            std::vector<double> reflectDir = {
+                                    2 * dotProduct * normal[0] - lightDir[0],
+                                    2 * dotProduct * normal[1] - lightDir[1],
+                                    2 * dotProduct * normal[2] - lightDir[2]
+                            };
+
+                            // Направление взгляда (направление на камеру)
+                            std::vector<double> viewDir = { -rayDir[0], -rayDir[1], -rayDir[2] };
+
+                            // Вычисляем specular интенсивность (блики)
+                            double reflectDotView = std::max(0.0, reflectDir[0] * viewDir[0] + reflectDir[1] * viewDir[1] + reflectDir[2] * viewDir[2]);
+                            double specularIntensity = pow(reflectDotView, specularExponent) * specularStrength;
+
+                            // Общая освещённость с учётом diffuse и specular
+                            illuminatedColor.r = std::min(255.0, illuminatedColor.r * diffuseIntensity + 255 * specularIntensity);
+                            illuminatedColor.g = std::min(255.0, illuminatedColor.g * diffuseIntensity + 255 * specularIntensity);
+                            illuminatedColor.b = std::min(255.0, illuminatedColor.b * diffuseIntensity + 255 * specularIntensity);
+
+
+                            // Заполняем буфер кадра
+                            // Синхронизированный доступ к буферу
+                            {
+                                std::lock_guard<std::mutex> lock(bufferMutex);
+                                buff[imageX + camera->width / 2][imageY + camera->height / 2] = illuminatedColor;
+                            }
+                            //buff[imageX + camera->width / 2][imageY + camera->height / 2] = illuminatedColor;
                         }
                     }
                 }
@@ -223,6 +273,7 @@ void ProcessRays(int startX, int endX, const std::shared_ptr<Scene>& scene, cons
         }
     }
 }
+
 
 #include <chrono>
 void PolygonDrawAdapter::Draw(std::shared_ptr<Scene> scene, std::shared_ptr<Camera> camera)

@@ -12,6 +12,7 @@ public:
     void addObject(const std::shared_ptr<BaseObject>& object);
     void removeObject(const std::shared_ptr<BaseObject>& object);
     size_t getObjectCount() const;
+    void ClearScene();
 };
 
 

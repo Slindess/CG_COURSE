@@ -18,3 +18,9 @@ size_t Scene::getObjectCount() const
 {
     return objects.size();
 }
+
+void Scene::ClearScene()
+{
+    objects.clear(); // Очищаем объекты в сцене
+    // Если есть другие структуры данных, которые нужно очистить, добавьте их сюда
+}
