@@ -9,6 +9,9 @@ class Scene
 {
 public:
     std::list<std::shared_ptr<BaseObject>> objects;
+    void addObject(const std::shared_ptr<BaseObject>& object);
+    void removeObject(const std::shared_ptr<BaseObject>& object);
+    size_t getObjectCount() const;
 };
 
 

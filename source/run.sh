@@ -10,4 +10,7 @@ cmake ..
 # Собираем проект с помощью make
 make
 
-./CG
+if [[ $? -eq 0 ]]
+then
+  ./CG
+fi

@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 import generators
 
 def linear_falloff(dist, max_radius):
-    return max(0, 1 - dist / max_radius)
+    return max(0, 1 - 1/5*dist / max_radius)
 
 def parabolic_falloff(dist, max_radius):
     if dist > max_radius:
@@ -66,7 +66,7 @@ def multi_peak_falloff(x, y, peaks):
         # Вычисляем расстояние до вершины
         dist = math.sqrt((x - peak_x) ** 2 + (y - peak_y) ** 2)
         # Применяем одну из функций затухания
-        influence = hyperbolic_falloff(dist, peak_radius)
+        influence = linear_falloff(dist, peak_radius)
         total_height += peak_height * influence
     return total_height
 

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2023.9.18)  12 OCT 2024 00:51
+This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2023.9.18)  12 OCT 2024 20:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1310,32 +1310,56 @@ File: img/wb_simple_perlin.png Graphic file (type bmp)
 File: img/wb_simple_perlin_z.png Graphic file (type bmp)
 <img/wb_simple_perlin_z.png>
  [8]
-Underfull \hbox (badness 4569) in paragraph at lines 145--150
+Underfull \hbox (badness 4569) in paragraph at lines 145--147
 []\TU/TimesNewRoman(0)/m/n/14.4 Для реалистичного построения ландшафта необходи
 мо правильно
  []
 
+[9]
+Underfull \hbox (badness 10000) in paragraph at lines 153--155
 
-Underfull \hbox (badness 4927) in paragraph at lines 145--150
-\TU/TimesNewRoman(0)/m/n/14.4 Для понимания формы вулканического склона рассмот
-рим процесс его
  []
 
-[9]
 File: img/mount.jpeg Graphic file (type bmp)
 <img/mount.jpeg>
- [10] (./report.aux)
+
+Underfull \hbox (badness 10000) in paragraph at lines 161--162
+[]\TU/TimesNewRoman(0)/m/n/14.4 U-образной долиной называется долина с прямыми 
+и крутыми
+ []
+
+[10]
+Underfull \hbox (badness 10000) in paragraph at lines 164--166
+
+ []
+
+File: img/valley.jpeg Graphic file (type bmp)
+<img/valley.jpeg>
+[11]
+Underfull \hbox (badness 3049) in paragraph at lines 176--178
+\TU/TimesNewRoman(0)/m/n/14.4 где $\OML/cmm/m/it/14.4 A[]$ \TU/TimesNewRoman(0)
+/m/n/14.4 — амплитуда каждого пика, $\OML/cmm/m/it/14.4 L[]$ \TU/TimesNewRoman(
+0)/m/n/14.4 — длина волны, определяющая
+ []
+
+File: img/hreb.jpg Graphic file (type bmp)
+<img/hreb.jpg>
+[12]
+Глава 2.
+[13
+
+] (./report.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 33895 strings out of 478200
- 896536 string characters out of 5836171
+ 33914 strings out of 478200
+ 896846 string characters out of 5836171
  1854018 words of memory out of 5000000
- 53497 multiletter control sequences out of 15000+600000
+ 53513 multiletter control sequences out of 15000+600000
  518075 words of font info for 76 fonts, out of 8000000 for 9000
  319 hyphenation exceptions out of 8191
  104i,12n,106p,753b,479s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on report.pdf (10 pages).
+Output written on report.pdf (13 pages).

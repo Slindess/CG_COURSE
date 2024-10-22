@@ -42,11 +42,22 @@ void QtDrawer::drawRectangle(double x, double y, double width, double height)
 
 void QtDrawer::drawTriangle(double x1, double y1, double x2, double y2, double x3, double y3)
 {
-    QPen pen(QColor(color_r, color_g, color_b));
+    // Создаем цвет на основе значений color_r, color_g, color_b
+    QColor color(color_r, color_g, color_b);
+
+    // Создаем контур с использованием цвета
+    QPen pen(color);
     pen.setWidth(width);
+
+    // Создаем кисть для заливки с тем же цветом
+    QBrush brush(color);
+
+    // Создание треугольника
     QPolygonF triangle;
     triangle << QPointF(x1, y1) << QPointF(x2, y2) << QPointF(x3, y3);
-    _scene->addPolygon(triangle, pen);
+
+    // Добавляем треугольник с контуром и заливкой
+    _scene->addPolygon(triangle, pen, brush);
 }
 
 void QtDrawer::drawText(double x, double y, std::string text)

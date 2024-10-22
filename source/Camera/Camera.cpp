@@ -35,8 +35,7 @@ std::vector<double> Camera::GetPointProjection(double x, double y, double z)
     x_proj = xs + d * (x - xs) / (z_view - z);
 
 
-
-    std::cout << zs << " " << z << std::endl;
+    //std::cout << zs << " " << z << std::endl;
     std::vector<double> vec = {x_proj, y_proj};
 
     return vec;

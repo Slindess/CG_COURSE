@@ -24,9 +24,12 @@ public:
     double yaw; // Рыскание
     double roll; // Крен
 
+    int height;
+    int width;
+
     Camera(double xs, double ys, double zs, double xv, double yv, double zv) :
     x_screen(xs), y_screen(ys), z_screen(zs), x_view(xv), y_view(yv), z_view(zv),
-    pitch(0), yaw(0), roll(0) {}
+    pitch(0), yaw(0), roll(0), height(100), width(100) {}
     std::vector<double> GetPointProjection(double x, double y, double z);
 };
 

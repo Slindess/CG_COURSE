@@ -1,16 +1,15 @@
 #ifndef CG_POLYGONOBJECT_H
 #define CG_POLYGONOBJECT_H
 
-#include <list>
-
+#include <initializer_list>
 #include "../BaseObject.h"
 
 
 class PolygonObject : public BaseObject
 {
 public:
-    std::list<>
-
+    PolygonObject(std::initializer_list<std::initializer_list<double>> l);
+    ~PolygonObject();
 };
 
 #endif //CG_POLYGONOBJECT_H

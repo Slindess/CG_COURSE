@@ -1,18 +1,42 @@
 #ifndef CG_COLOR_H
 #define CG_COLOR_H
 
-class Color
-{
+#include <QColor>
+#include <algorithm>
+
+class Color {
 public:
-    double red;
-    double green;
-    double blue;
+    double r, g, b;
 
-    Color(double r, double g, double b) : red(r), green(g), blue(b) {}
+    // Конструктор
+    Color(double red, double green, double blue) : r(red), g(green), b(blue) {}
 
-    Color(Color &color) : red(color.red), green(color.green), blue(color.blue) {}
+    // Конструктор копирования
+    Color(const Color& other) : r(other.r), g(other.g), b(other.b) {}
 
-    Color(Color&& other) noexcept : red(other.red), green(other.green), blue(other.blue) {}
+    // Оператор присваивания
+    Color& operator=(const Color& other) {
+        if (this != &other) {
+            r = other.r;
+            g = other.g;
+            b = other.b;
+        }
+        return *this;
+    }
+
+    // Оператор умножения на интенсивность
+    Color operator*(double intensity) const {
+        return Color(r * intensity, g * intensity, b * intensity);
+    }
+
+    // Преобразование в QColor
+    QColor toQColor() const {
+        int red = std::clamp(static_cast<int>(r * 255), 0, 255);
+        int green = std::clamp(static_cast<int>(g * 255), 0, 255);
+        int blue = std::clamp(static_cast<int>(b * 255), 0, 255);
+        return QColor(red, green, blue);
+    }
 };
+
 
 #endif //CG_COLOR_H

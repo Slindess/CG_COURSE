@@ -8,6 +8,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 # Найдите компоненты Qt
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
@@ -18,11 +19,17 @@ set(SOURCE_FILES main.cpp MainWindow.cpp Drawer/QtDrawer.cpp
         Camera/Camera.h Camera/Camera.cpp
         Components/BaseComponent.h Components/BaseComponent.cpp
         Components/Concrete/Line.cpp Components/Concrete/Line.h
+        Components/Concrete/Polygon.cpp Components/Concrete/Polygon.h
         Objects/BaseObject.cpp Objects/BaseObject.h
         Objects/Concrete/CarcasObject.cpp Objects/Concrete/CarcasObject.h
+        Objects/Concrete/PolygonObject.cpp Objects/Concrete/PolygonObject.h
         Manager/Manager.h Manager/Manager.cpp
         DrawAdapter/BaseDrawAdapter.h
-        DrawAdapter/Concrete/CarcasDrawAdapter.h DrawAdapter/Concrete/CarcasDrawAdapter.cpp)
+        DrawAdapter/Concrete/CarcasDrawAdapter.h DrawAdapter/Concrete/CarcasDrawAdapter.cpp
+        DrawAdapter/Concrete/PolygonDrawAdapter.h DrawAdapter/Concrete/PolygonDrawAdapter.cpp
+        Scene/Scene.cpp Scene/Scene.h
+        Light/Light.h
+        )
 
 # Укажите исполняемый файл и исходные файлы
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${UI_FILES})
