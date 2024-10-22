@@ -158,7 +158,7 @@ void ProcessRays(int startX, int endX, const std::shared_ptr<Scene>& scene, cons
     LightSource lightSource(-10.0, -10.0, 10.0); // Источник света
 
     // Задаём параметры для specular (зеркальных бликов)
-    double specularExponent = 50.0;  // Определяет "резкость" бликов
+    double specularExponent = 100.0;  // Определяет "резкость" бликов
     double specularStrength = 0.5;   // Влияние specular составляющей
 
     for (int x = startX; x < endX; ++x)
@@ -263,7 +263,10 @@ void ProcessRays(int startX, int endX, const std::shared_ptr<Scene>& scene, cons
                             // Синхронизированный доступ к буферу
                             {
                                 std::lock_guard<std::mutex> lock(bufferMutex);
-                                buff[imageX + camera->width / 2][imageY + camera->height / 2] = illuminatedColor;
+                                if (imageX + camera->width / 2 >= 0 && imageX + camera->width / 2 < buff.size() &&
+                                    imageY + camera->height / 2 >= 0 && imageY + camera->height / 2 < buff[0].size()) {
+                                    buff[imageX + camera->width / 2][imageY + camera->height / 2] = illuminatedColor;
+                                }
                             }
                             //buff[imageX + camera->width / 2][imageY + camera->height / 2] = illuminatedColor;
                         }
