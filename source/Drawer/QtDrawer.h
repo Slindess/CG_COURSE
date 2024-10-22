@@ -3,6 +3,7 @@
 
 #include <QGraphicsScene>
 #include <memory>
+#include "../Utils/Color.h"
 
 class QtDrawer
 {
@@ -16,6 +17,7 @@ public:
     virtual void drawTriangle(double x1, double y1, double x2, double y2, double x3, double y3);
     virtual void drawText(double x, double y, std::string text);
     virtual void setColor(int r, int g, int b);
+    virtual void setColor(Color color);
     virtual void setLineWidth(int width);
     virtual void clear();
     void set_scene(std::shared_ptr<QGraphicsScene> scene) {_scene = scene;}

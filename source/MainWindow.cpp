@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     manager = std::make_shared<Manager>();
     manager->SetDrawer(drawer);
+    scene->clear();
     manager->Manage();
 
     //drawer->drawLine(0, 0, 400, 400);

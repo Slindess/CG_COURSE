@@ -74,6 +74,13 @@ void QtDrawer::setColor(int r, int g, int b)
     color_b = b;
 }
 
+void QtDrawer::setColor(Color color)
+{
+    color_r = color.r;
+    color_g = color.g;
+    color_b = color.b;
+}
+
 void QtDrawer::setLineWidth(int width)
 {
     this->width = width;

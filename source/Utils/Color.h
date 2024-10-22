@@ -36,6 +36,11 @@ public:
         int blue = std::clamp(static_cast<int>(b * 255), 0, 255);
         return QColor(red, green, blue);
     }
+
+    bool isBG()
+    {
+        return r == -1 and b == -1 and g == -1;
+    }
 };
 
 

@@ -10,7 +10,7 @@
 #include <cmath>
 #include <limits>
 #include <iostream>
-#include <fstream>
+#include <thread>
 
 std::vector<double> cross(const std::vector<double>& a, const std::vector<double>& b) {
     return {
@@ -25,12 +25,12 @@ double dot(const std::vector<double>& a, const std::vector<double>& b) {
 }
 
 
- bool RayIntersectsTriangle(
+bool RayIntersectsTriangle(
         const std::vector<double>& rayOrigin,
         const std::vector<double>& rayDir,
         const Polygon& polygon,
         double t0,
-        std::vector<double>& intersectionPoint, std::ofstream &outFile)
+        std::vector<double>& intersectionPoint)
 {
     // Координаты вершин треугольника
     std::vector<double> v0 = { polygon.x1, polygon.y1, polygon.z1 };
@@ -53,39 +53,10 @@ double dot(const std::vector<double>& a, const std::vector<double>& b) {
     double k = v0[1] - rayOrigin[1];
     double l = v0[2] - rayOrigin[2];
 
-    /*
-    std::cout << "a = " << a << "\n";
-    std::cout << "b = " << b << "\n";
-    std::cout << "c = " << c << "\n";
-    std::cout << "d = " << d << "\n";
-    std::cout << "e = " << e << "\n";
-    std::cout << "f = " << f << "\n";
-    std::cout << "g = " << g << "\n";
-    std::cout << "h = " << h << "\n";
-    std::cout << "i = " << i << "\n";
-    std::cout << "j = " << j << "\n";
-    std::cout << "k = " << k << "\n";
-    std::cout << "l = " << l << "\n";
-     */
-
-    outFile << "a = " << a << "\n";
-    outFile << "b = " << b << "\n";
-    outFile << "c = " << c << "\n";
-    outFile << "d = " << d << "\n";
-    outFile << "e = " << e << "\n";
-    outFile << "f = " << f << "\n";
-    outFile << "g = " << g << "\n";
-    outFile << "h = " << h << "\n";
-    outFile << "i = " << i << "\n";
-    outFile << "j = " << j << "\n";
-    outFile << "k = " << k << "\n";
-    outFile << "l = " << l << "\n";
-
 
 
     // Вычисляем определитель матрицы |A|
     double detA = a * (e * i - f * h) + b * (f * g - d * i) + c * (d * h - e * g);
-    outFile << "detA = " << detA << "\n";
 
     if (fabs(detA) < 1e-6)
     {
@@ -124,49 +95,13 @@ double dot(const std::vector<double>& a, const std::vector<double>& b) {
     return true; // Пересечение найдено
 }
 
-/*
-bool RayIntersectsTriangle(
-        const std::vector<double>& rayOrigin,
-        const std::vector<double>& rayDir,
-        const Polygon& polygon,
-        double& t)
-
-
-{
-    std::vector<double> v0 = { polygon.x1, polygon.y1, polygon.z1 };
-    std::vector<double> v1 = { polygon.x2, polygon.y2, polygon.z2 };
-    std::vector<double> v2 = { polygon.x3, polygon.y3, polygon.z3 };
-    const double EPSILON = 1e-9;
-    std::vector<double> edge1 = { v1[0] - v0[0], v1[1] - v0[1], v1[2] - v0[2] };
-    std::vector<double> edge2 = { v2[0] - v0[0], v2[1] - v0[1], v2[2] - v0[2] };
-    std::vector<double> h = cross(rayDir, edge2);
-    double a = dot(edge1, h);
-    if (a > -EPSILON && a < EPSILON)
-        return false;    // Луч параллелен треугольнику
-
-    double f = 1.0 / a;
-    std::vector<double> s = { rayOrigin[0] - v0[0], rayOrigin[1] - v0[1], rayOrigin[2] - v0[2] };
-    double u = f * dot(s, h);
-    if (u < 0.0 || u > 1.0)
-        return false;
-
-    std::vector<double> q = cross(s, edge1);
-    double v = f * dot(rayDir, q);
-    if (v < 0.0 || u + v > 1.0)
-        return false;
-
-    t = f * dot(edge2, q); // Пересечение найдено
-    return t > EPSILON;
-}
-*/
-
 PolygonDrawAdapter::PolygonDrawAdapter(std::shared_ptr<QtDrawer> drawer) : _drawer(drawer)
 {}
 
+/*
 void PolygonDrawAdapter::Draw(std::shared_ptr<Scene> scene, std::shared_ptr<Camera> camera)
 {
     LightSource lightSource(20, 0, 0);
-    std::ofstream outFile("../../p.txt");
     for (int x = 0; x < camera->width; ++x)
     {
         for (int y = 0; y < camera->height; ++y)
@@ -195,22 +130,145 @@ void PolygonDrawAdapter::Draw(std::shared_ptr<Scene> scene, std::shared_ptr<Came
                     if (polygon)
                     {
                         std::vector<double> intersectionPoint;
-                        if (RayIntersectsTriangle(rayOrigin, rayDir, *polygon, t0, intersectionPoint, outFile))
+                        if (RayIntersectsTriangle(rayOrigin, rayDir, *polygon, t0, intersectionPoint))
                         {
                             double imageX = physX;
                             double imageY = -1 * physY;
                             Color illuminatedColor = polygon->color;
                             _drawer->setColor(0, 0, 255);
                             _drawer->drawPoint(imageX, imageY);
-                            _drawer->setColor(255, 0, 0);
-                            _drawer->drawPoint(0, 0);
                         }
                     }
                 }
             }
         }
     }
-    outFile.close();
+}
+*/
+
+void ProcessRays(int startX, int endX, const std::shared_ptr<Scene>& scene, const std::shared_ptr<Camera>& camera, std::shared_ptr<QtDrawer> drawer, std::vector<std::vector<Color>> &buff)
+{
+    LightSource lightSource(0, 0, 1.0);
+    for (int x = startX; x < endX; ++x)
+    {
+        for (int y = 0; y < camera->height; ++y)
+        {
+            std::vector<double> rayOrigin = { camera->x_view, camera->y_view, camera->z_view };
+
+            double physX = camera->x_screen + (x - camera->width / 2);
+            double physY = camera->y_screen + (y - camera->height / 2);
+            double physZ = camera->z_screen;
+            std::vector<double> rayDir = { physX - camera->x_view, physY - camera->y_view, physZ - camera->z_view };
+            double magnitude = sqrt(rayDir[0] * rayDir[0] + rayDir[1] * rayDir[1] + rayDir[2] * rayDir[2]);
+
+            rayDir[0] /= magnitude;
+            rayDir[1] /= magnitude;
+            rayDir[2] /= magnitude;
+
+            double t0 = (camera->z_view - rayOrigin[2]) / rayDir[2];
+
+            for (const auto& object : scene->objects) {
+                for (const auto& component : object->GetComponents()) {
+                    auto polygon = std::dynamic_pointer_cast<Polygon>(component);
+                    if (polygon) {
+                        std::vector<double> intersectionPoint;
+                        if (RayIntersectsTriangle(rayOrigin, rayDir, *polygon, t0, intersectionPoint)) {
+                            double imageX = physX;
+                            double imageY = physY;
+                            Color illuminatedColor = polygon->color;
+
+                            std::vector<double> v0 = { polygon->x1, polygon->y1, polygon->z1 };
+                            std::vector<double> v1 = { polygon->x2, polygon->y2, polygon->z2 };
+                            std::vector<double> v2 = { polygon->x3, polygon->y3, polygon->z3 };
+
+                            // Вычисляем векторы ребер
+                            std::vector<double> edge1 = { v1[0] - v0[0], v1[1] - v0[1], v1[2] - v0[2] };
+                            std::vector<double> edge2 = { v2[0] - v0[0], v2[1] - v0[1], v2[2] - v0[2] };
+
+                            // Вычисляем векторное произведение для нормали
+                            std::vector<double> normal = {
+                                    edge1[1] * edge2[2] - edge1[2] * edge2[1],
+                                    edge1[2] * edge2[0] - edge1[0] * edge2[2],
+                                    edge1[0] * edge2[1] - edge1[1] * edge2[0]
+                            };
+
+                            // Нормализуем нормаль
+                            double normMagnitude = sqrt(normal[0] * normal[0] + normal[1] * normal[1] + normal[2] * normal[2]);
+                            if (normMagnitude > 0) {
+                                normal[0] /= normMagnitude;
+                                normal[1] /= normMagnitude;
+                                normal[2] /= normMagnitude;
+                            }
+                            std::vector<double> lightDir = lightSource.getDirection();
+                            double lightMagnitude = sqrt(lightDir[0] * lightDir[0] + lightDir[1] * lightDir[1] + lightDir[2] * lightDir[2]);
+                            lightDir[0] /= lightMagnitude;
+                            lightDir[1] /= lightMagnitude;
+                            lightDir[2] /= lightMagnitude;
+
+                            // Рассчитываем интенсивность света
+                            double dotProduct = normal[0] * lightDir[0] + normal[1] * lightDir[1] + normal[2] * lightDir[2];
+                            double intensity = std::max(0.0, dotProduct);
+
+                            illuminatedColor.r = std::min(255.0, illuminatedColor.r * intensity);
+                            illuminatedColor.g = std::min(255.0, illuminatedColor.g * intensity);
+                            illuminatedColor.b = std::min(255.0, illuminatedColor.b * intensity);
+
+                            //drawer->setColor(0, 0, 255);
+                            //drawer->drawPoint(imageX, imageY);
+                            buff[imageX + camera->width / 2][imageY + camera->height / 2] = illuminatedColor;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+#include <chrono>
+void PolygonDrawAdapter::Draw(std::shared_ptr<Scene> scene, std::shared_ptr<Camera> camera)
+{
+    auto start = std::chrono::high_resolution_clock::now();
+    Color backgroundColor(-1, -1, -1);
+    std::vector<std::vector<Color>> buff(camera->height, std::vector<Color>(camera->width, backgroundColor));  // БУФЕР КАДРА
+
+    const int numThreads = 8;
+    std::vector<std::thread> threads;
+
+    // Определяем диапазон обработки для каждого потока
+    int widthPerThread = camera->width / numThreads;
+
+    for (int i = 0; i < numThreads; ++i)
+    {
+        int startX = i * widthPerThread;
+        int endX = (i == numThreads - 1) ? camera->width : startX + widthPerThread; // Обрабатываем оставшиеся пиксели в последнем потоке
+        //std::cout << "SX: " << startX << "EX: " << endX << "\n";
+        threads.emplace_back(ProcessRays, startX, endX, scene, camera, _drawer, std::ref(buff));
+    }
+
+    // Ждем завершения потоков
+    for (auto& thread : threads) {
+        thread.join();
+    }
+
+    for (int i = 0; i < camera->height; i++)
+    {
+        for (int j = 0; j < camera->width; j++)
+        {
+            if (!buff[i][j].isBG())
+            {
+                _drawer->setColor(buff[i][j]);
+                _drawer->drawPoint(j - camera->width / 2, -1*i + camera->height / 2);
+            }
+        }
+    }
+    _drawer->setColor(0, 0, 255);
+    _drawer->drawPoint(0, 0);
+
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = end - start;
+
+    // Вывод времени рендеринга
+    std::cout << "Rendering time: " << duration.count() << " seconds" << std::endl;
 }
 
 

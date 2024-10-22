@@ -29,7 +29,7 @@ public:
 
     Camera(double xs, double ys, double zs, double xv, double yv, double zv) :
     x_screen(xs), y_screen(ys), z_screen(zs), x_view(xv), y_view(yv), z_view(zv),
-    pitch(0), yaw(0), roll(0), height(100), width(100) {}
+    pitch(0), yaw(0), roll(0), height(1000), width(1000) {}
     std::vector<double> GetPointProjection(double x, double y, double z);
 };
 
