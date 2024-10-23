@@ -104,61 +104,14 @@ bool RayIntersectsTriangle(
 PolygonDrawAdapter::PolygonDrawAdapter(std::shared_ptr<QtDrawer> drawer) : _drawer(drawer)
 {}
 
-/*
-void PolygonDrawAdapter::Draw(std::shared_ptr<Scene> scene, std::shared_ptr<Camera> camera)
-{
-    LightSource lightSource(20, 0, 0);
-    for (int x = 0; x < camera->width; ++x)
-    {
-        for (int y = 0; y < camera->height; ++y)
-        {
-            std::vector<double> rayOrigin = { camera->x_view, camera->y_view, camera->z_view };
-
-            double physX = camera->x_screen + (x - camera->width / 2);
-            double physY = camera->y_screen + (y - camera->height / 2);
-            double physZ = camera->z_screen;
-            std::vector<double> rayDir = { physX - camera->x_view, physY - camera->y_view, physZ - camera->z_view };
-            double magnitude = sqrt(rayDir[0] * rayDir[0] + rayDir[1] * rayDir[1] + rayDir[2] * rayDir[2]);
-
-            rayDir[0] /= magnitude;
-            rayDir[1] /= magnitude;
-            rayDir[2] /= magnitude;
-
-            double t0 = (camera->z_view - rayOrigin[2]) / rayDir[2];
-
-            if (physX == 0.0 && physY == 0.0)
-                std::cout << physX << " " << physY << " " << " Direction: " << rayDir[0] << " " << rayDir[1] << " " << rayDir[2] << " ORIGIN: " <<  rayOrigin[0] << " " << rayOrigin[1] << " " << rayOrigin[2] << " " << t0 << "\n";
-            for (const auto& object : scene->objects)
-            {
-                for (const auto& component : object->GetComponents())
-                {
-                    auto polygon = std::dynamic_pointer_cast<Polygon>(component);
-                    if (polygon)
-                    {
-                        std::vector<double> intersectionPoint;
-                        if (RayIntersectsTriangle(rayOrigin, rayDir, *polygon, t0, intersectionPoint))
-                        {
-                            double imageX = physX;
-                            double imageY = -1 * physY;
-                            Color illuminatedColor = polygon->color;
-                            _drawer->setColor(0, 0, 255);
-                            _drawer->drawPoint(imageX, imageY);
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-*/
 
 
 void ProcessRays(int startX, int endX, const std::shared_ptr<Scene>& scene, const std::shared_ptr<Camera>& camera, std::shared_ptr<QtDrawer> drawer, std::vector<std::vector<Color>> &buff)
 {
-    LightSource lightSource(-10.0, -10.0, 10.0); // Источник света
+    LightSource lightSource(100.0, -50.0, 10.0); // Источник света
 
     // Задаём параметры для specular (зеркальных бликов)
-    double specularExponent = 100.0;  // Определяет "резкость" бликов
+    double specularExponent = 500.0;  // Определяет "резкость" бликов
     double specularStrength = 0.5;   // Влияние specular составляющей
 
     for (int x = startX; x < endX; ++x)
@@ -236,9 +189,9 @@ void ProcessRays(int startX, int endX, const std::shared_ptr<Scene>& scene, cons
                             double intensity = std::max(0.0, dotProduct);
 
                             // Устанавливаем минимальный уровень освещенности
-                            double minIntensity = 0.2;
+                            double minIntensity = 0.4;
                             double diffuseIntensity = std::max(intensity, minIntensity);
-
+                            //double diffuseIntensity = intensity + minIntensity;
                             // Вычисляем отражённое направление (reflectDir)
                             std::vector<double> reflectDir = {
                                     2 * dotProduct * normal[0] - lightDir[0],
@@ -252,6 +205,35 @@ void ProcessRays(int startX, int endX, const std::shared_ptr<Scene>& scene, cons
                             // Вычисляем specular интенсивность (блики)
                             double reflectDotView = std::max(0.0, reflectDir[0] * viewDir[0] + reflectDir[1] * viewDir[1] + reflectDir[2] * viewDir[2]);
                             double specularIntensity = pow(reflectDotView, specularExponent) * specularStrength;
+
+                            std::vector<double> shadowRayOrigin = intersectionPoint;
+                            std::vector<double> shadowRayDir = { lightDir[0], lightDir[1], lightDir[2] };
+
+                            bool isInShadow = false;
+
+                            // Проверяем пересечение с объектами сцены для shadow-ray
+                            for (const auto& shadowObject : scene->objects) {
+                                for (const auto& shadowComponent : shadowObject->GetComponents()) {
+                                    auto shadowPolygon = std::dynamic_pointer_cast<Polygon>(shadowComponent);
+                                    if (shadowPolygon) {
+                                        double shadowT;
+                                        std::vector<double> shadowIntersectionPoint;
+                                        if (RayIntersectsTriangle(shadowRayOrigin, shadowRayDir, *shadowPolygon, 0.001, &shadowT, shadowIntersectionPoint)) {
+                                            // Точка пересечения с другим объектом найдена - тень
+                                            isInShadow = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (isInShadow)
+                                    break;
+                            }
+
+                            // Если точка в тени, уменьшаем освещенность (либо полностью обнуляем)
+                            if (isInShadow) {
+                                diffuseIntensity *= 0.5;  // Слабая освещённость из-за тени
+                                specularIntensity = 0.0;  // Отсутствие бликов в тени
+                            }
 
                             // Общая освещённость с учётом diffuse и specular
                             illuminatedColor.r = std::min(255.0, illuminatedColor.r * diffuseIntensity + 255 * specularIntensity);
@@ -268,7 +250,6 @@ void ProcessRays(int startX, int endX, const std::shared_ptr<Scene>& scene, cons
                                     buff[imageX + camera->width / 2][imageY + camera->height / 2] = illuminatedColor;
                                 }
                             }
-                            //buff[imageX + camera->width / 2][imageY + camera->height / 2] = illuminatedColor;
                         }
                     }
                 }

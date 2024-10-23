@@ -16,8 +16,8 @@ std::shared_ptr<PolygonObject> generateFloor(double startX, double endX, double 
 
     for (double x = startX; x < endX; x += step) {
         for (double z = startZ; z < endZ; z += step) {
-            Color color = isWhite ? Color(235, 152, 52) : Color(52, 76, 235); // Чередуем цвет
-
+            Color color = isWhite ? Color(143, 188, 143) : Color(202, 227, 202); // Чередуем цвет
+            //Color color = isWhite ? Color(250, 157, 244) : Color(227, 9, 212);
             // Два треугольника для клетки
             polygons.push_back({x, 0.0, z, x + step, 0.0, z, x, 0.0, z + step, color.r, color.g, color.b});
             polygons.push_back({x + step, 0.0, z, x + step, 0.0, z + step, x, 0.0, z + step, color.r, color.g, color.b});
@@ -40,7 +40,7 @@ std::shared_ptr<PolygonObject> generateFloor(double startX, double endX, double 
 Manager::Manager()
 {
     _scene = std::make_shared<Scene>();
-    _camera = std::make_shared<Camera>(15.0, 16.0, -15.0, 15.0, 16.0, 15.0);
+    _camera = std::make_shared<Camera>(25.0, 15.0, -210.0, 25.0, 15.0, 50.0);
     /*
     _solution = std::make_shared<SolutionImpl<BaseObject, BaseDrawAdapter>>(
             std::initializer_list<std::pair<BaseObject, BaseDrawAdapter>>{
@@ -57,38 +57,38 @@ void Manager::SetDrawer(std::shared_ptr<QtDrawer> drawer)
 
 void Manager::CamPlus()
 {
-    _camera->z_screen -= 2;
-    _camera->z_view -= 2;
+    _camera->z_screen -= 5;
+    _camera->z_view -= 5;
 }
 
 void Manager::CamMinus()
 {
-    _camera->z_screen += 2;
-    _camera->z_view += 2;
+    _camera->z_screen += 5;
+    _camera->z_view += 5;
 }
 
 void Manager::CamUp()
 {
-    _camera->y_screen += 2;
-    _camera->y_view += 2;
+    _camera->x_screen += 5;
+    _camera->x_view += 5;
 }
 
 void Manager::CamDown()
 {
-    _camera->y_screen -= 2;
-    _camera->y_view -= 2;
+    _camera->x_screen -= 5;
+    _camera->x_view -= 5;
 }
 
 void Manager::CamLeft()
 {
-    _camera->x_screen -= 2;
-    _camera->x_view -= 2;
+    _camera->y_screen -= 5;
+    _camera->y_view -= 5;
 }
 
 void Manager::CamRight()
 {
-    _camera->x_screen += 2;
-    _camera->x_view += 2;
+    _camera->y_screen += 5;
+    _camera->y_view += 5;
 }
 
 void Manager::CamPitchUp()
@@ -119,22 +119,22 @@ void Manager::Manage()
     std::shared_ptr<PolygonObject> ox = std::make_shared<PolygonObject>(
             std::initializer_list<std::initializer_list<double>>{
                     // Преобразование первой стороны куба
-                    {0.0, 0.0, 10.0, 10.0, 0.0, 10.0, 0.0, 10.0, 10.0, 255, 0, 0}, // Треугольник 11
-                    {10.0, 0.0, 10.0, 10.0, 10.0, 10.0, 0.0, 10.0, 10.0, 255, 0, 0},
-                    {0.0, 0.0, 0.0, 10.0, 0.0, 0.0, 0.0, 10.0, 0.0, 255, 0, 0}, // Треугольник 1
-                    {10.0, 0.0, 0.0, 10.0, 10.0, 0.0, 0.0, 10.0, 0.0, 255, 0, 0}, // Треугольник 2
+                    {0.0, 0.0, 10.0, 10.0, 0.0, 10.0, 0.0, 10.0, 10.0, 245, 188, 103}, // Треугольник 11
+                    {10.0, 0.0, 10.0, 10.0, 10.0, 10.0, 0.0, 10.0, 10.0, 245, 188, 103},
+                    {0.0, 0.0, 0.0, 10.0, 0.0, 0.0, 0.0, 10.0, 0.0, 245, 188, 103}, // Треугольник 1
+                    {10.0, 0.0, 0.0, 10.0, 10.0, 0.0, 0.0, 10.0, 0.0, 245, 188, 103}, // Треугольник 2
                     // Преобразование второй стороны куба
-                    {0.0, 0.0, 0.0, 0.0, 0.0, 10.0, 0.0, 10.0, 0.0, 255, 0, 0}, // Треугольник 3
-                    {0.0, 10.0, 0.0, 0.0, 0.0, 10.0, 0.0, 10.0, 10.0, 255, 0, 0}, // Треугольник 4
+                    {0.0, 0.0, 0.0, 0.0, 0.0, 10.0, 0.0, 10.0, 0.0, 245, 188, 103}, // Треугольник 3
+                    {0.0, 10.0, 0.0, 0.0, 0.0, 10.0, 0.0, 10.0, 10.0, 245, 188, 103}, // Треугольник 4
                     // Преобразование третьей стороны куба
-                    {0.0, 0.0, 0.0, 10.0, 0.0, 0.0, 0.0, 0.0, 10.0, 255, 255, 0}, // Треугольник 5
-                    {10.0, 0.0, 0.0, 10.0, 0.0, 10.0, 0.0, 0.0, 10.0, 255, 0, 0}, // Треугольник 6
+                    {0.0, 0.0, 0.0, 10.0, 0.0, 0.0, 0.0, 0.0, 10.0, 245, 188, 103}, // Треугольник 5
+                    {10.0, 0.0, 0.0, 10.0, 0.0, 10.0, 0.0, 0.0, 10.0, 245, 188, 103}, // Треугольник 6
                     // Преобразование четвертой стороны куба
-                    {10.0, 0.0, 0.0, 10.0, 10.0, 0.0, 10.0, 0.0, 10.0, 255, 0, 0}, // Треугольник 7
-                    {10.0, 10.0, 0.0, 10.0, 10.0, 10.0, 10.0, 0.0, 10.0, 255, 0, 0}, // Треугольник 8
+                    {10.0, 0.0, 0.0, 10.0, 10.0, 0.0, 10.0, 0.0, 10.0, 245, 188, 103}, // Треугольник 7
+                    {10.0, 10.0, 0.0, 10.0, 10.0, 10.0, 10.0, 0.0, 10.0, 245, 188, 103}, // Треугольник 8
                     // Преобразование пятой стороны куба
-                    {0.0, 10.0, 0.0, 10.0, 10.0, 0.0, 0.0, 10.0, 10.0, 255, 0, 0}, // Треугольник 9
-                    {10.0, 10.0, 0.0, 10.0, 10.0, 10.0, 0.0, 10.0, 10.0, 255, 0, 0}, // Треугольник 10
+                    {0.0, 10.0, 0.0, 10.0, 10.0, 0.0, 0.0, 10.0, 10.0, 245, 188, 103}, // Треугольник 9
+                    {10.0, 10.0, 0.0, 10.0, 10.0, 10.0, 0.0, 10.0, 10.0, 245, 188, 103}, // Треугольник 10
             }
 
     );
