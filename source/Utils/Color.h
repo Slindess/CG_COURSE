@@ -8,6 +8,8 @@ class Color {
 public:
     double r, g, b;
 
+    Color() : r(0), g(0), b(0) {}
+
     // Конструктор
     Color(double red, double green, double blue) : r(red), g(green), b(blue) {}
 
@@ -40,6 +42,10 @@ public:
     bool isBG()
     {
         return r == -1 and b == -1 and g == -1;
+    }
+
+    Color operator+(const Color& other) const {
+        return Color(r + other.r, g + other.g, b + other.b);
     }
 };
 

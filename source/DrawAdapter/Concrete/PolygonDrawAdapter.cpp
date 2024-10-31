@@ -12,11 +12,19 @@
 #include <iostream>
 #include <thread>
 #include <mutex> // Не забудьте добавить этот заголовок
-
 // Определяем мьютекс для синхронизации
 std::mutex bufferMutex;
 
-std::vector<double> cross(const std::vector<double>& a, const std::vector<double>& b) {
+std::vector<double> Reflect(const std::vector<double>& rayDir, const std::vector<double>& normal) {
+    double dotProduct = rayDir[0] * normal[0] + rayDir[1] * normal[1] + rayDir[2] * normal[2];
+    return {
+            rayDir[0] - 2 * dotProduct * normal[0],
+            rayDir[1] - 2 * dotProduct * normal[1],
+            rayDir[2] - 2 * dotProduct * normal[2]
+    };
+}
+
+inline std::vector<double> cross(const std::vector<double>& a, const std::vector<double>& b) {
     return {
             a[1] * b[2] - a[2] * b[1],  // Cx
             a[2] * b[0] - a[0] * b[2],  // Cy
@@ -24,12 +32,11 @@ std::vector<double> cross(const std::vector<double>& a, const std::vector<double
     };
 }
 
-double dot(const std::vector<double>& a, const std::vector<double>& b) {
+inline double dot(const std::vector<double>& a, const std::vector<double>& b) {
     return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }
 
-
-bool RayIntersectsTriangle(
+inline bool RayIntersectsTriangle(
         const std::vector<double>& rayOrigin,
         const std::vector<double>& rayDir,
         const Polygon& polygon,
@@ -101,9 +108,9 @@ bool RayIntersectsTriangle(
     return true; // Пересечение найдено
 }
 
+
 PolygonDrawAdapter::PolygonDrawAdapter(std::shared_ptr<QtDrawer> drawer) : _drawer(drawer)
 {}
-
 
 
 void ProcessRays(int startX, int endX, const std::shared_ptr<Scene>& scene, const std::shared_ptr<Camera>& camera, std::shared_ptr<QtDrawer> drawer, std::vector<std::vector<Color>> &buff)
@@ -111,7 +118,7 @@ void ProcessRays(int startX, int endX, const std::shared_ptr<Scene>& scene, cons
     LightSource lightSource(100.0, -50.0, 10.0); // Источник света
 
     // Задаём параметры для specular (зеркальных бликов)
-    double specularExponent = 500.0;  // Определяет "резкость" бликов
+    double specularExponent = 5.0;  // Определяет "резкость" бликов
     double specularStrength = 0.5;   // Влияние specular составляющей
 
     for (int x = startX; x < endX; ++x)
@@ -136,12 +143,24 @@ void ProcessRays(int startX, int endX, const std::shared_ptr<Scene>& scene, cons
 
             for (const auto& object : scene->objects)
             {
+
+                double sphereT;
+                auto objpolygon = std::dynamic_pointer_cast<PolygonObject>(object);
+                auto sphere = objpolygon->Sphere();
+
+                if (!sphere.Intersects(rayOrigin, rayDir, sphereT))
+                {
+                    continue; // Если нет пересечения со сферой, перейти к следующему объекту
+                }
+
+
                 for (const auto& component : object->GetComponents())
                 {
                     auto polygon = std::dynamic_pointer_cast<Polygon>(component);
                     if (polygon)
                     {
                         std::vector<double> intersectionPoint;
+                        if (sphereT > tmin) break;  // ОПАСНАЯ ТЕМА
                         if (RayIntersectsTriangle(rayOrigin, rayDir, *polygon, t0, &t, intersectionPoint))
                         {
                             if (t > tmin)
@@ -212,6 +231,7 @@ void ProcessRays(int startX, int endX, const std::shared_ptr<Scene>& scene, cons
                             bool isInShadow = false;
 
                             // Проверяем пересечение с объектами сцены для shadow-ray
+
                             for (const auto& shadowObject : scene->objects) {
                                 for (const auto& shadowComponent : shadowObject->GetComponents()) {
                                     auto shadowPolygon = std::dynamic_pointer_cast<Polygon>(shadowComponent);
@@ -245,10 +265,12 @@ void ProcessRays(int startX, int endX, const std::shared_ptr<Scene>& scene, cons
                             // Синхронизированный доступ к буферу
                             {
                                 std::lock_guard<std::mutex> lock(bufferMutex);
+                                //std::unique_lock<std::mutex> lock(bufferMutex);
                                 if (imageX + camera->width / 2 >= 0 && imageX + camera->width / 2 < buff.size() &&
                                     imageY + camera->height / 2 >= 0 && imageY + camera->height / 2 < buff[0].size()) {
                                     buff[imageX + camera->width / 2][imageY + camera->height / 2] = illuminatedColor;
                                 }
+                                //lock.unlock();
                             }
                         }
                     }
@@ -269,21 +291,25 @@ void PolygonDrawAdapter::Draw(std::shared_ptr<Scene> scene, std::shared_ptr<Came
     const int numThreads = 8;
     std::vector<std::thread> threads;
 
-    // Определяем диапазон обработки для каждого потока
     int widthPerThread = camera->width / numThreads;
 
     for (int i = 0; i < numThreads; ++i)
     {
         int startX = i * widthPerThread;
         int endX = (i == numThreads - 1) ? camera->width : startX + widthPerThread; // Обрабатываем оставшиеся пиксели в последнем потоке
-        //std::cout << "SX: " << startX << "EX: " << endX << "\n";
         threads.emplace_back(ProcessRays, startX, endX, scene, camera, _drawer, std::ref(buff));
     }
 
-    // Ждем завершения потоков
-    for (auto& thread : threads) {
+    for (auto& thread : threads)
+    {
         thread.join();
     }
+
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = end - start;
+
+    // Вывод времени рендеринга
+    std::cout << "Rendering time: " << duration.count() << " seconds" << std::endl;
 
     for (int i = 0; i < camera->height; i++)
     {
@@ -298,12 +324,6 @@ void PolygonDrawAdapter::Draw(std::shared_ptr<Scene> scene, std::shared_ptr<Came
     }
     _drawer->setColor(0, 0, 255);
     _drawer->drawPoint(0, 0);
-
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> duration = end - start;
-
-    // Вывод времени рендеринга
-    std::cout << "Rendering time: " << duration.count() << " seconds" << std::endl;
 }
 
 

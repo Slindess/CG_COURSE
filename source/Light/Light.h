@@ -14,6 +14,7 @@ public:
     LightSource(double dx, double dy, double dz) : direction_x(dx), direction_y(dy), direction_z(dz)
     {}
 
+
     std::vector<double> getDirection() const
     {
         return { direction_x, direction_y, direction_z };

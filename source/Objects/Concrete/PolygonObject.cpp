@@ -6,7 +6,7 @@
 #include <iostream>
 #include "../../Utils/Color.h"
 
-PolygonObject::PolygonObject(std::initializer_list<std::initializer_list<double>> l)
+PolygonObject::PolygonObject(std::initializer_list<std::initializer_list<double>> l) : _sphere(CalculateBoundingSphere())
 {
     for (auto e : l)
     {
@@ -19,9 +19,11 @@ PolygonObject::PolygonObject(std::initializer_list<std::initializer_list<double>
         // Добавляем треугольник в компоненты
         _components.push_back(std::make_shared<Polygon>(v0[0], v0[1], v0[2], v1[0], v1[1], v1[2], v2[0], v2[1], v2[2], color));
     }
+
+    _sphere = CalculateBoundingSphere();
 }
 
-PolygonObject::PolygonObject(std::vector<std::initializer_list<double>>& l)
+PolygonObject::PolygonObject(std::vector<std::initializer_list<double>>& l) : _sphere(CalculateBoundingSphere())
 {
     for (const auto& e : l)
     {
@@ -38,9 +40,10 @@ PolygonObject::PolygonObject(std::vector<std::initializer_list<double>>& l)
                                                         v2[0], v2[1], v2[2],
                                                         color));
     }
+    _sphere = CalculateBoundingSphere();
 }
 
-PolygonObject::PolygonObject(std::vector<Polygon>& polygons)
+PolygonObject::PolygonObject(std::vector<Polygon>& polygons) : _sphere(CalculateBoundingSphere())
 {
     for (const auto& polygon : polygons) {
         // Создание триугольников из полигонов
@@ -50,9 +53,10 @@ PolygonObject::PolygonObject(std::vector<Polygon>& polygons)
                 polygon.x3, polygon.y3, polygon.z3,
                 polygon.color)); // Используем цвет из полигона
     }
+    _sphere = CalculateBoundingSphere();
 }
 
-PolygonObject::PolygonObject(std::vector<std::vector<double>>& l)
+PolygonObject::PolygonObject(std::vector<std::vector<double>>& l) : _sphere(CalculateBoundingSphere())
 {
     for (const auto& vec : l) {
 
@@ -69,6 +73,7 @@ PolygonObject::PolygonObject(std::vector<std::vector<double>>& l)
                 v2[0], v2[1], v2[2],
                 color));
     }
+    _sphere = CalculateBoundingSphere();
 }
 
 PolygonObject::~PolygonObject()
