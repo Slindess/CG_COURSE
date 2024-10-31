@@ -7,6 +7,7 @@
 #include "../Objects/Concrete/PolygonObject.h"
 #include "../DrawAdapter/Concrete/CarcasDrawAdapter.h"
 #include "../DrawAdapter/Concrete/PolygonDrawAdapter.h"
+#include "../Generators/MountainGenerator.h"
 #include <iostream>
 
 std::shared_ptr<PolygonObject> generateFloor(double startX, double endX, double startZ, double endZ, double step) {
@@ -40,7 +41,8 @@ std::shared_ptr<PolygonObject> generateFloor(double startX, double endX, double 
 Manager::Manager()
 {
     _scene = std::make_shared<Scene>();
-    _camera = std::make_shared<Camera>(25.0, 15.0, -210.0, 25.0, 15.0, 50.0);
+    double cam_screen = 40.0;
+    _camera = std::make_shared<Camera>(25.0, 15.0, cam_screen - 265, 25.0, 15.0, cam_screen);
     /*
     _solution = std::make_shared<SolutionImpl<BaseObject, BaseDrawAdapter>>(
             std::initializer_list<std::pair<BaseObject, BaseDrawAdapter>>{
@@ -138,7 +140,7 @@ void Manager::Manage()
             }
 
     );
-    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(ox));
+    //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(ox));
     /*
     std::shared_ptr<PolygonObject> oxx = std::make_shared<PolygonObject>(
             std::initializer_list<std::initializer_list<double>>{
@@ -164,40 +166,25 @@ void Manager::Manage()
     _scene->addObject(std::dynamic_pointer_cast<BaseObject>(oxx));
     */
 
-    /*
-    std::shared_ptr<PolygonObject> floor = std::make_shared<PolygonObject>(
+    std::shared_ptr<PolygonObject> oxo = std::make_shared<PolygonObject>(
             std::initializer_list<std::initializer_list<double>>{
-                    // Пример сетки 4x4
-                    // Первая клетка: треугольники белого цвета
-                    {0.0, 0.0, 0.0, 10.0, 0.0, 0.0, 0.0, 0.0, 10.0, 255, 255, 255}, // Треугольник 1
-                    {10.0, 0.0, 0.0, 10.0, 0.0, 10.0, 0.0, 0.0, 10.0, 255, 255, 255}, // Треугольник 2
-
-                    // Вторая клетка: треугольники синего цвета
-                    {10.0, 0.0, 0.0, 20.0, 0.0, 0.0, 10.0, 0.0, 10.0, 0, 0, 255}, // Треугольник 3
-                    {20.0, 0.0, 0.0, 20.0, 0.0, 10.0, 10.0, 0.0, 10.0, 0, 0, 255}, // Треугольник 4
-
-
-                    // Третья клетка: белые треугольники
-                    {0.0, 0.0, 10.0, 10.0, 0.0, 10.0, 0.0, 0.0, 20.0, 255, 255, 255}, // Треугольник 5
-                    {10.0, 0.0, 10.0, 10.0, 0.0, 20.0, 0.0, 0.0, 20.0, 255, 255, 255}, // Треугольник 6
-
-                    // Четвертая клетка: синие треугольники
-                    {10.0, 0.0, 10.0, 20.0, 0.0, 10.0, 10.0, 0.0, 20.0, 0, 0, 255}, // Треугольник 7
-                    {20.0, 0.0, 10.0, 20.0, 0.0, 20.0, 10.0, 0.0, 20.0, 0, 0, 255}, // Треугольник 8
-
-
+                    // Преобразование первой стороны куба
+                    {-100.0, 0, -100.0, 100.0, 0.0, -100.0, 0.0, 0.0, 100.0, 55, 66, 57}, // Треугольник 11
             }
+
     );
-    */
-    // Добавляем объект пола на сцену
-    //    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(floor));
+    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(oxo));
 
 
-    std::shared_ptr<PolygonObject> floor = generateFloor(-100.0, 100.0, -30.0, 30.0, 10.0);
-    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(floor));
+    //std::shared_ptr<PolygonObject> floor = generateFloor(-100.0, 100.0, -30.0, 30.0, 10.0);
+    //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(floor));
+    std::shared_ptr<PerlinNoiseMountainGenerator> g = std::make_shared<PerlinNoiseMountainGenerator>(10, 10, 20);
+    std::shared_ptr<PolygonObject> mountain = g->generateMountain();
+    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(mountain));
 
     std::shared_ptr<PolygonDrawAdapter> adapter = std::make_shared<PolygonDrawAdapter>(_drawer);
     adapter->Draw(_scene, _camera);
+    
 }
 
 

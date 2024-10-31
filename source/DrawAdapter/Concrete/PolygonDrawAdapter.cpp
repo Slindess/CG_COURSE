@@ -144,6 +144,7 @@ void ProcessRays(int startX, int endX, const std::shared_ptr<Scene>& scene, cons
             for (const auto& object : scene->objects)
             {
 
+                
                 double sphereT;
                 auto objpolygon = std::dynamic_pointer_cast<PolygonObject>(object);
                 auto sphere = objpolygon->Sphere();
@@ -153,7 +154,7 @@ void ProcessRays(int startX, int endX, const std::shared_ptr<Scene>& scene, cons
                     continue; // Если нет пересечения со сферой, перейти к следующему объекту
                 }
 
-
+                
                 for (const auto& component : object->GetComponents())
                 {
                     auto polygon = std::dynamic_pointer_cast<Polygon>(component);
@@ -324,6 +325,7 @@ void PolygonDrawAdapter::Draw(std::shared_ptr<Scene> scene, std::shared_ptr<Came
     }
     _drawer->setColor(0, 0, 255);
     _drawer->drawPoint(0, 0);
+    _drawer->drawPoint(camera->width / 2 - 10, camera->height / 2 - 10);
 }
 
 

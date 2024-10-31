@@ -31,6 +31,7 @@ set(SOURCE_FILES main.cpp MainWindow.cpp Drawer/QtDrawer.cpp
         DrawAdapter/Concrete/PolygonDrawAdapter.h DrawAdapter/Concrete/PolygonDrawAdapter.cpp
         Scene/Scene.cpp Scene/Scene.h
         Light/Light.h
+        Generators/MountainGenerator.h Generators/MountainGenerator.cpp
         )
 
 # Укажите исполняемый файл и исходные файлы
