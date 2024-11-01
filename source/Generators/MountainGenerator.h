@@ -10,13 +10,13 @@ class PerlinNoiseMountainGenerator {
 public:
     PerlinNoiseMountainGenerator(int gridSize, int noiseSize, double scale)
         : _gridSize(gridSize), _noiseSize(noiseSize), _scale(scale) {
-        initializeGradientGrid();
-        //island();
+        //initializeGradientGrid();
+        island();
     }
 
     std::shared_ptr<PolygonObject> generateMountain() {
         std::vector<Polygon> polygons;
-        double rs = 1.2;
+        double rs = 2;
         std::vector<std::vector<double>> heights(_noiseSize * 10 / rs, std::vector<double>(_noiseSize * 10 /rs));
 
             // Генерация карты шума
@@ -25,7 +25,7 @@ public:
                 double x = i;
                 double y = j;
             
-                double height = (generateNoise(x, y) + 1) * 30.0; // Смещаем и масштабируем высоту
+                double height = (generateNoise(x, y) + 1) * 40.0; // Смещаем и масштабируем высоту
                 //std::cout << i / 0.1 << " " << j / 0.1 << " " << height << "\n";
                 // Сохраняем высоту в двумерном массиве
                 heights[i / (0.1 * rs)][j / (0.1 * rs)] = height; // Используем i и j для индексации
@@ -44,8 +44,8 @@ public:
         }
 
         // Перебор высот для создания полигонов
-        for (int i = 21; i < heights.size() - 11; i++) {
-            for (int j = 21; j < heights[i].size() - 11; j++) {
+        for (int i = 11; i < heights.size() - 11; i++) {
+            for (int j = 11; j < heights[i].size() - 11; j++) {
                 double x1 = (double)i * 0.1 * rs;
                 double y1 = (double)j * 0.1 * rs;
                 double h1 = heights[i][j];           // Вершина 1
@@ -54,22 +54,44 @@ public:
                 double h3 = heights[i + 1][j];       // Вершина 3
                 double h4 = heights[i + 1][j + 1];   // Вершина 4
 
-                x1 *= 4;
-                y1 *= 4;
-                x1 -= 10;
-                y1 -= 10;
-                double x2 = x1 + 0.7;
-                double y2 = y1 + 0.7;
+                if (h1 <= 0 || h2 <= 0 || h3 <= 0 || h4 <= 0) continue;
+                double x2 = (double)i * 0.1 * rs;
+                double y2 = (double)(j + 1) * 0.1 * rs;
+                double x3 = (double)(i + 1) * 0.1 * rs;
+                double y3 = (double)j * 0.1 * rs;
+                double x4 = (double)(i + 1) * 0.1 * rs;
+                double y4 = (double)(j + 1)* 0.1 * rs;
+
+                x1 *= 10;
+                y1 *= 10;
+                x2 *= 10;
+                y2 *= 10;
+                x3 *= 10;
+                y3 *= 10;
+                x4 *= 10;
+                y4 *= 10;
+                x1 -= 40;
+                y1 -= 40;
+                x2 -= 40;
+                y2 -= 40;
+                x3 -= 40;
+                y3 -= 40;
+                x4 -= 40;
+                y4 -= 40;
+                //double x2 = x1 + 0.7;
+                //double y2 = y1 + 0.7;
                 Color mount = {160, 161, 163};
                 Color snow = {255, 255, 255};
                 //if (h1 < 25) continue;
                 Color result = (h1 > (7.5 / 10.0) * maxHeight) ? snow : mount;
-                h1 = std::max(h1, 25.0) - 25.0;
-                h2 = std::max(h2, 25.0) - 25.0;
-                h3 = std::max(h3, 25.0) - 25.0;
-                h4 = std::max(h4, 25.0) - 25.0;
-                polygons.emplace_back(h1, y1, x1, h2, y1, x2, h3, y1, x1, result);
-                polygons.emplace_back(h2, y1, x2, h4, y2, x2, h3, y2, x1, result);
+                h1 = std::max(h1, h1) - 32.0;
+                h2 = std::max(h2, h2) - 32.0;
+                h3 = std::max(h3, h3) - 32.0;
+                h4 = std::max(h4, h4) - 32.0;
+                polygons.emplace_back(h1, y1, x1, h2, y2, x2, h3, y3, x3, result);
+                polygons.emplace_back(h4, y4, x4, h2, y2, x2, h3, y3, x3, result);
+                //polygons.emplace_back(h1, y1, x1, h2, y1, x2, h3, y1, x1, result);
+                //polygons.emplace_back(h2, y1, x2, h4, y2, x2, h3, y2, x1, result);
 
 
             }

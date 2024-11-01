@@ -50,6 +50,18 @@ Manager::Manager()
             }
     );
      */
+    std::shared_ptr<PerlinNoiseMountainGenerator> g = std::make_shared<PerlinNoiseMountainGenerator>(10, 10, 20);
+    std::shared_ptr<PolygonObject> mountain = g->generateMountain();
+    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(mountain));
+
+    std::shared_ptr<PolygonObject> oxo = std::make_shared<PolygonObject>(
+        std::initializer_list<std::initializer_list<double>>{
+                // Преобразование первой стороны куба
+                {-100.0, 0, -100.0, 100.0, 0.0, -100.0, 0.0, 0.0, 100.0, 66, 66, 66}, // Треугольник 11
+        }
+
+    );
+    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(oxo));
 }
 
 void Manager::SetDrawer(std::shared_ptr<QtDrawer> drawer)
@@ -115,7 +127,7 @@ void Manager::CamYawRight()
 
 void Manager::Manage()
 {
-    _scene->ClearScene();
+    //_scene->ClearScene();
     setInfo();
 
     std::shared_ptr<PolygonObject> ox = std::make_shared<PolygonObject>(
@@ -141,30 +153,7 @@ void Manager::Manage()
 
     );
     //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(ox));
-    /*
-    std::shared_ptr<PolygonObject> oxx = std::make_shared<PolygonObject>(
-            std::initializer_list<std::initializer_list<double>>{
-                    // Преобразование первой стороны куба
-                    {0.0, 20.0, 10.0, 10.0, 20.0, 10.0, 0.0, 30.0, 10.0, 188, 245, 103}, // Треугольник 11
-                    {10.0, 20.0, 10.0, 10.0, 30.0, 10.0, 0.0, 30.0, 10.0, 188, 245, 103},
-                    {0.0, 20.0, 0.0, 10.0, 20.0, 0.0, 0.0, 30.0, 0.0, 188, 245, 103}, // Треугольник 1
-                    {10.0, 20.0, 0.0, 10.0, 30.0, 0.0, 0.0, 30.0, 0.0, 188, 245, 103}, // Треугольник 2
-                    // Преобразование второй стороны куба
-                    {0.0, 20.0, 0.0, 0.0, 20.0, 10.0, 0.0, 30.0, 0.0, 188, 245, 103}, // Треугольник 3
-                    {0.0, 30.0, 0.0, 0.0, 20.0, 10.0, 0.0, 30.0, 10.0, 188, 245, 103}, // Треугольник 4
-                    // Преобразование третьей стороны куба
-                    {0.0, 20.0, 0.0, 10.0, 20.0, 0.0, 0.0, 20.0, 10.0, 188, 245, 103}, // Треугольник 5
-                    {10.0, 20.0, 0.0, 10.0, 20.0, 10.0, 0.0, 20.0, 10.0, 188, 245, 103}, // Треугольник 6
-                    // Преобразование четвертой стороны куба
-                    {10.0, 20.0, 0.0, 10.0, 30.0, 0.0, 10.0, 20.0, 10.0, 188, 245, 103}, // Треугольник 7
-                    {10.0, 30.0, 0.0, 10.0, 30.0, 10.0, 10.0, 20.0, 10.0, 188, 245, 103}, // Треугольник 8
-                    // Преобразование пятой стороны куба
-                    {0.0, 30.0, 0.0, 10.0, 30.0, 0.0, 0.0, 30.0, 10.0, 188, 245, 103}, // Треугольник 9
-                    {10.0, 30.0, 0.0, 10.0, 30.0, 10.0, 0.0, 30.0, 10.0, 188, 245, 103} // Треугольник 10
-            }
-    );
-    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(oxx));
-    */
+
 
     std::shared_ptr<PolygonObject> oxo = std::make_shared<PolygonObject>(
             std::initializer_list<std::initializer_list<double>>{
@@ -173,14 +162,14 @@ void Manager::Manage()
             }
 
     );
-    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(oxo));
+    //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(oxo));
 
 
     //std::shared_ptr<PolygonObject> floor = generateFloor(-100.0, 100.0, -30.0, 30.0, 10.0);
     //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(floor));
-    std::shared_ptr<PerlinNoiseMountainGenerator> g = std::make_shared<PerlinNoiseMountainGenerator>(10, 10, 20);
-    std::shared_ptr<PolygonObject> mountain = g->generateMountain();
-    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(mountain));
+    //std::shared_ptr<PerlinNoiseMountainGenerator> g = std::make_shared<PerlinNoiseMountainGenerator>(10, 10, 20);
+    //std::shared_ptr<PolygonObject> mountain = g->generateMountain();
+    //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(mountain));
 
     std::shared_ptr<PolygonDrawAdapter> adapter = std::make_shared<PolygonDrawAdapter>(_drawer);
     adapter->Draw(_scene, _camera);
