@@ -38,7 +38,7 @@ private:
     std::shared_ptr<Camera> _camera;
     //std::shared_ptr<SolutionImpl<BaseObject, BaseDrawAdapter>> _solution;
 
-    void setInfo();
+    void setInfo(bool on);
 };
 
 

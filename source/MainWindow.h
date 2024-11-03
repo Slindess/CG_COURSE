@@ -10,7 +10,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include "Drawer/QtDrawer.h"
-#include "ui_mainwindow.h"
+#include "ui_mainWindow.h"
 #include "Manager/Manager.h"
 
 class MainWindow : public QMainWindow

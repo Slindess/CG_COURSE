@@ -112,171 +112,177 @@ inline bool RayIntersectsTriangle(
 PolygonDrawAdapter::PolygonDrawAdapter(std::shared_ptr<QtDrawer> drawer) : _drawer(drawer)
 {}
 
+bool CheckShadow(std::vector<double> &lightDir, std::vector<double> &intersectionPoint, const std::shared_ptr<Scene>& scene)
+{
+    std::vector<double> shadowRayOrigin = intersectionPoint;
+    std::vector<double> shadowRayDir = { lightDir[0], lightDir[1], lightDir[2] };
 
-void ProcessRays(int startX, int endX, const std::shared_ptr<Scene>& scene, const std::shared_ptr<Camera>& camera, std::shared_ptr<QtDrawer> drawer, std::vector<std::vector<Color>> &buff)
+    bool isInShadow = false;
+
+    // Проверяем пересечение с объектами сцены для shadow-ray
+
+    for (const auto& shadowObject : scene->objects) {
+        for (const auto& shadowComponent : shadowObject->GetComponents()) {
+            auto shadowPolygon = std::dynamic_pointer_cast<Polygon>(shadowComponent);
+            if (shadowPolygon) {
+                double shadowT;
+                std::vector<double> shadowIntersectionPoint;
+                if (RayIntersectsTriangle(shadowRayOrigin, shadowRayDir, *shadowPolygon, 0.001, &shadowT, shadowIntersectionPoint))
+                {
+                    isInShadow = true;
+                    break;
+                }
+            }
+        }
+        if (isInShadow)
+            break;
+    }
+
+    return isInShadow;
+}
+
+void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std::shared_ptr<Camera>& camera, std::shared_ptr<QtDrawer> drawer, std::vector<std::vector<Color>> &buff)
 {
     LightSource lightSource(100.0, -50.0, 10.0); // Источник света
 
-    // Задаём параметры для specular (зеркальных бликов)
     double specularExponent = 5.0;  // Определяет "резкость" бликов
     double specularStrength = 0.5;   // Влияние specular составляющей
+    
 
+    std::vector<double> rayOrigin = { camera->x_view, camera->y_view, camera->z_view };
+
+    double physX = camera->x_screen + (x - camera->width / 2);
+    double physY = camera->y_screen + (y - camera->height / 2);
+    double physZ = camera->z_screen;
+    std::vector<double> rayDir = { physX - camera->x_view, physY - camera->y_view, physZ - camera->z_view };
+    double magnitude = sqrt(rayDir[0] * rayDir[0] + rayDir[1] * rayDir[1] + rayDir[2] * rayDir[2]);
+
+    rayDir[0] /= magnitude;
+    rayDir[1] /= magnitude;
+    rayDir[2] /= magnitude;
+
+    double t0 = (camera->z_view - rayOrigin[2]) / rayDir[2];
+    double tmin = 10000.0;
+    double t = 0.0;
+
+    for (const auto& object : scene->objects)
+    {
+        double sphereT;
+        auto objpolygon = std::dynamic_pointer_cast<PolygonObject>(object);
+        auto sphere = objpolygon->Sphere();
+
+        if (!sphere.Intersects(rayOrigin, rayDir, sphereT))
+        {
+            continue; // Если нет пересечения со сферой, перейти к следующему объекту
+        }
+
+        
+        for (const auto& component : object->GetComponents())
+        {
+            auto polygon = std::dynamic_pointer_cast<Polygon>(component);
+            if (!polygon) continue;
+
+            std::vector<double> intersectionPoint;
+            if (sphereT > tmin) break;  // ОПАСНАЯ ТЕМА
+            if (!RayIntersectsTriangle(rayOrigin, rayDir, *polygon, t0, &t, intersectionPoint)) continue;
+            
+            if (t > tmin)
+                break;
+
+            tmin = t;
+            double imageX = physX;
+            double imageY = physY;
+
+            Color illuminatedColor = polygon->color;
+
+            std::vector<double> v0 = { polygon->x1, polygon->y1, polygon->z1 };
+            std::vector<double> v1 = { polygon->x2, polygon->y2, polygon->z2 };
+            std::vector<double> v2 = { polygon->x3, polygon->y3, polygon->z3 };
+
+            // Вычисляем векторы ребер
+            std::vector<double> edge1 = { v1[0] - v0[0], v1[1] - v0[1], v1[2] - v0[2] };
+            std::vector<double> edge2 = { v2[0] - v0[0], v2[1] - v0[1], v2[2] - v0[2] };
+
+            // Вычисляем нормаль полигона
+            std::vector<double> normal = {
+                    edge1[1] * edge2[2] - edge1[2] * edge2[1],
+                    edge1[2] * edge2[0] - edge1[0] * edge2[2],
+                    edge1[0] * edge2[1] - edge1[1] * edge2[0]
+            };
+
+            // Нормализуем нормаль
+            double normMagnitude = sqrt(normal[0] * normal[0] + normal[1] * normal[1] + normal[2] * normal[2]);
+            if (normMagnitude > 0)
+            {
+                normal[0] /= normMagnitude;
+                normal[1] /= normMagnitude;
+                normal[2] /= normMagnitude;
+            }
+
+            // Направление света
+            std::vector<double> lightDir = lightSource.getDirection();
+            double lightMagnitude = sqrt(lightDir[0] * lightDir[0] + lightDir[1] * lightDir[1] + lightDir[2] * lightDir[2]);
+            lightDir[0] /= lightMagnitude;
+            lightDir[1] /= lightMagnitude;
+            lightDir[2] /= lightMagnitude;
+
+            // Рассчитываем интенсивность света (diffuse)
+            double dotProduct = normal[0] * lightDir[0] + normal[1] * lightDir[1] + normal[2] * lightDir[2];
+            double intensity = std::max(0.0, dotProduct);
+
+            // Устанавливаем минимальный уровень освещенности
+            double minIntensity = 0.4;
+            double diffuseIntensity = std::max(intensity, minIntensity);
+            
+            // Вычисляем отражённое направление (reflectDir)
+            std::vector<double> reflectDir = {
+                    2 * dotProduct * normal[0] - lightDir[0],
+                    2 * dotProduct * normal[1] - lightDir[1],
+                    2 * dotProduct * normal[2] - lightDir[2]
+            };
+
+            // Направление взгляда (направление на камеру)
+            std::vector<double> viewDir = { -rayDir[0], -rayDir[1], -rayDir[2] };
+
+            // Вычисляем specular интенсивность (блики)
+            double reflectDotView = std::max(0.0, reflectDir[0] * viewDir[0] + reflectDir[1] * viewDir[1] + reflectDir[2] * viewDir[2]);
+            double specularIntensity = pow(reflectDotView, specularExponent) * specularStrength;
+
+
+            if (CheckShadow(lightDir, intersectionPoint, scene))
+            {
+                diffuseIntensity *= 0.5;  // Слабая освещённость из-за тени
+                specularIntensity = 0.0;  // Отсутствие бликов в тени
+            }
+
+            // Общая освещённость с учётом diffuse и specular
+            illuminatedColor.r = std::min(255.0, illuminatedColor.r * diffuseIntensity + 255 * specularIntensity);
+            illuminatedColor.g = std::min(255.0, illuminatedColor.g * diffuseIntensity + 255 * specularIntensity);
+            illuminatedColor.b = std::min(255.0, illuminatedColor.b * diffuseIntensity + 255 * specularIntensity);
+
+
+            // Заполняем буфер кадра
+            // Синхронизированный доступ к буферу
+            {
+                std::lock_guard<std::mutex> lock(bufferMutex);
+                //std::unique_lock<std::mutex> lock(bufferMutex);
+                if (imageX + camera->width / 2 >= 0 && imageX + camera->width / 2 < buff.size() &&
+                    imageY + camera->height / 2 >= 0 && imageY + camera->height / 2 < buff[0].size()) {
+                    buff[imageX + camera->width / 2][imageY + camera->height / 2] = illuminatedColor;
+                }
+                //lock.unlock();
+            }
+        }
+    }
+}
+
+void ProcessRays(int startX, int endX, const std::shared_ptr<Scene>& scene, const std::shared_ptr<Camera>& camera, std::shared_ptr<QtDrawer> drawer, std::vector<std::vector<Color>> &buff)
+{
     for (int x = startX; x < endX; ++x)
     {
         for (int y = 0; y < camera->height; ++y)
         {
-            std::vector<double> rayOrigin = { camera->x_view, camera->y_view, camera->z_view };
-
-            double physX = camera->x_screen + (x - camera->width / 2);
-            double physY = camera->y_screen + (y - camera->height / 2);
-            double physZ = camera->z_screen;
-            std::vector<double> rayDir = { physX - camera->x_view, physY - camera->y_view, physZ - camera->z_view };
-            double magnitude = sqrt(rayDir[0] * rayDir[0] + rayDir[1] * rayDir[1] + rayDir[2] * rayDir[2]);
-
-            rayDir[0] /= magnitude;
-            rayDir[1] /= magnitude;
-            rayDir[2] /= magnitude;
-
-            double t0 = (camera->z_view - rayOrigin[2]) / rayDir[2];
-            double tmin = 10000.0;
-            double t = 0.0;
-
-            for (const auto& object : scene->objects)
-            {
-
-                
-                double sphereT;
-                auto objpolygon = std::dynamic_pointer_cast<PolygonObject>(object);
-                auto sphere = objpolygon->Sphere();
-
-                if (!sphere.Intersects(rayOrigin, rayDir, sphereT))
-                {
-                    continue; // Если нет пересечения со сферой, перейти к следующему объекту
-                }
-
-                
-                for (const auto& component : object->GetComponents())
-                {
-                    auto polygon = std::dynamic_pointer_cast<Polygon>(component);
-                    if (polygon)
-                    {
-                        std::vector<double> intersectionPoint;
-                        if (sphereT > tmin) break;  // ОПАСНАЯ ТЕМА
-                        if (RayIntersectsTriangle(rayOrigin, rayDir, *polygon, t0, &t, intersectionPoint))
-                        {
-                            if (t > tmin)
-                                break;
-
-                            tmin = t;
-                            double imageX = physX;
-                            double imageY = physY;
-
-                            Color illuminatedColor = polygon->color;
-
-                            std::vector<double> v0 = { polygon->x1, polygon->y1, polygon->z1 };
-                            std::vector<double> v1 = { polygon->x2, polygon->y2, polygon->z2 };
-                            std::vector<double> v2 = { polygon->x3, polygon->y3, polygon->z3 };
-
-                            // Вычисляем векторы ребер
-                            std::vector<double> edge1 = { v1[0] - v0[0], v1[1] - v0[1], v1[2] - v0[2] };
-                            std::vector<double> edge2 = { v2[0] - v0[0], v2[1] - v0[1], v2[2] - v0[2] };
-
-                            // Вычисляем нормаль полигона
-                            std::vector<double> normal = {
-                                    edge1[1] * edge2[2] - edge1[2] * edge2[1],
-                                    edge1[2] * edge2[0] - edge1[0] * edge2[2],
-                                    edge1[0] * edge2[1] - edge1[1] * edge2[0]
-                            };
-
-                            // Нормализуем нормаль
-                            double normMagnitude = sqrt(normal[0] * normal[0] + normal[1] * normal[1] + normal[2] * normal[2]);
-                            if (normMagnitude > 0)
-                            {
-                                normal[0] /= normMagnitude;
-                                normal[1] /= normMagnitude;
-                                normal[2] /= normMagnitude;
-                            }
-
-                            // Направление света
-                            std::vector<double> lightDir = lightSource.getDirection();
-                            double lightMagnitude = sqrt(lightDir[0] * lightDir[0] + lightDir[1] * lightDir[1] + lightDir[2] * lightDir[2]);
-                            lightDir[0] /= lightMagnitude;
-                            lightDir[1] /= lightMagnitude;
-                            lightDir[2] /= lightMagnitude;
-
-                            // Рассчитываем интенсивность света (diffuse)
-                            double dotProduct = normal[0] * lightDir[0] + normal[1] * lightDir[1] + normal[2] * lightDir[2];
-                            double intensity = std::max(0.0, dotProduct);
-
-                            // Устанавливаем минимальный уровень освещенности
-                            double minIntensity = 0.4;
-                            double diffuseIntensity = std::max(intensity, minIntensity);
-                            //double diffuseIntensity = intensity + minIntensity;
-                            // Вычисляем отражённое направление (reflectDir)
-                            std::vector<double> reflectDir = {
-                                    2 * dotProduct * normal[0] - lightDir[0],
-                                    2 * dotProduct * normal[1] - lightDir[1],
-                                    2 * dotProduct * normal[2] - lightDir[2]
-                            };
-
-                            // Направление взгляда (направление на камеру)
-                            std::vector<double> viewDir = { -rayDir[0], -rayDir[1], -rayDir[2] };
-
-                            // Вычисляем specular интенсивность (блики)
-                            double reflectDotView = std::max(0.0, reflectDir[0] * viewDir[0] + reflectDir[1] * viewDir[1] + reflectDir[2] * viewDir[2]);
-                            double specularIntensity = pow(reflectDotView, specularExponent) * specularStrength;
-
-                            std::vector<double> shadowRayOrigin = intersectionPoint;
-                            std::vector<double> shadowRayDir = { lightDir[0], lightDir[1], lightDir[2] };
-
-                            bool isInShadow = false;
-
-                            // Проверяем пересечение с объектами сцены для shadow-ray
-
-                            for (const auto& shadowObject : scene->objects) {
-                                for (const auto& shadowComponent : shadowObject->GetComponents()) {
-                                    auto shadowPolygon = std::dynamic_pointer_cast<Polygon>(shadowComponent);
-                                    if (shadowPolygon) {
-                                        double shadowT;
-                                        std::vector<double> shadowIntersectionPoint;
-                                        if (RayIntersectsTriangle(shadowRayOrigin, shadowRayDir, *shadowPolygon, 0.001, &shadowT, shadowIntersectionPoint)) {
-                                            // Точка пересечения с другим объектом найдена - тень
-                                            isInShadow = true;
-                                            break;
-                                        }
-                                    }
-                                }
-                                if (isInShadow)
-                                    break;
-                            }
-
-                            // Если точка в тени, уменьшаем освещенность (либо полностью обнуляем)
-                            if (isInShadow) {
-                                diffuseIntensity *= 0.5;  // Слабая освещённость из-за тени
-                                specularIntensity = 0.0;  // Отсутствие бликов в тени
-                            }
-
-                            // Общая освещённость с учётом diffuse и specular
-                            illuminatedColor.r = std::min(255.0, illuminatedColor.r * diffuseIntensity + 255 * specularIntensity);
-                            illuminatedColor.g = std::min(255.0, illuminatedColor.g * diffuseIntensity + 255 * specularIntensity);
-                            illuminatedColor.b = std::min(255.0, illuminatedColor.b * diffuseIntensity + 255 * specularIntensity);
-
-
-                            // Заполняем буфер кадра
-                            // Синхронизированный доступ к буферу
-                            {
-                                std::lock_guard<std::mutex> lock(bufferMutex);
-                                //std::unique_lock<std::mutex> lock(bufferMutex);
-                                if (imageX + camera->width / 2 >= 0 && imageX + camera->width / 2 < buff.size() &&
-                                    imageY + camera->height / 2 >= 0 && imageY + camera->height / 2 < buff[0].size()) {
-                                    buff[imageX + camera->width / 2][imageY + camera->height / 2] = illuminatedColor;
-                                }
-                                //lock.unlock();
-                            }
-                        }
-                    }
-                }
-            }
+            ProccessPixel(x, y, scene, camera, drawer, buff);
         }
     }
 }
@@ -289,7 +295,7 @@ void PolygonDrawAdapter::Draw(std::shared_ptr<Scene> scene, std::shared_ptr<Came
     Color backgroundColor(-1, -1, -1);
     std::vector<std::vector<Color>> buff(camera->height, std::vector<Color>(camera->width, backgroundColor));  // БУФЕР КАДРА
 
-    const int numThreads = 8;
+    const int numThreads = 16;
     std::vector<std::thread> threads;
 
     int widthPerThread = camera->width / numThreads;
