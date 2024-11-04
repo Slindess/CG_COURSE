@@ -16,7 +16,7 @@ public:
 
     std::shared_ptr<PolygonObject> generateMountain() {
         std::vector<Polygon> polygons;
-        double rs = 2;
+        double rs = 1.7;
         std::vector<std::vector<double>> heights(_noiseSize * 10 / rs, std::vector<double>(_noiseSize * 10 /rs));
 
             // Генерация карты шума

@@ -15,6 +15,138 @@
 // Определяем мьютекс для синхронизации
 std::mutex bufferMutex;
 
+double calculateAngle(const std::vector<double>& a, const std::vector<double>& b) {
+    // Скалярное произведение векторов
+    double dotProduct = a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+
+    // Длины векторов
+    double lengthA = std::sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+    double lengthB = std::sqrt(b[0] * b[0] + b[1] * b[1] + b[2] * b[2]);
+
+    // Защита от деления на ноль
+    if (lengthA == 0 || lengthB == 0) {
+        return 0.0;  // Векторы нулевой длины
+    }
+
+    // Косинус угла
+    double cosTheta = dotProduct / (lengthA * lengthB);
+
+    // Угол в радианах
+    return std::abs(std::acos(cosTheta));
+}
+
+double calculateLength(const std::vector<double>& a)
+{
+    return std::sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+}
+
+std::vector<double> normalizee(const std::vector<double>& vec) {
+    double length = std::sqrt(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
+    if (length > 0) {
+        return { vec[0] / length, vec[1] / length, vec[2] / length };
+    }
+    return vec; // Если длина нулевая, возвращаем нулевой вектор
+}
+
+
+std::vector<double> interpolateMy(const std::vector<double>& p,
+                     const std::vector<double>& V1, 
+                     const std::vector<double>& V2,
+                     const std::vector<double>& V3,
+                     const std::vector<double>& normalV1,
+                     const std::vector<double>& normalV2, 
+                     const std::vector<double>& normalV3)
+{
+    // Вектор от V1 к p
+    std::vector<double> V1P = {p[0] - V1[0], p[1] - V1[1], p[2] - V1[2]};
+    std::vector<double> V12 = {V2[0] - V1[0], V2[1] - V1[1], V2[2] - V1[2]};
+    std::vector<double> V13 = {V3[0] - V1[0], V3[1] - V1[1], V3[2] - V1[2]};
+    std::vector<double> V23 = {V2[0] - V3[0], V2[1] - V3[1], V2[2] - V3[2]};
+    std::vector<double> V3P = {p[0] - V3[0], p[1] - V3[1], p[2] - V3[2]};
+    
+    // Длины
+    double lenV12 = calculateLength(V12);
+    double lenV13 = calculateLength(V13);
+    double lenV23 = calculateLength(V23);
+    
+    // Вычисляем угол между V12 и V1P
+    double angle12 = calculateAngle(V12, V1P);
+    double l0 = std::cos(angle12) * calculateLength(V1P);
+    double u = l0 / lenV12;
+
+    // Интерполяция нормали между normalV1 и normalV2
+    std::vector<double> normalV1V2 = {
+        u * normalV1[0] + (1 - u) * normalV2[0],
+        u * normalV1[1] + (1 - u) * normalV2[1],
+        u * normalV1[2] + (1 - u) * normalV2[2]
+    };
+
+    // Вычисляем угол между V13 и V1P
+    double angle13 = calculateAngle(V23, V3P);
+    double l1 = std::cos(angle13) * calculateLength(V3P);
+    double v = l1 / lenV23;
+
+    // Интерполяция нормали между normalV2 и normalV3
+    std::vector<double> normalV2V3 = {
+        v * normalV2[0] + (1 - v) * normalV3[0],
+        v * normalV2[1] + (1 - v) * normalV3[1],
+        v * normalV2[2] + (1 - v) * normalV3[2]
+    };
+
+    // Финальная интерполяция между normalV1V2 и normalV2V3
+    std::vector<double> interpolatedNormal = {
+        (normalV1V2[0] + normalV2V3[0]) / 2,
+        (normalV1V2[1] + normalV2V3[1]) / 2,
+        (normalV1V2[2] + normalV2V3[2]) / 2
+    };
+
+    // Возвращаем нормализованную интерполированную нормаль
+    return normalizee(interpolatedNormal);
+}
+
+double interpolateMyI(const std::vector<double>& p,
+                      const std::vector<double>& V1, 
+                      const std::vector<double>& V2,
+                      const std::vector<double>& V3,
+                      const double iV1,
+                      const double iV2, 
+                      const double iV3)
+{
+    // Вектор от V1 к p
+    std::vector<double> V1P = {p[0] - V1[0], p[1] - V1[1], p[2] - V1[2]};
+    std::vector<double> V12 = {V2[0] - V1[0], V2[1] - V1[1], V2[2] - V1[2]};
+    std::vector<double> V13 = {V3[0] - V1[0], V3[1] - V1[1], V3[2] - V1[2]};
+    std::vector<double> V23 = {V2[0] - V3[0], V2[1] - V3[1], V2[2] - V3[2]};
+    std::vector<double> V3P = {p[0] - V3[0], p[1] - V3[1], p[2] - V3[2]};
+    
+    // Длины
+    double lenV12 = calculateLength(V12);
+    double lenV13 = calculateLength(V13);
+    double lenV23 = calculateLength(V23);
+    
+    // Вычисляем угол между V12 и V1P
+    double angle12 = calculateAngle(V12, V1P);
+    double l0 = std::cos(angle12) * calculateLength(V1P);
+    double u =  l0 / lenV12; // Защита от деления на ноль
+
+    // Интерполяция интенсивности между iV1 и iV2
+    double iV1V2 = u * iV1 + (1 - u) * iV2;
+
+    // Вычисляем угол между V23 и V3P
+    double angle13 = calculateAngle(V23, V3P);
+    double l1 = std::cos(angle13) * calculateLength(V3P);
+    double v = l1 / lenV23; // Защита от деления на ноль
+
+    // Интерполяция интенсивности между iV2 и iV3
+    double iV2V3 = v * iV2 + (1 - v) * iV3;
+
+    // Финальная интерполяция между iV1V2 и iV2V3
+    double interpolatedIntensity = (iV1V2 + iV2V3) / 2;
+
+    // Возвращаем интерполированную интенсивность
+    return interpolatedIntensity;
+}
+
 std::vector<double> addThreeVectorss(const std::vector<double>& v1, const std::vector<double>& v2, const std::vector<double>& v3) {
     if (v1.size() != v2.size() || v1.size() != v3.size()) {
         throw std::invalid_argument("Все векторы должны быть одинакового размера");
@@ -79,7 +211,7 @@ std::vector<double> barycentricCoords(const std::vector<double>& p,
     double w = (d00 * d21 - d01 * d20) / denom;
     double u = 1.0 - v - w; // u + v + w = 1
 
-    return { u, v, w };
+    return { w, u, v };
 }
 
 inline bool RayIntersectsTriangle(
@@ -197,13 +329,7 @@ bool CheckShadow(std::vector<double> &lightDir, std::vector<double> &intersectio
     return isInShadow;
 }
 
-std::vector<double> normalizee(const std::vector<double>& vec) {
-    double length = std::sqrt(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
-    if (length > 0) {
-        return { vec[0] / length, vec[1] / length, vec[2] / length };
-    }
-    return vec; // Если длина нулевая, возвращаем нулевой вектор
-}
+
 
 std::vector<double> interpolateNormals(const std::vector<double>& normalV1, 
                                        const std::vector<double>& normalV2, 
@@ -291,6 +417,7 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
             std::vector<double> normalV2 = polygon->GetVertex2Normal();
             std::vector<double> normalV3 = polygon->GetVertex3Normal();
 
+            
             // Вычисляем бариатрические координаты
             std::vector<double> baryCoords = barycentricCoords(intersectionPoint, 
                                                                 { polygon->x1, polygon->y1, polygon->z1 }, 
@@ -299,7 +426,7 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
 
 
             std::vector<double> interpolatedNormal = interpolateNormals(normalV1, normalV2, normalV3, baryCoords);
-            
+            //std::vector<double> interpolatedNormal = interpolateMy(intersectionPoint, v0, v1, v2, normalV1, normalV2, normalV3);
             std::vector<double> normal = interpolatedNormal;
 
             //std::vector<double> normal = normalizee(addThreeVectorss(normalV1, normalV2, normalV3));
@@ -326,8 +453,8 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
             }
 
             //std::vector<double> normal = normalUnique;
-            /*
-            if (polygon->color.b != 105) goto jmp;
+            
+            if (polygon->color.b != 104) goto jmp;
             std::cout << "normal1: ";
             for (const auto& value : normalV1) {
                 std::cout << value << " ";
@@ -357,7 +484,7 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
             for (const auto& value : normal) {
                 std::cout << value << " ";
             }
-            std::cout << "\n-------\n"; */
+            std::cout << "\n-------\n"; 
             // Направление света
             jmp:
             std::vector<double> lightDir = lightSource.getDirection();
@@ -373,10 +500,15 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
             if (intensity < 0 )
                 intensity *= -1;
 
+            double intensityV0 = std::abs(normalV1[0] * lightDir[0] + normalV1[1] * lightDir[1] + normalV1[2] * lightDir[2]);
+            double intensityV1 = std::abs(normalV2[0] * lightDir[0] + normalV2[1] * lightDir[1] + normalV2[2] * lightDir[2]);
+            double intensityV2 = std::abs(normalV3[0] * lightDir[0] + normalV3[1] * lightDir[1] + normalV3[2] * lightDir[2]);
+            //intensity = interpolateMyI(intersectionPoint, v0, v1, v2, intensityV0, intensityV1, intensityV2);
+
             //std::cout << dotProduct << " " << intensity << "\n";
 
             // Устанавливаем минимальный уровень освещенности
-            double minIntensity = 0.0;
+            double minIntensity = 0.1;
             double diffuseIntensity = std::max(intensity, minIntensity);
             
             // Вычисляем отражённое направление (reflectDir)
@@ -393,13 +525,13 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
             double reflectDotView = std::max(0.0, reflectDir[0] * viewDir[0] + reflectDir[1] * viewDir[1] + reflectDir[2] * viewDir[2]);
             double specularIntensity = pow(reflectDotView, specularExponent) * specularStrength;
 
-            /*
+            
             if (CheckShadow(lightDir, intersectionPoint, scene))
             {
                 diffuseIntensity *= 0.5;  // Слабая освещённость из-за тени
                 specularIntensity = 0.0;  // Отсутствие бликов в тени
             }
-            */
+            
             // Общая освещённость с учётом diffuse и specular
             illuminatedColor.r = std::min(255.0, illuminatedColor.r * diffuseIntensity + 255 * specularIntensity);
             illuminatedColor.g = std::min(255.0, illuminatedColor.g * diffuseIntensity + 255 * specularIntensity);

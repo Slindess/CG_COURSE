@@ -8,6 +8,7 @@
 #include "../DrawAdapter/Concrete/CarcasDrawAdapter.h"
 #include "../DrawAdapter/Concrete/PolygonDrawAdapter.h"
 #include "../Generators/MountainGenerator.h"
+#include <cmath>
 #include <iostream>
 
 std::shared_ptr<PolygonObject> generateFloor(double startX, double endX, double startZ, double endZ, double step) {
@@ -40,6 +41,53 @@ std::shared_ptr<PolygonObject> generateFloor(double startX, double endX, double 
 }
 
 
+std::shared_ptr<PolygonObject> generateSphere(double radius) {
+    std::vector<std::vector<double>> polygons;
+    double segments = 50;
+    double rings = 20;
+    double pi = 3.14159265358979323846;
+    double ofx = 10;
+    double ofy = 20;
+    double ofz = 20;
+
+    // Перебираем кольца (latitude)
+    for (int i = 0; i < rings; ++i) {
+        double theta1 = pi * i / rings; // Текущий угол кольца
+        double theta2 = pi * (i + 1) / rings; // Следующий угол кольца
+
+        // Координаты по высоте (y) для текущего и следующего колец
+        double y1 = radius * cos(theta1);
+        double y2 = radius * cos(theta2);
+
+        // Радиусы текущего и следующего колец
+        double radius1 = radius * sin(theta1);
+        double radius2 = radius * sin(theta2);
+
+        // Перебираем сегменты для каждого кольца (longitude)
+        for (int j = 0; j < segments; ++j) {
+            double phi1 = 2 * pi * j / segments; // Текущий угол сегмента
+            double phi2 = 2 * pi * (j + 1) / segments; // Следующий угол сегмента
+
+            // Вычисляем координаты четырех вершин
+            std::vector<double> v0 = { radius1 * cos(phi1) + ofx, y1 + ofy, radius1 * sin(phi1) + ofz };
+            std::vector<double> v1 = { radius1 * cos(phi2) + ofx, y1 + ofy, radius1 * sin(phi2) + ofz };
+            std::vector<double> v2 = { radius2 * cos(phi1) + ofx, y2 + ofy, radius2 * sin(phi1) + ofz };
+            std::vector<double> v3 = { radius2 * cos(phi2) + ofx, y2 + ofy, radius2 * sin(phi2) + ofz };
+
+            // Добавляем два треугольника для каждой ячейки
+            Color color(235, 111, 77); // Можно поменять цвет на любой желаемый
+
+            polygons.push_back({v0[0], v0[1], v0[2], v2[0], v2[1], v2[2], v1[0], v1[1], v1[2], color.r, color.g, color.b});
+            polygons.push_back({v1[0], v1[1], v1[2], v2[0], v2[1], v2[2], v3[0], v3[1], v3[2], color.r, color.g, color.b});
+        }
+    }
+
+    std::cout << "Generated " << polygons.size() << " triangles for the sphere." << "\n"; // Лог
+
+    return std::make_shared<PolygonObject>(polygons);
+}
+
+
 
 Manager::Manager()
 {
@@ -50,7 +98,7 @@ Manager::Manager()
     
     std::shared_ptr<PerlinNoiseMountainGenerator> g = std::make_shared<PerlinNoiseMountainGenerator>(10, 10, 20);
     std::shared_ptr<PolygonObject> mountain = g->generateMountain();
-    //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(mountain));
+    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(mountain));
     
 
     
@@ -62,7 +110,9 @@ Manager::Manager()
 
     );
     //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(oxo));
-    
+    //std::shared_ptr<PolygonObject> floor = generateSphere(5);
+    std::shared_ptr<PolygonObject> floor = generateSphere(5);
+    //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(floor));
 
    setInfo(true);
 }
@@ -144,7 +194,7 @@ void Manager::setInfo(bool on)
     std::shared_ptr<PolygonObject> cube = std::make_shared<PolygonObject>(
             std::initializer_list<std::initializer_list<double>>{
                     // Преобразование первой стороны куба
-                    {10.0, 0.0, 10.0, 0.0, 10.0, 10.0, 0.0, 0.0, 10.0, 245, 188, 253}, // aТреугольник 11
+                    {10.0, 0.0, 10.0, 0.0, 10.0, 10.0, 0.0, 0.0, 10.0, 245, 188, 104}, // aТреугольник 11
                     {10.0, 0.0, 10.0, 10.0, 10.0, 10.0, 0.0, 10.0, 10.0, 245, 188, 103}, // a
                     {0.0, 0.0, 0.0, 10.0, 0.0, 0.0, 0.0, 10.0, 0.0, 245, 188, 103}, // Треугольник 1
                     {10.0, 0.0, 0.0, 10.0, 10.0, 0.0, 0.0, 10.0, 0.0, 245, 188, 103}, //b Треугольник 2
@@ -155,7 +205,7 @@ void Manager::setInfo(bool on)
                     {0.0, 0.0, 0.0, 10.0, 0.0, 0.0, 0.0, 0.0, 10.0, 245, 188, 103}, // Треугольник 5
                     {10.0, 0.0, 10.0, 10.0, 0.0, 0.0, 0.0, 0.0, 10.0, 245, 188, 103}, // abТреугольник 6
                     // Преобразование четвертой стороны куба
-                    {10.0, 10.0, 0.0, 10.0, 0.0, 0.0, 10.0, 0.0, 10.0, 245, 188, 104}, //b Треугольник 7
+                    {10.0, 10.0, 0.0, 10.0, 0.0, 0.0, 10.0, 0.0, 10.0, 245, 188, 103}, //b Треугольник 7
                     {10.0, 10.0, 10.0, 10.0, 10.0, 0.0, 10.0, 0.0, 10.0, 245, 188, 103}, //b Треугольник 8
                     // Преобразование пятой стороны куба
                     {0.0, 10.0, 0.0, 10.0, 10.0, 0.0, 0.0, 10.0, 10.0, 245, 188, 103}, // Треугольник 9
@@ -163,7 +213,7 @@ void Manager::setInfo(bool on)
             }
 
     );
-    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(cube));
+    //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(cube));
 
     std::shared_ptr<PolygonObject> floor = generateFloor(-100.0, 100.0, -30.0, 30.0, 10.0);
     //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(floor));
