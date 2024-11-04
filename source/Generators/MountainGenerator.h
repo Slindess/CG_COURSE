@@ -81,7 +81,8 @@ public:
                 //double x2 = x1 + 0.7;
                 //double y2 = y1 + 0.7;
                 Color mount = {160, 161, 163};
-                Color snow = {255, 255, 255};
+                Color snow = {160, 161, 163};
+                //Color snow = {255, 255, 255};
                 //if (h1 < 25) continue;
                 Color result = (h1 > (7.5 / 10.0) * maxHeight) ? snow : mount;
                 h1 = std::max(h1, h1) - 32.0;

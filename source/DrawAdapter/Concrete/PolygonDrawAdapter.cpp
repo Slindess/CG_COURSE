@@ -15,6 +15,26 @@
 // Определяем мьютекс для синхронизации
 std::mutex bufferMutex;
 
+std::vector<double> addThreeVectorss(const std::vector<double>& v1, const std::vector<double>& v2, const std::vector<double>& v3) {
+    if (v1.size() != v2.size() || v1.size() != v3.size()) {
+        throw std::invalid_argument("Все векторы должны быть одинакового размера");
+    }
+
+    std::vector<double> result(v1.size());
+    for (size_t i = 0; i < v1.size(); ++i) {
+        result[i] = v1[i] + v2[i] + v3[i];
+    }
+    /*
+    double length = std::sqrt(result[0] * result[0] + result[1] * result[1] + result[2] * result[2]);
+    if (length != 0) {
+        result[0] /= length;
+        result[1] /= length;
+        result[2] /= length;
+    }*/
+
+    return result;
+}
+
 std::vector<double> Reflect(const std::vector<double>& rayDir, const std::vector<double>& normal) {
     double dotProduct = rayDir[0] * normal[0] + rayDir[1] * normal[1] + rayDir[2] * normal[2];
     return {
@@ -34,6 +54,32 @@ inline std::vector<double> cross(const std::vector<double>& a, const std::vector
 
 inline double dot(const std::vector<double>& a, const std::vector<double>& b) {
     return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+}
+
+std::vector<double> barycentricCoords(const std::vector<double>& p, 
+                                       const std::vector<double>& v0, 
+                                       const std::vector<double>& v1, 
+                                       const std::vector<double>& v2) {
+    // Векторы от v0 к другим вершинам
+    std::vector<double> v0_v1 = { v1[0] - v0[0], v1[1] - v0[1], v1[2] - v0[2] };
+    std::vector<double> v0_v2 = { v2[0] - v0[0], v2[1] - v0[1], v2[2] - v0[2] };
+    std::vector<double> v0_p = { p[0] - v0[0], p[1] - v0[1], p[2] - v0[2] };
+
+    // Определитель
+    double d00 = v0_v1[0] * v0_v1[0] + v0_v1[1] * v0_v1[1] + v0_v1[2] * v0_v1[2];
+    double d01 = v0_v1[0] * v0_v2[0] + v0_v1[1] * v0_v2[1] + v0_v1[2] * v0_v2[2];
+    double d11 = v0_v2[0] * v0_v2[0] + v0_v2[1] * v0_v2[1] + v0_v2[2] * v0_v2[2];
+    
+    double d20 = v0_p[0] * v0_v1[0] + v0_p[1] * v0_v1[1] + v0_p[2] * v0_v1[2];
+    double d21 = v0_p[0] * v0_v2[0] + v0_p[1] * v0_v2[1] + v0_p[2] * v0_v2[2];
+
+    // Вычисляем барицентрические координаты
+    double denom = d00 * d11 - d01 * d01;
+    double v = (d11 * d20 - d01 * d21) / denom;
+    double w = (d00 * d21 - d01 * d20) / denom;
+    double u = 1.0 - v - w; // u + v + w = 1
+
+    return { u, v, w };
 }
 
 inline bool RayIntersectsTriangle(
@@ -103,6 +149,7 @@ inline bool RayIntersectsTriangle(
             rayOrigin[1] + t * rayDir[1],
             rayOrigin[2] + t * rayDir[2]
     };
+    //std::cout << "I: " << intersectionPoint[0] << " " << intersectionPoint[1] << " " << intersectionPoint[2] << "\n";
     *tt = t;
 
     return true; // Пересечение найдено
@@ -111,6 +158,15 @@ inline bool RayIntersectsTriangle(
 
 PolygonDrawAdapter::PolygonDrawAdapter(std::shared_ptr<QtDrawer> drawer) : _drawer(drawer)
 {}
+
+std::vector<double> alignNormalToReference(const std::vector<double>& target, const std::vector<double>& reference) {
+    double dotProduct = target[0] * reference[0] + target[1] * reference[1] + target[2] * reference[2];
+    // Если нормаль противоположна по направлению, разворачиваем её
+    if (dotProduct < 0) {
+        return { -target[0], -target[1], -target[2] };
+    }
+    return target;
+}
 
 bool CheckShadow(std::vector<double> &lightDir, std::vector<double> &intersectionPoint, const std::shared_ptr<Scene>& scene)
 {
@@ -141,12 +197,39 @@ bool CheckShadow(std::vector<double> &lightDir, std::vector<double> &intersectio
     return isInShadow;
 }
 
+std::vector<double> normalizee(const std::vector<double>& vec) {
+    double length = std::sqrt(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
+    if (length > 0) {
+        return { vec[0] / length, vec[1] / length, vec[2] / length };
+    }
+    return vec; // Если длина нулевая, возвращаем нулевой вектор
+}
+
+std::vector<double> interpolateNormals(const std::vector<double>& normalV1, 
+                                       const std::vector<double>& normalV2, 
+                                       const std::vector<double>& normalV3, 
+                                       const std::vector<double>& baryCoords) {
+    // Приводим нормали к одному направлению
+    std::vector<double> alignedNormalV2 = alignNormalToReference(normalV2, normalV1);
+    std::vector<double> alignedNormalV3 = alignNormalToReference(normalV3, normalV1);
+
+    // Интерполируем нормали с использованием барицентрических координат
+    std::vector<double> interpolatedNormal = {
+        normalV1[0] * baryCoords[0] + alignedNormalV2[0] * baryCoords[1] + alignedNormalV3[0] * baryCoords[2],
+        normalV1[1] * baryCoords[0] + alignedNormalV2[1] * baryCoords[1] + alignedNormalV3[1] * baryCoords[2],
+        normalV1[2] * baryCoords[0] + alignedNormalV2[2] * baryCoords[1] + alignedNormalV3[2] * baryCoords[2]
+    };
+
+    // Нормализуем результирующую интерполированную нормаль
+    return normalizee(interpolatedNormal);
+}
+
 void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std::shared_ptr<Camera>& camera, std::shared_ptr<QtDrawer> drawer, std::vector<std::vector<Color>> &buff)
 {
-    LightSource lightSource(100.0, -50.0, 10.0); // Источник света
+    LightSource lightSource(10.0, -10.0, 10.0); // Источник света
 
-    double specularExponent = 5.0;  // Определяет "резкость" бликов
-    double specularStrength = 0.5;   // Влияние specular составляющей
+    double specularExponent = 1.0;  // Определяет "резкость" бликов
+    double specularStrength = 0.1;   // Влияние specular составляющей
     
 
     std::vector<double> rayOrigin = { camera->x_view, camera->y_view, camera->z_view };
@@ -202,36 +285,98 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
             // Вычисляем векторы ребер
             std::vector<double> edge1 = { v1[0] - v0[0], v1[1] - v0[1], v1[2] - v0[2] };
             std::vector<double> edge2 = { v2[0] - v0[0], v2[1] - v0[1], v2[2] - v0[2] };
+            
+            // Получаем нормали вершин полигона
+            std::vector<double> normalV1 = polygon->GetVertex1Normal();
+            std::vector<double> normalV2 = polygon->GetVertex2Normal();
+            std::vector<double> normalV3 = polygon->GetVertex3Normal();
+
+            // Вычисляем бариатрические координаты
+            std::vector<double> baryCoords = barycentricCoords(intersectionPoint, 
+                                                                { polygon->x1, polygon->y1, polygon->z1 }, 
+                                                                { polygon->x2, polygon->y2, polygon->z2 }, 
+                                                                { polygon->x3, polygon->y3, polygon->z3 });
+
+
+            std::vector<double> interpolatedNormal = interpolateNormals(normalV1, normalV2, normalV3, baryCoords);
+            
+            std::vector<double> normal = interpolatedNormal;
+
+            //std::vector<double> normal = normalizee(addThreeVectorss(normalV1, normalV2, normalV3));
 
             // Вычисляем нормаль полигона
-            std::vector<double> normal = {
+
+
+            
+            std::vector<double> normalUnique = {
                     edge1[1] * edge2[2] - edge1[2] * edge2[1],
                     edge1[2] * edge2[0] - edge1[0] * edge2[2],
                     edge1[0] * edge2[1] - edge1[1] * edge2[0]
             };
 
+    
             // Нормализуем нормаль
-            double normMagnitude = sqrt(normal[0] * normal[0] + normal[1] * normal[1] + normal[2] * normal[2]);
-            if (normMagnitude > 0)
+            
+            double normMagnitudeUnique = sqrt(normalUnique[0] * normalUnique[0] + normalUnique[1] * normalUnique[1] + normalUnique[2] * normalUnique[2]);
+            if (normMagnitudeUnique > 0)
             {
-                normal[0] /= normMagnitude;
-                normal[1] /= normMagnitude;
-                normal[2] /= normMagnitude;
+                normalUnique[0] /= normMagnitudeUnique;
+                normalUnique[1] /= normMagnitudeUnique;
+                normalUnique[2] /= normMagnitudeUnique;
             }
 
+            //std::vector<double> normal = normalUnique;
+            /*
+            if (polygon->color.b != 105) goto jmp;
+            std::cout << "normal1: ";
+            for (const auto& value : normalV1) {
+                std::cout << value << " ";
+            }
+            std::cout << "\n";
+
+            std::cout << "normal2: ";
+            for (const auto& value : normalV2) {
+                std::cout << value << " ";
+            }
+            std::cout << "\n";
+
+            std::cout << "normal3: ";
+            for (const auto& value : normalV3) {
+                std::cout << value << " ";
+            }
+            std::cout << "\n";
+
+            std::cout << "normalUnique: ";
+            for (const auto& value : normalUnique) {
+                std::cout << value << " ";
+            }
+            std::cout << "\n";
+
+            // Вывод элементов вектора normal
+            std::cout << "normal: ";
+            for (const auto& value : normal) {
+                std::cout << value << " ";
+            }
+            std::cout << "\n-------\n"; */
             // Направление света
+            jmp:
             std::vector<double> lightDir = lightSource.getDirection();
-            double lightMagnitude = sqrt(lightDir[0] * lightDir[0] + lightDir[1] * lightDir[1] + lightDir[2] * lightDir[2]);
+            double lightMagnitude = std::abs(sqrt(lightDir[0] * lightDir[0] + lightDir[1] * lightDir[1] + lightDir[2] * lightDir[2]));
             lightDir[0] /= lightMagnitude;
             lightDir[1] /= lightMagnitude;
             lightDir[2] /= lightMagnitude;
 
+            
             // Рассчитываем интенсивность света (diffuse)
             double dotProduct = normal[0] * lightDir[0] + normal[1] * lightDir[1] + normal[2] * lightDir[2];
-            double intensity = std::max(0.0, dotProduct);
+            double intensity = dotProduct;
+            if (intensity < 0 )
+                intensity *= -1;
+
+            //std::cout << dotProduct << " " << intensity << "\n";
 
             // Устанавливаем минимальный уровень освещенности
-            double minIntensity = 0.4;
+            double minIntensity = 0.0;
             double diffuseIntensity = std::max(intensity, minIntensity);
             
             // Вычисляем отражённое направление (reflectDir)
@@ -248,13 +393,13 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
             double reflectDotView = std::max(0.0, reflectDir[0] * viewDir[0] + reflectDir[1] * viewDir[1] + reflectDir[2] * viewDir[2]);
             double specularIntensity = pow(reflectDotView, specularExponent) * specularStrength;
 
-
+            /*
             if (CheckShadow(lightDir, intersectionPoint, scene))
             {
                 diffuseIntensity *= 0.5;  // Слабая освещённость из-за тени
                 specularIntensity = 0.0;  // Отсутствие бликов в тени
             }
-
+            */
             // Общая освещённость с учётом diffuse и specular
             illuminatedColor.r = std::min(255.0, illuminatedColor.r * diffuseIntensity + 255 * specularIntensity);
             illuminatedColor.g = std::min(255.0, illuminatedColor.g * diffuseIntensity + 255 * specularIntensity);
@@ -294,8 +439,8 @@ void PolygonDrawAdapter::Draw(std::shared_ptr<Scene> scene, std::shared_ptr<Came
     auto start = std::chrono::high_resolution_clock::now();
     Color backgroundColor(-1, -1, -1);
     std::vector<std::vector<Color>> buff(camera->height, std::vector<Color>(camera->width, backgroundColor));  // БУФЕР КАДРА
-
-    const int numThreads = 16;
+    const int numThreads = 42;
+    std::cout << "NUM of Threads: " << numThreads << "\n";
     std::vector<std::thread> threads;
 
     int widthPerThread = camera->width / numThreads;

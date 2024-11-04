@@ -97,60 +97,50 @@ PolygonObject::PolygonObject(std::initializer_list<std::initializer_list<double>
         for (const auto& pair : pairedNeighbors) {
             neighbors.insert(neighbors.end(), pair.second.begin(), pair.second.end());
         }
+        
+        if (neighbors.size() != 9)
+        {   
+            std::cout << "AHAHA";
+            
+            _components.push_back(std::make_shared<Polygon>(v0[0], v0[1], v0[2], v1[0], v1[1], v1[2], v2[0], v2[1], v2[2], color));
+        }
+        else
+        {
+            std::cout << "v1: ";
+            for (const auto& value : v0) {
+                std::cout << value << " ";
+            }
+            std::cout << "\n";
 
-        // Добавляем треугольник в компоненты
-        _components.push_back(std::make_shared<Polygon>(v0[0], v0[1], v0[2], v1[0], v1[1], v1[2], v2[0], v2[1], v2[2], color,
+            std::cout << "v2: ";
+            for (const auto& value : v1) {
+                std::cout << value << " ";
+            }
+            std::cout << "\n";
+
+            std::cout << "v3: ";
+            for (const auto& value : v2) {
+                std::cout << value << " ";
+            }
+            std::cout << "\n";
+
+            std::cout << "normal: ";
+            for (const auto& value : neighbors) {
+                std::cout << value << " ";
+            }
+            std::cout << "\n";
+                    // Добавляем треугольник в компоненты
+            _components.push_back(std::make_shared<Polygon>(v0[0], v0[1], v0[2], v1[0], v1[1], v1[2], v2[0], v2[1], v2[2], color,
                                                         neighbors[0], neighbors[1], neighbors[2],
                                                         neighbors[3], neighbors[4], neighbors[5],
                                                         neighbors[6], neighbors[7], neighbors[8]));
-    }
-
-    _sphere = CalculateBoundingSphere();
-}
-
-/*
-PolygonObject::PolygonObject(std::vector<std::initializer_list<double>>& l) : _sphere(CalculateBoundingSphere())
-{
-    for (const auto& e : l)
-    {
-        std::vector<double> vec(e);
-
-        std::vector<double> v0 = { vec[1], vec[0], vec[2] };
-        std::vector<double> v1 = { vec[4], vec[3], vec[5] };
-        std::vector<double> v2 = { vec[7], vec[6], vec[8] };
-        Color color(vec[9], vec[10], vec[11]);
-
-        std::vector<double> neighbors; // ДВА СОСЕДА - 9 элементов (по 3 координаты у каждой)
-        // Поиск соседей
-        for (auto n : l)
-        {
-            std::vector<double> nec(n);
-            std::vector<double> n0 = { nec[1], nec[0], nec[2] };
-            std::vector<double> n1 = { nec[4], nec[3], nec[5] };
-            std::vector<double> n2 = { nec[7], nec[6], nec[8] };
-
-            if (isNeighbor(v0, v1, v2, n0, n1, n2))
-            {
-                auto nonMatchingVertex = getNonMatchingVertex(v0, v1, v2, n0, n1, n2);
-                if (nonMatchingVertex.has_value()) {
-                    neighbors.insert(neighbors.end(), nonMatchingVertex->begin(), nonMatchingVertex->end());
-                }
-            }
         }
-
-        // Добавляем треугольник в компоненты
-        _components.push_back(std::make_shared<Polygon>(v0[0], v0[1], v0[2],
-                                                        v1[0], v1[1], v1[2],
-                                                        v2[0], v2[1], v2[2],
-                                                        color, neighbors[0], neighbors[1], neighbors[2],
-                                                        neighbors[3], neighbors[4], neighbors[5],
-                                                        neighbors[6], neighbors[7], neighbors[8]));
-
-
     }
+
     _sphere = CalculateBoundingSphere();
 }
-*/
+
+
 PolygonObject::PolygonObject(std::vector<std::initializer_list<double>>& l) : _sphere(CalculateBoundingSphere())
 {
     for (const auto& e : l)
@@ -198,65 +188,25 @@ PolygonObject::PolygonObject(std::vector<std::initializer_list<double>>& l) : _s
             neighbors.insert(neighbors.end(), pair.second.begin(), pair.second.end());
         }
 
-        // Добавляем треугольник в компоненты
-        _components.push_back(std::make_shared<Polygon>(v0[0], v0[1], v0[2], 
-                                                        v1[0], v1[1], v1[2], 
-                                                        v2[0], v2[1], v2[2], 
-                                                        color, neighbors[0], neighbors[1], neighbors[2], 
-                                                        neighbors[3], neighbors[4], neighbors[5], 
-                                                        neighbors[6], neighbors[7], neighbors[8]));
-    }
-    _sphere = CalculateBoundingSphere();
-}
-
-/*
-PolygonObject::PolygonObject(std::vector<Polygon>& polygons) : _sphere(CalculateBoundingSphere())
-{
-    for (const auto& polygon : polygons) {
-        std::vector<double> neighbours;
-
-        // Поиск соседей
-        for (const auto& otherPolygon : polygons) {
-            if (&polygon != &otherPolygon && isNeighbor(
-                {polygon.x1, polygon.y1, polygon.z1},
-                {polygon.x2, polygon.y2, polygon.z2},
-                {polygon.x3, polygon.y3, polygon.z3},
-                {otherPolygon.x1, otherPolygon.y1, otherPolygon.z1},
-                {otherPolygon.x2, otherPolygon.y2, otherPolygon.z2},
-                {otherPolygon.x3, otherPolygon.y3, otherPolygon.z3}
-            )) {
-                // Найти несовпадающую вершину и добавить ее в соседей
-                auto nonMatchingVertex = getNonMatchingVertex(
-                    {polygon.x1, polygon.y1, polygon.z1},
-                    {polygon.x2, polygon.y2, polygon.z2},
-                    {polygon.x3, polygon.y3, polygon.z3},
-                    {otherPolygon.x1, otherPolygon.y1, otherPolygon.z1},
-                    {otherPolygon.x2, otherPolygon.y2, otherPolygon.z2},
-                    {otherPolygon.x3, otherPolygon.y3, otherPolygon.z3}
-                );
-
-                if (nonMatchingVertex.has_value()) {
-                    neighbours.insert(neighbours.end(), nonMatchingVertex->begin(), nonMatchingVertex->end());
-                }
-            }
+        if (neighbors.size() != 9)
+        {   
+            _components.push_back(std::make_shared<Polygon>(v0[0], v0[1], v0[2], v1[0], v1[1], v1[2], v2[0], v2[1], v2[2], color));
         }
-
-        // Используем первую несовпадающую вершину как соседа
-        double nx = neighbours.size() >= 3 ? neighbours[0] : polygon.x1;
-        double ny = neighbours.size() >= 3 ? neighbours[1] : polygon.y1;
-        double nz = neighbours.size() >= 3 ? neighbours[2] : polygon.z1;
-
-        // Добавляем треугольник в компоненты, передавая координаты соседей
-        _components.push_back(std::make_shared<Polygon>(
-            polygon.x1, polygon.y1, polygon.z1,
-            polygon.x2, polygon.y2, polygon.z2,
-            polygon.x3, polygon.y3, polygon.z3,
-            polygon.color, nx, ny, nz, nx, ny, nz, nx, ny, nz // Замените на реальных соседей
-        ));
+        else
+        {
+            // Добавляем треугольник в компоненты
+            _components.push_back(std::make_shared<Polygon>(v0[0], v0[1], v0[2], 
+                                                            v1[0], v1[1], v1[2], 
+                                                            v2[0], v2[1], v2[2], 
+                                                            color, neighbors[0], neighbors[1], neighbors[2], 
+                                                            neighbors[3], neighbors[4], neighbors[5], 
+                                                            neighbors[6], neighbors[7], neighbors[8]));
+        }
     }
     _sphere = CalculateBoundingSphere();
 }
-*/
+
+
 PolygonObject::PolygonObject(std::vector<Polygon>& polygons) : _sphere(CalculateBoundingSphere())
 {
     for (const auto& polygon : polygons) {
@@ -291,7 +241,7 @@ PolygonObject::PolygonObject(std::vector<Polygon>& polygons) : _sphere(Calculate
             }
         }
 
-        // Сортируем соседи
+        // Сортируем соседей
         std::vector<std::pair<int, std::vector<double>>> pairedNeighbors;
         for (size_t i = 0; i < neighbours.size() / 3; ++i) {
             pairedNeighbors.emplace_back(neighborsOrder[i], std::vector<double>(neighbours.begin() + i * 3, neighbours.begin() + (i + 1) * 3));
@@ -305,86 +255,21 @@ PolygonObject::PolygonObject(std::vector<Polygon>& polygons) : _sphere(Calculate
             neighbours.insert(neighbours.end(), pair.second.begin(), pair.second.end());
         }
 
-        // Используем первую несовпадающую вершину как соседа
-        double nx = neighbours.size() >= 3 ? neighbours[0] : polygon.x1;
-        double ny = neighbours.size() >= 3 ? neighbours[1] : polygon.y1;
-        double nz = neighbours.size() >= 3 ? neighbours[2] : polygon.z1;
-
         // Добавляем треугольник в компоненты
         _components.push_back(std::make_shared<Polygon>(
             polygon.x1, polygon.y1, polygon.z1,
             polygon.x2, polygon.y2, polygon.z2,
             polygon.x3, polygon.y3, polygon.z3,
-            polygon.color, nx, ny, nz, nx, ny, nz, nx, ny, nz // Замените на реальных соседей
+            polygon.color, 
+            neighbours.size() >= 9 ? neighbours[0] : polygon.x1, neighbours.size() >= 9 ? neighbours[1] : polygon.y1, neighbours.size() >= 9 ? neighbours[2] : polygon.z1,
+            neighbours.size() >= 9 ? neighbours[3] : polygon.x1, neighbours.size() >= 9 ? neighbours[4] : polygon.y1, neighbours.size() >= 9 ? neighbours[5] : polygon.z1,
+            neighbours.size() >= 9 ? neighbours[6] : polygon.x1, neighbours.size() >= 9 ? neighbours[7] : polygon.y1, neighbours.size() >= 9 ? neighbours[8] : polygon.z1
         ));
     }
     _sphere = CalculateBoundingSphere();
 }
 
-/*
-PolygonObject::PolygonObject(std::vector<std::vector<double>>& l) : _sphere(CalculateBoundingSphere())
-{
-    std::vector<Polygon> tempPolygons; // Временное хранилище для полигонов, чтобы искать соседей
 
-    // Первое проход для создания полигонов и их хранения
-    for (const auto& vec : l) {
-        // Извлекаем координаты и цвет
-        std::vector<double> v0 = { vec[1], vec[0], vec[2] };
-        std::vector<double> v1 = { vec[4], vec[3], vec[5] };
-        std::vector<double> v2 = { vec[7], vec[6], vec[8] };
-        Color color(vec[9], vec[10], vec[11]);
-
-        // Сохраним полигон во временное хранилище
-        tempPolygons.emplace_back(v0[0], v0[1], v0[2], v1[0], v1[1], v1[2], v2[0], v2[1], v2[2], color);
-    }
-
-    // Второе проход для добавления полигонов с соседями
-    for (const auto& polygon : tempPolygons) {
-        std::vector<double> neighbours;
-
-        // Поиск соседей
-        for (const auto& otherPolygon : tempPolygons) {
-            if (&polygon != &otherPolygon && isNeighbor(
-                {polygon.x1, polygon.y1, polygon.z1},
-                {polygon.x2, polygon.y2, polygon.z2},
-                {polygon.x3, polygon.y3, polygon.z3},
-                {otherPolygon.x1, otherPolygon.y1, otherPolygon.z1},
-                {otherPolygon.x2, otherPolygon.y2, otherPolygon.z2},
-                {otherPolygon.x3, otherPolygon.y3, otherPolygon.z3}
-            )) {
-                // Найти несовпадающую вершину и добавить ее в соседей
-                auto nonMatchingVertex = getNonMatchingVertex(
-                    {polygon.x1, polygon.y1, polygon.z1},
-                    {polygon.x2, polygon.y2, polygon.z2},
-                    {polygon.x3, polygon.y3, polygon.z3},
-                    {otherPolygon.x1, otherPolygon.y1, otherPolygon.z1},
-                    {otherPolygon.x2, otherPolygon.y2, otherPolygon.z2},
-                    {otherPolygon.x3, otherPolygon.y3, otherPolygon.z3}
-                );
-
-                if (nonMatchingVertex.has_value()) {
-                    neighbours.insert(neighbours.end(), nonMatchingVertex->begin(), nonMatchingVertex->end());
-                }
-            }
-        }
-
-        // Используем первую несовпадающую вершину как соседа
-        double nx = neighbours.size() >= 3 ? neighbours[0] : polygon.x1;
-        double ny = neighbours.size() >= 3 ? neighbours[1] : polygon.y1;
-        double nz = neighbours.size() >= 3 ? neighbours[2] : polygon.z1;
-
-        // Добавляем треугольник в компоненты, передавая координаты соседей
-        _components.push_back(std::make_shared<Polygon>(
-            polygon.x1, polygon.y1, polygon.z1,
-            polygon.x2, polygon.y2, polygon.z2,
-            polygon.x3, polygon.y3, polygon.z3,
-            polygon.color, nx, ny, nz, nx, ny, nz, nx, ny, nz // Замените на реальных соседей
-        ));
-    }
-
-    _sphere = CalculateBoundingSphere();
-}
-*/
 PolygonObject::PolygonObject(std::vector<std::vector<double>>& l) : _sphere(CalculateBoundingSphere())
 {
     std::vector<Polygon> tempPolygons;
@@ -399,7 +284,7 @@ PolygonObject::PolygonObject(std::vector<std::vector<double>>& l) : _sphere(Calc
         tempPolygons.emplace_back(v0[0], v0[1], v0[2], v1[0], v1[1], v1[2], v2[0], v2[1], v2[2], color);
     }
 
-    // Второе проход для добавления полигонов с соседями
+    // Второй проход для добавления полигонов с соседями
     for (const auto& polygon : tempPolygons) {
         std::vector<double> neighbours;
         std::vector<int> neighborsOrder;
@@ -426,7 +311,7 @@ PolygonObject::PolygonObject(std::vector<std::vector<double>>& l) : _sphere(Calc
 
                 if (nonMatchingVertex.has_value()) {
                     neighbours.insert(neighbours.end(), nonMatchingVertex->begin(), nonMatchingVertex->end());
-                    neighborsOrder.push_back(vertexCount); // Используйте vertexCount для сортировки
+                    neighborsOrder.push_back(vertexCount); // Используем vertexCount для сортировки
                 }
             }
         }
@@ -445,22 +330,19 @@ PolygonObject::PolygonObject(std::vector<std::vector<double>>& l) : _sphere(Calc
             neighbours.insert(neighbours.end(), pair.second.begin(), pair.second.end());
         }
 
-        // Используем первую несовпадающую вершину как соседа
-        double nx = neighbours.size() >= 3 ? neighbours[0] : polygon.x1;
-        double ny = neighbours.size() >= 3 ? neighbours[1] : polygon.y1;
-        double nz = neighbours.size() >= 3 ? neighbours[2] : polygon.z1;
-
         // Добавляем треугольник в компоненты
         _components.push_back(std::make_shared<Polygon>(
             polygon.x1, polygon.y1, polygon.z1,
             polygon.x2, polygon.y2, polygon.z2,
             polygon.x3, polygon.y3, polygon.z3,
-            polygon.color, nx, ny, nz, nx, ny, nz, nx, ny, nz // Замените на реальных соседей
+            polygon.color, 
+            neighbours.size() >= 9 ? neighbours[0] : polygon.x1, neighbours.size() >= 9 ? neighbours[1] : polygon.y1, neighbours.size() >= 9 ? neighbours[2] : polygon.z1,
+            neighbours.size() >= 9 ? neighbours[3] : polygon.x1, neighbours.size() >= 9 ? neighbours[4] : polygon.y1, neighbours.size() >= 9 ? neighbours[5] : polygon.z1,
+            neighbours.size() >= 9 ? neighbours[6] : polygon.x1, neighbours.size() >= 9 ? neighbours[7] : polygon.y1, neighbours.size() >= 9 ? neighbours[8] : polygon.z1
         ));
     }
     _sphere = CalculateBoundingSphere();
 }
-
 
 PolygonObject::~PolygonObject()
 {

@@ -47,13 +47,13 @@ Manager::Manager()
     double cam_screen = 40.0;
     _camera = std::make_shared<Camera>(25.0, 15.0, cam_screen - 265, 25.0, 15.0, cam_screen);
     
-    /*
+    
     std::shared_ptr<PerlinNoiseMountainGenerator> g = std::make_shared<PerlinNoiseMountainGenerator>(10, 10, 20);
     std::shared_ptr<PolygonObject> mountain = g->generateMountain();
-    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(mountain));
-    */
+    //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(mountain));
+    
 
-    /*
+    
     std::shared_ptr<PolygonObject> oxo = std::make_shared<PolygonObject>(
         std::initializer_list<std::initializer_list<double>>{
                 // Преобразование первой стороны куба
@@ -61,8 +61,8 @@ Manager::Manager()
         }
 
     );
-    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(oxo));
-    */
+    //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(oxo));
+    
 
    setInfo(true);
 }
@@ -144,19 +144,19 @@ void Manager::setInfo(bool on)
     std::shared_ptr<PolygonObject> cube = std::make_shared<PolygonObject>(
             std::initializer_list<std::initializer_list<double>>{
                     // Преобразование первой стороны куба
-                    {0.0, 0.0, 10.0, 10.0, 0.0, 10.0, 0.0, 10.0, 10.0, 245, 188, 103}, // Треугольник 11
-                    {10.0, 0.0, 10.0, 10.0, 10.0, 10.0, 0.0, 10.0, 10.0, 245, 188, 103},
+                    {10.0, 0.0, 10.0, 0.0, 10.0, 10.0, 0.0, 0.0, 10.0, 245, 188, 253}, // aТреугольник 11
+                    {10.0, 0.0, 10.0, 10.0, 10.0, 10.0, 0.0, 10.0, 10.0, 245, 188, 103}, // a
                     {0.0, 0.0, 0.0, 10.0, 0.0, 0.0, 0.0, 10.0, 0.0, 245, 188, 103}, // Треугольник 1
-                    {10.0, 0.0, 0.0, 10.0, 10.0, 0.0, 0.0, 10.0, 0.0, 245, 188, 103}, // Треугольник 2
+                    {10.0, 0.0, 0.0, 10.0, 10.0, 0.0, 0.0, 10.0, 0.0, 245, 188, 103}, //b Треугольник 2
                     // Преобразование второй стороны куба
-                    {0.0, 0.0, 0.0, 0.0, 0.0, 10.0, 0.0, 10.0, 0.0, 245, 188, 103}, // Треугольник 3
-                    {0.0, 10.0, 0.0, 0.0, 0.0, 10.0, 0.0, 10.0, 10.0, 245, 188, 103}, // Треугольник 4
+                    {0.0, 0.0, 10.0, 0.0, 10.0, 0.0, 0.0, 0.0, 0.0, 245, 188, 103}, // Треугольник 3
+                    {0.0, 10.0, 0.0, 0.0, 0.0, 10.0,0.0, 10.0, 10.0, 245, 188, 103}, // aТреугольник 4
                     // Преобразование третьей стороны куба
                     {0.0, 0.0, 0.0, 10.0, 0.0, 0.0, 0.0, 0.0, 10.0, 245, 188, 103}, // Треугольник 5
-                    {10.0, 0.0, 0.0, 10.0, 0.0, 10.0, 0.0, 0.0, 10.0, 245, 188, 103}, // Треугольник 6
+                    {10.0, 0.0, 10.0, 10.0, 0.0, 0.0, 0.0, 0.0, 10.0, 245, 188, 103}, // abТреугольник 6
                     // Преобразование четвертой стороны куба
-                    {10.0, 0.0, 0.0, 10.0, 10.0, 0.0, 10.0, 0.0, 10.0, 245, 188, 103}, // Треугольник 7
-                    {10.0, 10.0, 0.0, 10.0, 10.0, 10.0, 10.0, 0.0, 10.0, 245, 188, 103}, // Треугольник 8
+                    {10.0, 10.0, 0.0, 10.0, 0.0, 0.0, 10.0, 0.0, 10.0, 245, 188, 104}, //b Треугольник 7
+                    {10.0, 10.0, 10.0, 10.0, 10.0, 0.0, 10.0, 0.0, 10.0, 245, 188, 103}, //b Треугольник 8
                     // Преобразование пятой стороны куба
                     {0.0, 10.0, 0.0, 10.0, 10.0, 0.0, 0.0, 10.0, 10.0, 245, 188, 103}, // Треугольник 9
                     {10.0, 10.0, 0.0, 10.0, 10.0, 10.0, 0.0, 10.0, 10.0, 245, 188, 103}, // Треугольник 10
@@ -166,7 +166,7 @@ void Manager::setInfo(bool on)
     _scene->addObject(std::dynamic_pointer_cast<BaseObject>(cube));
 
     std::shared_ptr<PolygonObject> floor = generateFloor(-100.0, 100.0, -30.0, 30.0, 10.0);
-    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(floor));
+    //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(floor));
 }
 
 Manager::~Manager() {}

@@ -40,6 +40,9 @@ public:
             neighbor3x(neighbor3x), neighbor3y(neighbor3y), neighbor3z(neighbor3z) {}
 
     std::vector<double> GetNormal() const;
+    std::vector<double> GetVertex1Normal() const;  // Возвращает нормаль в V1
+    std::vector<double> GetVertex3Normal() const;  // Возвращает нормаль в V2
+    std::vector<double> GetVertex2Normal() const;  // Возвращает нормаль в V3
 
     ~Polygon() = default;
 };
