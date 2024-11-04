@@ -43,7 +43,7 @@ std::shared_ptr<PolygonObject> generateFloor(double startX, double endX, double 
 
 std::shared_ptr<PolygonObject> generateSphere(double radius) {
     std::vector<std::vector<double>> polygons;
-    double segments = 50;
+    double segments = 100;
     double rings = 20;
     double pi = 3.14159265358979323846;
     double ofx = 10;
@@ -112,9 +112,9 @@ Manager::Manager()
     //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(oxo));
     //std::shared_ptr<PolygonObject> floor = generateSphere(5);
     std::shared_ptr<PolygonObject> floor = generateSphere(5);
-    //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(floor));
+    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(floor));
 
-   setInfo(true);
+   setInfo(false);
 }
 
 void Manager::SetDrawer(std::shared_ptr<QtDrawer> drawer)
@@ -213,10 +213,10 @@ void Manager::setInfo(bool on)
             }
 
     );
-    //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(cube));
+    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(cube));
 
     std::shared_ptr<PolygonObject> floor = generateFloor(-100.0, 100.0, -30.0, 30.0, 10.0);
-    //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(floor));
+    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(floor));
 }
 
 Manager::~Manager() {}

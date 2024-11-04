@@ -40,13 +40,13 @@ std::vector<double> addThreeVectors(const std::vector<double>& v1, const std::ve
     for (size_t i = 0; i < v1.size(); ++i) {
         result[i] = v1[i] + v2[i] + v3[i];
     }
-    /*
+    
     double length = std::sqrt(result[0] * result[0] + result[1] * result[1] + result[2] * result[2]);
     if (length != 0) {
         result[0] /= length;
         result[1] /= length;
         result[2] /= length;
-    }*/
+    }
         
     return result;
 }
@@ -71,7 +71,7 @@ std::vector<double> formNormal(std::vector<double> &v1, std::vector<double> &v2)
 std::vector<double> normalize(const std::vector<double>& vec) {
     double length = std::sqrt(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
     if (length > 0) {
-        return { std::abs(vec[0] / length), std::abs(vec[1] / length), std::abs(vec[2] / length) };
+        return { vec[0] / length, vec[1] / length, vec[2] / length };
     }
     return vec; // Если длина нулевая, возвращаем нулевой вектор
 }

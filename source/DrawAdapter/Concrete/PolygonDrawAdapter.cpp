@@ -427,7 +427,7 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
 
             std::vector<double> interpolatedNormal = interpolateNormals(normalV1, normalV2, normalV3, baryCoords);
             //std::vector<double> interpolatedNormal = interpolateMy(intersectionPoint, v0, v1, v2, normalV1, normalV2, normalV3);
-            std::vector<double> normal = interpolatedNormal;
+            //std::vector<double> normal = interpolatedNormal;
 
             //std::vector<double> normal = normalizee(addThreeVectorss(normalV1, normalV2, normalV3));
 
@@ -452,7 +452,7 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
                 normalUnique[2] /= normMagnitudeUnique;
             }
 
-            //std::vector<double> normal = normalUnique;
+            std::vector<double> normal = normalUnique;
             
             if (polygon->color.b != 104) goto jmp;
             std::cout << "normal1: ";
@@ -503,12 +503,12 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
             double intensityV0 = std::abs(normalV1[0] * lightDir[0] + normalV1[1] * lightDir[1] + normalV1[2] * lightDir[2]);
             double intensityV1 = std::abs(normalV2[0] * lightDir[0] + normalV2[1] * lightDir[1] + normalV2[2] * lightDir[2]);
             double intensityV2 = std::abs(normalV3[0] * lightDir[0] + normalV3[1] * lightDir[1] + normalV3[2] * lightDir[2]);
-            //intensity = interpolateMyI(intersectionPoint, v0, v1, v2, intensityV0, intensityV1, intensityV2);
+            intensity = interpolateMyI(intersectionPoint, v0, v1, v2, intensityV0, intensityV1, intensityV2);
 
             //std::cout << dotProduct << " " << intensity << "\n";
 
             // Устанавливаем минимальный уровень освещенности
-            double minIntensity = 0.1;
+            double minIntensity = 0.4;
             double diffuseIntensity = std::max(intensity, minIntensity);
             
             // Вычисляем отражённое направление (reflectDir)
