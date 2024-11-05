@@ -79,19 +79,19 @@ std::vector<double> normalize(const std::vector<double>& vec) {
 std::vector<double> Polygon::GetVertex1Normal() const
 {
     std::vector n = {n1x, n1y, n1z};
-    return normalize(n);
+    return n;
 }
 
 std::vector<double> Polygon::GetVertex2Normal() const
 {
     std::vector n = {n2x, n2y, n2z};
-    return normalize(n);
+    return n;
 }
 
 std::vector<double> Polygon::GetVertex3Normal() const
 {
     std::vector n = {n3x, n3y, n3z};
-    return normalize(n);
+    return n;
 }
 
 /*

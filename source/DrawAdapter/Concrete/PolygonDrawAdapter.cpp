@@ -57,6 +57,7 @@ std::vector<double> interpolateMy(const std::vector<double>& p,
                      const std::vector<double>& normalV2, 
                      const std::vector<double>& normalV3)
 {
+    /*
     // Вектор от V1 к p
     std::vector<double> V1P = {p[0] - V1[0], p[1] - V1[1], p[2] - V1[2]};
     std::vector<double> V12 = {V2[0] - V1[0], V2[1] - V1[1], V2[2] - V1[2]};
@@ -102,6 +103,10 @@ std::vector<double> interpolateMy(const std::vector<double>& p,
 
     // Возвращаем нормализованную интерполированную нормаль
     return normalizee(interpolatedNormal);
+    */
+   return { ((normalV1[0] + normalV2[0]) / 2 + (normalV1[0] + normalV3[0]) / 2)/2, 
+   ((normalV1[1] + normalV2[1]) / 2 + (normalV1[1] + normalV3[1]) / 2)/2 ,
+   ((normalV1[2] + normalV2[2]) / 2 + (normalV1[2] + normalV3[2]) / 2)/2 };
 }
 
 double interpolateMyI(const std::vector<double>& p,
@@ -211,7 +216,7 @@ std::vector<double> barycentricCoords(const std::vector<double>& p,
     double w = (d00 * d21 - d01 * d20) / denom;
     double u = 1.0 - v - w; // u + v + w = 1
 
-    return { u, v, w };
+    return { u, v, w};
 }
 
 inline bool RayIntersectsTriangle(
@@ -335,15 +340,11 @@ std::vector<double> interpolateNormals(const std::vector<double>& normalV1,
                                        const std::vector<double>& normalV2, 
                                        const std::vector<double>& normalV3, 
                                        const std::vector<double>& baryCoords) {
-    // Приводим нормали к одному направлению
-    std::vector<double> alignedNormalV2 = alignNormalToReference(normalV2, normalV1);
-    std::vector<double> alignedNormalV3 = alignNormalToReference(normalV3, normalV1);
-
     // Интерполируем нормали с использованием барицентрических координат
     std::vector<double> interpolatedNormal = {
-        normalV1[0] * baryCoords[0] + alignedNormalV2[0] * baryCoords[1] + alignedNormalV3[0] * baryCoords[2],
-        normalV1[1] * baryCoords[0] + alignedNormalV2[1] * baryCoords[1] + alignedNormalV3[1] * baryCoords[2],
-        normalV1[2] * baryCoords[0] + alignedNormalV2[2] * baryCoords[1] + alignedNormalV3[2] * baryCoords[2]
+        normalV1[0] * baryCoords[0] + normalV2[0] * baryCoords[1] + normalV3[0] * baryCoords[2],
+        normalV1[1] * baryCoords[0] + normalV2[1] * baryCoords[1] + normalV3[1] * baryCoords[2],
+        normalV1[2] * baryCoords[0] + normalV2[2] * baryCoords[1] + normalV3[2] * baryCoords[2]
     };
 
     // Нормализуем результирующую интерполированную нормаль
@@ -453,8 +454,11 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
             }
 
             //std::vector<double> normal = normalUnique;
-            
+        
             if (polygon->color.b != 104) goto jmp;
+            std::cout << v0[0] << " " << v0[1] << " " << v0[2] << "\n";
+            std::cout << v1[0] << " " << v1[1] << " " << v1[2] << "\n";
+            std::cout << v2[0] << " " << v2[1] << " " << v2[2] << "\n";
             std::cout << "normal1: ";
             for (const auto& value : normalV1) {
                 std::cout << value << " ";
@@ -497,9 +501,8 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
             // Рассчитываем интенсивность света (diffuse)
             double dotProduct = std::abs(normal[0] * lightDir[0] + normal[1] * lightDir[1] + normal[2] * lightDir[2]);
             double intensity = dotProduct;
-            /*
-            if (intensity < 0 )
-                intensity *= -1; */
+
+            //intensity *= -1; 
 
             double intensityV0 = std::abs(normalV1[0] * lightDir[0] + normalV1[1] * lightDir[1] + normalV1[2] * lightDir[2]);
             double intensityV1 = std::abs(normalV2[0] * lightDir[0] + normalV2[1] * lightDir[1] + normalV2[2] * lightDir[2]);
