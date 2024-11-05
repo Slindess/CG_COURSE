@@ -110,7 +110,7 @@ Manager::Manager()
 
     );
     //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(oxo));
-    //std::shared_ptr<PolygonObject> floor = generateSphere(5);
+
     std::shared_ptr<PolygonObject> floor = generateSphere(5);
     _scene->addObject(std::dynamic_pointer_cast<BaseObject>(floor));
 
@@ -194,7 +194,7 @@ void Manager::setInfo(bool on)
     std::shared_ptr<PolygonObject> cube = std::make_shared<PolygonObject>(
             std::initializer_list<std::initializer_list<double>>{
                     // Преобразование первой стороны куба
-                    {10.0, 0.0, 10.0, 0.0, 10.0, 10.0, 0.0, 0.0, 10.0, 245, 188, 104}, // aТреугольник 11
+                    {10.0, 0.0, 10.0, 0.0, 10.0, 10.0, 0.0, 0.0, 10.0, 245, 188, 103}, // aТреугольник 11
                     {10.0, 0.0, 10.0, 10.0, 10.0, 10.0, 0.0, 10.0, 10.0, 245, 188, 103}, // a
                     {0.0, 0.0, 0.0, 10.0, 0.0, 0.0, 0.0, 10.0, 0.0, 245, 188, 103}, // Треугольник 1
                     {10.0, 0.0, 0.0, 10.0, 10.0, 0.0, 0.0, 10.0, 0.0, 245, 188, 103}, //b Треугольник 2
@@ -213,7 +213,7 @@ void Manager::setInfo(bool on)
             }
 
     );
-    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(cube));
+   _scene->addObject(std::dynamic_pointer_cast<BaseObject>(cube));
 
     std::shared_ptr<PolygonObject> floor = generateFloor(-100.0, 100.0, -30.0, 30.0, 10.0);
     _scene->addObject(std::dynamic_pointer_cast<BaseObject>(floor));

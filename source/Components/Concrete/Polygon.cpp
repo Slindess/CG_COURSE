@@ -78,6 +78,25 @@ std::vector<double> normalize(const std::vector<double>& vec) {
 
 std::vector<double> Polygon::GetVertex1Normal() const
 {
+    std::vector n = {n1x, n1y, n1z};
+    return normalize(n);
+}
+
+std::vector<double> Polygon::GetVertex2Normal() const
+{
+    std::vector n = {n2x, n2y, n2z};
+    return normalize(n);
+}
+
+std::vector<double> Polygon::GetVertex3Normal() const
+{
+    std::vector n = {n3x, n3y, n3z};
+    return normalize(n);
+}
+
+/*
+std::vector<double> Polygon::GetVertex1Normal() const
+{
     // Векторы для формирования нормалей
     std::vector<double> v1 = { (x1 - neighbor1x), (y1 - neighbor1y), (z1 - neighbor1z) };
     std::vector<double> v2 = { (x2 - neighbor1x), (y2 - neighbor1y), (z2 - neighbor1z) };
@@ -128,7 +147,7 @@ std::vector<double> Polygon::GetVertex3Normal() const
     // Сложение и нормализация результирующей нормали
     std::vector<double> combinedNormal = normalize(addThreeVectors(normal1, normal2, normal3));
     return combinedNormal;
-}
+}*/
 
 /*
 std::vector<double> Polygon::GetVertex1Normal() const

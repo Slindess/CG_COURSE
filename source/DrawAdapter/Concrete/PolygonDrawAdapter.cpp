@@ -211,7 +211,7 @@ std::vector<double> barycentricCoords(const std::vector<double>& p,
     double w = (d00 * d21 - d01 * d20) / denom;
     double u = 1.0 - v - w; // u + v + w = 1
 
-    return { w, u, v };
+    return { u, v, w };
 }
 
 inline bool RayIntersectsTriangle(
@@ -347,7 +347,7 @@ std::vector<double> interpolateNormals(const std::vector<double>& normalV1,
     };
 
     // Нормализуем результирующую интерполированную нормаль
-    return normalizee(interpolatedNormal);
+    return interpolatedNormal;
 }
 
 void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std::shared_ptr<Camera>& camera, std::shared_ptr<QtDrawer> drawer, std::vector<std::vector<Color>> &buff)
@@ -427,7 +427,7 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
 
             std::vector<double> interpolatedNormal = interpolateNormals(normalV1, normalV2, normalV3, baryCoords);
             //std::vector<double> interpolatedNormal = interpolateMy(intersectionPoint, v0, v1, v2, normalV1, normalV2, normalV3);
-            //std::vector<double> normal = interpolatedNormal;
+            std::vector<double> normal = interpolatedNormal;
 
             //std::vector<double> normal = normalizee(addThreeVectorss(normalV1, normalV2, normalV3));
 
@@ -452,7 +452,7 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
                 normalUnique[2] /= normMagnitudeUnique;
             }
 
-            std::vector<double> normal = normalUnique;
+            //std::vector<double> normal = normalUnique;
             
             if (polygon->color.b != 104) goto jmp;
             std::cout << "normal1: ";
@@ -495,20 +495,21 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
 
             
             // Рассчитываем интенсивность света (diffuse)
-            double dotProduct = normal[0] * lightDir[0] + normal[1] * lightDir[1] + normal[2] * lightDir[2];
+            double dotProduct = std::abs(normal[0] * lightDir[0] + normal[1] * lightDir[1] + normal[2] * lightDir[2]);
             double intensity = dotProduct;
+            /*
             if (intensity < 0 )
-                intensity *= -1;
+                intensity *= -1; */
 
             double intensityV0 = std::abs(normalV1[0] * lightDir[0] + normalV1[1] * lightDir[1] + normalV1[2] * lightDir[2]);
             double intensityV1 = std::abs(normalV2[0] * lightDir[0] + normalV2[1] * lightDir[1] + normalV2[2] * lightDir[2]);
             double intensityV2 = std::abs(normalV3[0] * lightDir[0] + normalV3[1] * lightDir[1] + normalV3[2] * lightDir[2]);
-            intensity = interpolateMyI(intersectionPoint, v0, v1, v2, intensityV0, intensityV1, intensityV2);
-
+            //intensity = interpolateMyI(intersectionPoint, v0, v1, v2, intensityV0, intensityV1, intensityV2);
+            //intensity = intensityV0 * baryCoords[0] + intensityV1 * baryCoords[1] + intensityV2 * baryCoords[2];
             //std::cout << dotProduct << " " << intensity << "\n";
 
             // Устанавливаем минимальный уровень освещенности
-            double minIntensity = 0.4;
+            double minIntensity = 0.1;
             double diffuseIntensity = std::max(intensity, minIntensity);
             
             // Вычисляем отражённое направление (reflectDir)

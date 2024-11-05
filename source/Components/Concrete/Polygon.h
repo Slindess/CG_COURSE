@@ -15,29 +15,28 @@ public:
 
     Color color; // TODO: Texture
 
-    double neighbor1x, neighbor1y, neighbor1z; // Вершина смежная с 1-2
-    double neighbor2x, neighbor2y, neighbor2z; // Вершина смежная с 1-3
-    double neighbor3x, neighbor3y, neighbor3z;  // Вершина смежная с 2-3
+    double n1x = 0, n1y = 0, n1z = 0; // Нормаль в вершине 1
+    double n2x = 0, n2y = 0, n2z = 0; // Нормаль в вершине 2
+    double n3x = 0, n3y = 0, n3z = 0;  // Нормаль в вершине 3
 
     Polygon(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3) :
-            x1(x1), y1(y1), z1(z1), x2(x2), y2(y2), z2(z2), x3(x3), y3(y3), z3(z3), color(255, 0, 0),
-            neighbor1x(x1), neighbor1y(y1), neighbor1z(z1), neighbor2x(x2), neighbor2y(y2), neighbor2z(z2),
-            neighbor3x(x3), neighbor3y(y3), neighbor3z(z3) {}
+            x1(x1), y1(y1), z1(z1), x2(x2), y2(y2), z2(z2), x3(x3), y3(y3), z3(z3), color(255, 0, 0) {}
 
     Polygon(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3, Color color) :
-            x1(x1), y1(y1), z1(z1), x2(x2), y2(y2), z2(z2), x3(x3), y3(y3), z3(z3), color(color),
-            neighbor1x(x1), neighbor1y(y1), neighbor1z(z1), neighbor2x(x2), neighbor2y(y2), neighbor2z(z2),
-            neighbor3x(x3), neighbor3y(y3), neighbor3z(z3) {} 
+            x1(x1), y1(y1), z1(z1), x2(x2), y2(y2), z2(z2), x3(x3), y3(y3), z3(z3), color(color) {} 
 
     Polygon(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3,
             Color color, 
-            double neighbor1x, double neighbor1y, double neighbor1z,
-            double neighbor2x, double neighbor2y, double neighbor2z,
-            double neighbor3x, double neighbor3y, double neighbor3z) :
-            x1(x1), y1(y1), z1(z1), x2(x2), y2(y2), z2(z2), x3(x3), y3(y3), z3(z3), color(color),
-            neighbor1x(neighbor1x), neighbor1y(neighbor1y), neighbor1z(neighbor1z),
-            neighbor2x(neighbor2x), neighbor2y(neighbor2y), neighbor2z(neighbor2z),
-            neighbor3x(neighbor3x), neighbor3y(neighbor3y), neighbor3z(neighbor3z) {}
+            double normal1x, double normal1y, double normal1z,
+            double normal2x, double normal2y, double normal2z,
+            double normal3x, double normal3y, double normal3z) :
+            x1(x1), y1(y1), z1(z1), x2(x2), y2(y2), z2(z2), x3(x3), y3(y3), z3(z3), color(color)
+            {
+                n1x = normal1x; n1y = normal1y; n1z = normal1z;
+                n2x = normal2x; n2y = normal2y; n2z = normal2z;
+                n3x = normal3x; n3y = normal3y; n3z = normal3z;
+            }
+
 
     std::vector<double> GetNormal() const;
     std::vector<double> GetVertex1Normal() const;  // Возвращает нормаль в V1
