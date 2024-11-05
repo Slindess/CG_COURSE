@@ -46,14 +46,14 @@ std::vector<double> calculateNormal(const std::vector<double>& v0, const std::ve
     double nx = (v1[1] - v0[1]) * (v2[2] - v0[2]) - (v1[2] - v0[2]) * (v2[1] - v0[1]);
     double ny = (v1[2] - v0[2]) * (v2[0] - v0[0]) - (v1[0] - v0[0]) * (v2[2] - v0[2]);
     double nz = (v1[0] - v0[0]) * (v2[1] - v0[1]) - (v1[1] - v0[1]) * (v2[0] - v0[0]);
-    double length = 0.1; //std::sqrt(nx * nx + ny * ny + nz * nz);
+    double length = -1; //std::sqrt(nx * nx + ny * ny + nz * nz);
     return {nx / length, ny / length, nz / length};
 }
 
 std::shared_ptr<PolygonObject> generateSphere(double radius) {
     std::vector<std::vector<double>> polygons;
-    double segments = 100;
-    double rings = 20;
+    double segments = 50;
+    double rings = 10;
     double pi = 3.14159265358979323846;
     double ofx = 10;
     double ofy = 20;
@@ -113,7 +113,7 @@ Manager::Manager()
     
     std::shared_ptr<PerlinNoiseMountainGenerator> g = std::make_shared<PerlinNoiseMountainGenerator>(10, 10, 20);
     std::shared_ptr<PolygonObject> mountain = g->generateMountain();
-    //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(mountain));
+    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(mountain));
     
 
     

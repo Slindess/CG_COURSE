@@ -320,7 +320,7 @@ bool CheckShadow(std::vector<double> &lightDir, std::vector<double> &intersectio
             if (shadowPolygon) {
                 double shadowT;
                 std::vector<double> shadowIntersectionPoint;
-                if (RayIntersectsTriangle(shadowRayOrigin, shadowRayDir, *shadowPolygon, 0.001, &shadowT, shadowIntersectionPoint))
+                if (RayIntersectsTriangle(shadowRayOrigin, shadowRayDir, *shadowPolygon, 0.00001, &shadowT, shadowIntersectionPoint))
                 {
                     isInShadow = true;
                     break;
@@ -353,7 +353,7 @@ std::vector<double> interpolateNormals(const std::vector<double>& normalV1,
 
 void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std::shared_ptr<Camera>& camera, std::shared_ptr<QtDrawer> drawer, std::vector<std::vector<Color>> &buff)
 {
-    LightSource lightSource(10.0, -10.0, 10.0); // Источник света
+    LightSource lightSource(50.0, -10.0, 20.0); // Источник света
 
     double specularExponent = 1.0;  // Определяет "резкость" бликов
     double specularStrength = 0.1;   // Влияние specular составляющей
@@ -529,12 +529,12 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
             double reflectDotView = std::max(0.0, reflectDir[0] * viewDir[0] + reflectDir[1] * viewDir[1] + reflectDir[2] * viewDir[2]);
             double specularIntensity = pow(reflectDotView, specularExponent) * specularStrength;
 
-            
+            /*
             if (CheckShadow(lightDir, intersectionPoint, scene))
             {
-                diffuseIntensity *= 0.5;  // Слабая освещённость из-за тени
+                diffuseIntensity *= 0.8;  // Слабая освещённость из-за тени
                 specularIntensity = 0.0;  // Отсутствие бликов в тени
-            }
+            }*/
             
             // Общая освещённость с учётом diffuse и specular
             illuminatedColor.r = std::min(255.0, illuminatedColor.r * diffuseIntensity + 255 * specularIntensity);

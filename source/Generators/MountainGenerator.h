@@ -6,6 +6,14 @@
 #include "../Objects/Concrete/PolygonObject.h" // Подключаем ваш класс PolygonObject
 #include "../Utils/Color.h"
 
+std::vector<double> calculateNormall(const std::vector<double>& v0, const std::vector<double>& v1, const std::vector<double>& v2) {
+    double nx = (v1[1] - v0[1]) * (v2[2] - v0[2]) - (v1[2] - v0[2]) * (v2[1] - v0[1]);
+    double ny = (v1[2] - v0[2]) * (v2[0] - v0[0]) - (v1[0] - v0[0]) * (v2[2] - v0[2]);
+    double nz = (v1[0] - v0[0]) * (v2[1] - v0[1]) - (v1[1] - v0[1]) * (v2[0] - v0[0]);
+    double length = -1; //std::sqrt(nx * nx + ny * ny + nz * nz);
+    return {nx / length, ny / length, nz / length};
+}
+
 class PerlinNoiseMountainGenerator {
 public:
     PerlinNoiseMountainGenerator(int gridSize, int noiseSize, double scale)
@@ -89,8 +97,11 @@ public:
                 h2 = std::max(h2, h2) - 32.0;
                 h3 = std::max(h3, h3) - 32.0;
                 h4 = std::max(h4, h4) - 32.0;
-                polygons.emplace_back(h1, y1, x1, h2, y2, x2, h3, y3, x3, result);
-                polygons.emplace_back(h4, y4, x4, h2, y2, x2, h3, y3, x3, result);
+
+                std::vector n1 = calculateNormall({x1, y1, h1}, {x3, y3, h3}, {x2, y2, h2});
+                std::vector n2 = calculateNormall({x4, y4, h4}, {x2, y2, h2}, {x3, y3, h3});
+                polygons.emplace_back(h1, y1, x1, h2, y2, x2, h3, y3, x3, result, n1[0], n1[1], n1[2]);
+                polygons.emplace_back(h4, y4, x4, h2, y2, x2, h3, y3, x3, result, n2[0], n2[1], n2[2]);
                 //polygons.emplace_back(h1, y1, x1, h2, y1, x2, h3, y1, x1, result);
                 //polygons.emplace_back(h2, y1, x2, h4, y2, x2, h3, y2, x1, result);
 
