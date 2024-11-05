@@ -512,7 +512,7 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
             //std::cout << dotProduct << " " << intensity << "\n";
 
             // Устанавливаем минимальный уровень освещенности
-            double minIntensity = 0.4;
+            double minIntensity = 0.2;
             double diffuseIntensity = std::max(intensity, minIntensity);
             
             // Вычисляем отражённое направление (reflectDir)

@@ -126,8 +126,8 @@ Manager::Manager()
     );
     //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(oxo));
 
-    std::shared_ptr<PolygonObject> floor = generateSphere(5);
-    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(floor));
+    //std::shared_ptr<PolygonObject> floor = generateSphere(5);
+    //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(floor));
 
    setInfo(true);
 }
