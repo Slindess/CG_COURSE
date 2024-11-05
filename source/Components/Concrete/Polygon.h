@@ -19,6 +19,8 @@ public:
     double n2x = 0, n2y = 0, n2z = 0; // Нормаль в вершине 2
     double n3x = 0, n3y = 0, n3z = 0;  // Нормаль в вершине 3
 
+    double nx = 0, ny = 0, nz = 0;
+
     Polygon(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3) :
             x1(x1), y1(y1), z1(z1), x2(x2), y2(y2), z2(z2), x3(x3), y3(y3), z3(z3), color(255, 0, 0) {}
 
@@ -37,6 +39,15 @@ public:
                 n3x = normal3x; n3y = normal3y; n3z = normal3z;
             }
 
+    Polygon(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3,
+            Color color, 
+            double normalx, double normaly, double normalz) :
+            x1(x1), y1(y1), z1(z1), x2(x2), y2(y2), z2(z2), x3(x3), y3(y3), z3(z3), color(color)
+            {
+                nx = normalx;
+                ny = normaly;
+                nz = normalz;
+            }
 
     std::vector<double> GetNormal() const;
     std::vector<double> GetVertex1Normal() const;  // Возвращает нормаль в V1

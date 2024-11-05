@@ -23,8 +23,8 @@ std::shared_ptr<PolygonObject> generateFloor(double startX, double endX, double 
             Color color = isWhite ? Color(143, 188, 143) : Color(202, 227, 202); // Чередуем цвет
             //Color color = isWhite ? Color(250, 157, 244) : Color(227, 9, 212);
             // Два треугольника для клетки
-            polygons.push_back({x, 0.0, z, x + step, 0.0, z, x, 0.0, z + step, color.r, color.g, color.b});
-            polygons.push_back({x + step, 0.0, z, x + step, 0.0, z + step, x, 0.0, z + step, color.r, color.g, color.b});
+            polygons.push_back({x, 0.0, z, x + step, 0.0, z, x, 0.0, z + step, color.r, color.g, color.b, 0, 1, 0});
+            polygons.push_back({x + step, 0.0, z, x + step, 0.0, z + step, x, 0.0, z + step, color.r, color.g, color.b, 0, 1, 0});
 
             isWhite = !isWhite; // Меняем цвет для следующей клетки
         }
@@ -40,6 +40,15 @@ std::shared_ptr<PolygonObject> generateFloor(double startX, double endX, double 
     return std::make_shared<PolygonObject>(polygons);
 }
 
+
+// Функция для вычисления нормали к треугольнику
+std::vector<double> calculateNormal(const std::vector<double>& v0, const std::vector<double>& v1, const std::vector<double>& v2) {
+    double nx = (v1[1] - v0[1]) * (v2[2] - v0[2]) - (v1[2] - v0[2]) * (v2[1] - v0[1]);
+    double ny = (v1[2] - v0[2]) * (v2[0] - v0[0]) - (v1[0] - v0[0]) * (v2[2] - v0[2]);
+    double nz = (v1[0] - v0[0]) * (v2[1] - v0[1]) - (v1[1] - v0[1]) * (v2[0] - v0[0]);
+    double length = 0.1; //std::sqrt(nx * nx + ny * ny + nz * nz);
+    return {nx / length, ny / length, nz / length};
+}
 
 std::shared_ptr<PolygonObject> generateSphere(double radius) {
     std::vector<std::vector<double>> polygons;
@@ -74,11 +83,17 @@ std::shared_ptr<PolygonObject> generateSphere(double radius) {
             std::vector<double> v2 = { radius2 * cos(phi1) + ofx, y2 + ofy, radius2 * sin(phi1) + ofz };
             std::vector<double> v3 = { radius2 * cos(phi2) + ofx, y2 + ofy, radius2 * sin(phi2) + ofz };
 
-            // Добавляем два треугольника для каждой ячейки
-            Color color(235, 111, 77); // Можно поменять цвет на любой желаемый
+            // Вычисляем нормали для каждого треугольника
+            auto normal1 = calculateNormal(v0, v2, v1);
+            auto normal2 = calculateNormal(v1, v2, v3);
 
-            polygons.push_back({v0[0], v0[1], v0[2], v2[0], v2[1], v2[2], v1[0], v1[1], v1[2], color.r, color.g, color.b});
-            polygons.push_back({v1[0], v1[1], v1[2], v2[0], v2[1], v2[2], v3[0], v3[1], v3[2], color.r, color.g, color.b});
+            Color color(235, 111, 77); // Цвет полигона
+
+            // Добавляем полигоны с нормалями
+            polygons.push_back({v0[0], v0[1], v0[2], v2[0], v2[1], v2[2], v1[0], v1[1], v1[2], color.r, color.g, color.b,
+                                normal1[0], normal1[1], normal1[2]});
+            polygons.push_back({v1[0], v1[1], v1[2], v2[0], v2[1], v2[2], v3[0], v3[1], v3[2], color.r, color.g, color.b,
+                                normal2[0], normal2[1], normal2[2]});
         }
     }
 
@@ -111,8 +126,8 @@ Manager::Manager()
     );
     //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(oxo));
 
-    //std::shared_ptr<PolygonObject> floor = generateSphere(5);
-    //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(floor));
+    std::shared_ptr<PolygonObject> floor = generateSphere(5);
+    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(floor));
 
    setInfo(true);
 }
@@ -194,7 +209,7 @@ void Manager::setInfo(bool on)
     std::shared_ptr<PolygonObject> cube = std::make_shared<PolygonObject>(
             std::initializer_list<std::initializer_list<double>>{
                     // Преобразование первой стороны куба
-                    {10.0, 0.0, 10.0, 0.0, 10.0, 10.0, 0.0, 0.0, 10.0, 245, 188, 104, 0, 0, 1}, // aТреугольник 11
+                    {10.0, 0.0, 10.0, 0.0, 10.0, 10.0, 0.0, 0.0, 10.0, 245, 188, 103, 0, 0, 1}, // aТреугольник 11
                     {10.0, 0.0, 10.0, 10.0, 10.0, 10.0, 0.0, 10.0, 10.0, 245, 188, 103, 0, 0, 1}, // a
                     {0.0, 0.0, 0.0, 10.0, 0.0, 0.0, 0.0, 10.0, 0.0, 245, 188, 103, 0, 0, -1}, // Треугольник 1
                     {10.0, 0.0, 0.0, 10.0, 10.0, 0.0, 0.0, 10.0, 0.0, 245, 188, 103, 0, 0, -1}, //b Треугольник 2
@@ -213,7 +228,7 @@ void Manager::setInfo(bool on)
             }
 
     );
-   _scene->addObject(std::dynamic_pointer_cast<BaseObject>(cube));
+    //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(cube));
 
     std::shared_ptr<PolygonObject> floor = generateFloor(-100.0, 100.0, -30.0, 30.0, 10.0);
     //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(floor));

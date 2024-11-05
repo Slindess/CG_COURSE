@@ -348,7 +348,7 @@ std::vector<double> interpolateNormals(const std::vector<double>& normalV1,
     };
 
     // Нормализуем результирующую интерполированную нормаль
-    return interpolatedNormal;
+    return normalizee(interpolatedNormal);
 }
 
 void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std::shared_ptr<Camera>& camera, std::shared_ptr<QtDrawer> drawer, std::vector<std::vector<Color>> &buff)
@@ -499,7 +499,7 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
 
             
             // Рассчитываем интенсивность света (diffuse)
-            double dotProduct = std::abs(normal[0] * lightDir[0] + normal[1] * lightDir[1] + normal[2] * lightDir[2]);
+            double dotProduct = normal[0] * lightDir[0] + normal[1] * lightDir[1] + normal[2] * lightDir[2];
             double intensity = dotProduct;
 
             //intensity *= -1; 
@@ -512,7 +512,7 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
             //std::cout << dotProduct << " " << intensity << "\n";
 
             // Устанавливаем минимальный уровень освещенности
-            double minIntensity = 0.1;
+            double minIntensity = 0.4;
             double diffuseIntensity = std::max(intensity, minIntensity);
             
             // Вычисляем отражённое направление (reflectDir)

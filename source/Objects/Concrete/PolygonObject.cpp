@@ -76,9 +76,9 @@ PolygonObject::PolygonObject(std::initializer_list<std::initializer_list<double>
         Color color(vec[9], vec[10], vec[11]);
 
         double nx = vec[13]; double ny = vec[12]; double nz = vec[14];
-        std::cout << v0[0] << " " << v0[1] << " " << v0[2] << "\n";
-        std::cout << v1[0] << " " << v1[1] << " " << v1[2] << "\n";
-        std::cout << v2[0] << " " << v2[1] << " " << v2[2] << "\n";
+        //std::cout << v0[0] << " " << v0[1] << " " << v0[2] << "\n";
+        //std::cout << v1[0] << " " << v1[1] << " " << v1[2] << "\n";
+        //std::cout << v2[0] << " " << v2[1] << " " << v2[2] << "\n";
         
         std::vector<std::vector<double>> normals1; // уже использованные нормали
         std::vector<std::vector<double>> normals2; // уже использованные нормали
@@ -96,7 +96,7 @@ PolygonObject::PolygonObject(std::initializer_list<std::initializer_list<double>
         std::vector<double> normal2_tmp = {nx, ny, nz}; 
         normals3.push_back({nx, ny, nz}); 
         double normal2_count = 1;
-        std::cout << normal2_tmp[0] << " " << normal2_tmp[1] << " " << normal2_tmp[2] << "A\n";
+        //std::cout << normal2_tmp[0] << " " << normal2_tmp[1] << " " << normal2_tmp[2] << "A\n";
 
 
         // А тут U это вершины других полигонов
@@ -205,16 +205,24 @@ PolygonObject::PolygonObject(std::vector<std::initializer_list<double>>& l) : _s
         std::vector<double> v1 = { vec[4], vec[3], vec[5] };
         std::vector<double> v2 = { vec[7], vec[6], vec[8] };
         Color color(vec[9], vec[10], vec[11]);
-
+        double nx = vec[13]; double ny = vec[12]; double nz = vec[14];
         // ДАЛЕЕ ИДЕЯ ТАКАЯ: УСРЕДНЯТЬ НОРМАЛИ ПОСТЕПЕННО, ПОЭТОМУ ВРЕМЕННАЯ НОРМАЛЬ ЕСТЬ И ИХ СЧЕТЧИК
-        std::vector<double> normal0_tmp = {0, 0, 0}; 
-        double normal0_count;
+        std::vector<std::vector<double>> normals1; // уже использованные нормали
+        std::vector<std::vector<double>> normals2; // уже использованные нормали
+        std::vector<std::vector<double>> normals3; // уже использованные нормали
+        // ДАЛЕЕ ИДЕЯ ТАКАЯ: УСРЕДНЯТЬ НОРМАЛИ ПОСТЕПЕННО, ПОЭТОМУ ВРЕМЕННАЯ НОРМАЛЬ ЕСТЬ И ИХ СЧЕТЧИК
+        std::vector<double> normal0_tmp = {nx, ny, nz}; 
+        normals1.push_back({nx, ny, nz});
+        
+        double normal0_count = 1;
 
-        std::vector<double> normal1_tmp = {0, 0, 0}; 
-        double normal1_count;
+        std::vector<double> normal1_tmp = {nx, ny, nz}; 
+        normals2.push_back({nx, ny, nz});
+        double normal1_count = 1;
 
-        std::vector<double> normal2_tmp = {0, 0, 0}; 
-        double normal2_count;
+        std::vector<double> normal2_tmp = {nx, ny, nz}; 
+        normals3.push_back({nx, ny, nz}); 
+        double normal2_count = 1;
         
         // А тут U это вершины других полигонов
         for (auto u : l)
@@ -223,6 +231,7 @@ PolygonObject::PolygonObject(std::vector<std::initializer_list<double>>& l) : _s
             std::vector<double> u0 = { uvec[1], uvec[0], uvec[2] };
             std::vector<double> u1 = { uvec[4], uvec[3], uvec[5] };
             std::vector<double> u2 = { uvec[7], uvec[6], uvec[8] };
+            double u_nx = uvec[13]; double u_ny = uvec[12]; double u_nz = uvec[14];
 
             int eq_count = 0; // Чтоб потом проверить, что вершины идентичны
             std::vector<double> n0_tmp = {0, 0, 0}; // Нормаль к грани в которой вершина 1
@@ -231,47 +240,61 @@ PolygonObject::PolygonObject(std::vector<std::initializer_list<double>>& l) : _s
             double a1 = 0, a2 = 0, a3 = 0;
             if (areVerticesEqual(v0, u0) || areVerticesEqual(v0, u1) || areVerticesEqual(v0, u2)) 
             {
-                n0_tmp = formNormall(u0, u1, u2);
-                if (normal0_count >= 1)
-                    n0_tmp = alignNormall(n0_tmp, v0);
+                n0_tmp[0] = u_nx; n0_tmp[1] = u_ny; n0_tmp[2] = u_nz; 
+                if (checkNormals(n0_tmp, normals1))
+                {
+                    a1 = 1.0;
+                }
                 eq_count++;
-                a1 = 1.0;
             }
 
             if (areVerticesEqual(v1, u0) || areVerticesEqual(v1, u1) || areVerticesEqual(v1, u2)) 
             {
-                n1_tmp = formNormall(u0, u1, u2);
-                if (normal1_count >= 1)
-                    n1_tmp = alignNormall(n1_tmp, v1);
+                n1_tmp[0] = u_nx; n1_tmp[1] = u_ny; n1_tmp[2] = u_nz;
+                if (checkNormals(n1_tmp, normals2))
+                {
+                    a2 = 1.0;
+                }
                 eq_count++;
-                a2 = 1.0;
             }
 
             if (areVerticesEqual(v2, u0) || areVerticesEqual(v2, u1) || areVerticesEqual(v2, u2)) 
             {
-                n2_tmp = formNormall(u0, u1, u2);
-                if (normal2_count >= 1)
-                    n2_tmp = alignNormall(n2_tmp, v2);
+                n2_tmp[0] = u_nx; n2_tmp[1] = u_ny; n2_tmp[2] = u_nz;
+                if (checkNormals(n2_tmp, normals3))
+                {
+                    a3 = 1.0;
+                }
                 eq_count++;
-                a3 = 1.0;
             }
 
             if (eq_count == 3) continue; // Та же самая вершина
 
-            normal0_tmp[0] += n0_tmp[0];
-            normal0_tmp[1] += n0_tmp[1];
-            normal0_tmp[2] += n0_tmp[2];
-            normal0_count += a1;
+            if (a1 > 0)
+            {
+                normal0_tmp[0] += n0_tmp[0];
+                normal0_tmp[1] += n0_tmp[1];
+                normal0_tmp[2] += n0_tmp[2];
+                normal0_count += a1;
+                normals1.push_back({n0_tmp[0], n0_tmp[1], n0_tmp[2]});
+            }
+            if (a2 > 0)
+            {
+                normal1_tmp[0] += n1_tmp[0];
+                normal1_tmp[1] += n1_tmp[1];
+                normal1_tmp[2] += n1_tmp[2];
+                normal1_count += a2;
+                normals2.push_back({n1_tmp[0], n1_tmp[1], n1_tmp[2]});
+            }
 
-            normal1_tmp[0] += n1_tmp[0];
-            normal1_tmp[1] += n1_tmp[1];
-            normal1_tmp[2] += n1_tmp[2];
-            normal1_count += a2;
-
-            normal2_tmp[0] += n2_tmp[0];
-            normal2_tmp[1] += n2_tmp[1];
-            normal2_tmp[2] += n2_tmp[2];
-            normal2_count += a3;
+            if (a3 > 0)
+            {
+                normal2_tmp[0] += n2_tmp[0];
+                normal2_tmp[1] += n2_tmp[1];
+                normal2_tmp[2] += n2_tmp[2];
+                normal2_count += a3;
+                normals3.push_back({n2_tmp[0], n2_tmp[1], n2_tmp[2]});
+            }
         }
         
         std::vector<double> normal0 = {normal0_tmp[0] / normal0_count, normal0_tmp[1] / normal0_count, normal0_tmp[2] / normal0_count}; 
@@ -292,14 +315,20 @@ PolygonObject::PolygonObject(std::vector<std::initializer_list<double>>& l) : _s
 PolygonObject::PolygonObject(std::vector<Polygon>& polygons) : _sphere(CalculateBoundingSphere())
 {
     for (const auto& polygon : polygons) {
+        std::vector<std::vector<double>> normals1; // уже использованные нормали
+        std::vector<std::vector<double>> normals2; // уже использованные нормали
+        std::vector<std::vector<double>> normals3; // уже использованные нормали
         // Временные нормали и счетчики для каждой вершины
-        std::vector<double> normal0_tmp = {0, 0, 0}; 
+        std::vector<double> normal0_tmp = {polygon.nx, polygon.ny, polygon.nz}; 
+        normals1.push_back({polygon.nx, polygon.ny, polygon.nz});
         double normal0_count = 0;
         
-        std::vector<double> normal1_tmp = {0, 0, 0}; 
+        std::vector<double> normal1_tmp = {polygon.nx, polygon.ny, polygon.nz};
+        normals2.push_back({polygon.nx, polygon.ny, polygon.nz}); 
         double normal1_count = 0;
         
-        std::vector<double> normal2_tmp = {0, 0, 0}; 
+        std::vector<double> normal2_tmp = {polygon.nx, polygon.ny, polygon.nz}; 
+        normals3.push_back({polygon.nx, polygon.ny, polygon.nz});
         double normal2_count = 0;
 
         // Поиск соседей для усреднения нормалей
@@ -316,52 +345,65 @@ PolygonObject::PolygonObject(std::vector<Polygon>& polygons) : _sphere(Calculate
                     areVerticesEqual({polygon.x1, polygon.y1, polygon.z1}, {otherPolygon.x2, otherPolygon.y2, otherPolygon.z2}) ||
                     areVerticesEqual({polygon.x1, polygon.y1, polygon.z1}, {otherPolygon.x3, otherPolygon.y3, otherPolygon.z3})) 
                 {
-                    n0_tmp = formNormall({otherPolygon.x1, otherPolygon.y1, otherPolygon.z1}, {otherPolygon.x2, otherPolygon.y2, otherPolygon.z2}, {otherPolygon.x3, otherPolygon.y3, otherPolygon.z3});
-                    if (normal0_count >= 1)
-                        n0_tmp = alignNormall(n0_tmp, {polygon.x1, polygon.y1, polygon.z1});
+                    n0_tmp = {otherPolygon.nx, otherPolygon.ny, otherPolygon.nz};
+                    if (checkNormals(n0_tmp, normals1))
+                    {
+                        a1 = 1.0;
+                    }
                     eq_count++;
-                    a1 = 1.0;
                 }
                 
                 if (areVerticesEqual({polygon.x2, polygon.y2, polygon.z2}, {otherPolygon.x1, otherPolygon.y1, otherPolygon.z1}) ||
                     areVerticesEqual({polygon.x2, polygon.y2, polygon.z2}, {otherPolygon.x2, otherPolygon.y2, otherPolygon.z2}) ||
                     areVerticesEqual({polygon.x2, polygon.y2, otherPolygon.z2}, {otherPolygon.x3, otherPolygon.y3, otherPolygon.z3})) 
                 {
-                    n1_tmp = formNormall({otherPolygon.x1, otherPolygon.y1, otherPolygon.z1}, {otherPolygon.x2, otherPolygon.y2, otherPolygon.z2}, {otherPolygon.x3, otherPolygon.y3, otherPolygon.z3});
-                    if (normal1_count >= 1)
-                        n1_tmp = alignNormall(n1_tmp, {polygon.x2, polygon.y2, otherPolygon.z2});
+                    n1_tmp = {otherPolygon.nx, otherPolygon.ny, otherPolygon.nz};
+                    if (checkNormals(n1_tmp, normals2))
+                    {
+                        a2 = 1.0;
+                    }
                     eq_count++;
-                    a2 = 1.0;
                 }
                 
                 if (areVerticesEqual({polygon.x3, polygon.y3, polygon.z3}, {otherPolygon.x1, otherPolygon.y1, otherPolygon.z1}) ||
                     areVerticesEqual({polygon.x3, polygon.y3, polygon.z3}, {otherPolygon.x2, otherPolygon.y2, otherPolygon.z2}) ||
                     areVerticesEqual({polygon.x3, polygon.y3, polygon.z3}, {otherPolygon.x3, otherPolygon.y3, otherPolygon.z3})) 
                 {
-                    n2_tmp = formNormall({otherPolygon.x1, otherPolygon.y1, otherPolygon.z1}, {otherPolygon.x2, otherPolygon.y2, otherPolygon.z2}, {otherPolygon.x3, otherPolygon.y3, otherPolygon.z3});
-                    if (normal2_count >= 1)
-                        n2_tmp = alignNormall(n2_tmp, {polygon.x3, polygon.y3, polygon.z3});
+                    n2_tmp = {otherPolygon.nx, otherPolygon.ny, otherPolygon.nz};
+                    if (checkNormals(n2_tmp, normals3))
+                    {
+                        a3 = 1.0;
+                    }
                     eq_count++;
-                    a3 = 1.0;
                 }
 
                 if (eq_count == 3) continue;  // Пропуск совпадающего полигона
 
-                // Увеличиваем временные нормали
-                normal0_tmp[0] += n0_tmp[0];
-                normal0_tmp[1] += n0_tmp[1];
-                normal0_tmp[2] += n0_tmp[2];
-                normal0_count += a1;
+                if (a1 > 0)
+                {
+                    normal0_tmp[0] += n0_tmp[0];
+                    normal0_tmp[1] += n0_tmp[1];
+                    normal0_tmp[2] += n0_tmp[2];
+                    normal0_count += a1;
+                    normals1.push_back({n0_tmp[0], n0_tmp[1], n0_tmp[2]});
+                }
+                if (a2 > 0)
+                {
+                    normal1_tmp[0] += n1_tmp[0];
+                    normal1_tmp[1] += n1_tmp[1];
+                    normal1_tmp[2] += n1_tmp[2];
+                    normal1_count += a2;
+                    normals2.push_back({n1_tmp[0], n1_tmp[1], n1_tmp[2]});
+                }
 
-                normal1_tmp[0] += n1_tmp[0];
-                normal1_tmp[1] += n1_tmp[1];
-                normal1_tmp[2] += n1_tmp[2];
-                normal1_count += a2;
-
-                normal2_tmp[0] += n2_tmp[0];
-                normal2_tmp[1] += n2_tmp[1];
-                normal2_tmp[2] += n2_tmp[2];
-                normal2_count += a3;
+                if (a3 > 0)
+                {
+                    normal2_tmp[0] += n2_tmp[0];
+                    normal2_tmp[1] += n2_tmp[1];
+                    normal2_tmp[2] += n2_tmp[2];
+                    normal2_count += a3;
+                    normals3.push_back({n2_tmp[0], n2_tmp[1], n2_tmp[2]});
+                }
             }
         }
 
@@ -397,18 +439,28 @@ PolygonObject::PolygonObject(std::vector<std::vector<double>>& l) : _sphere(Calc
         std::vector<double> v2 = { vec[7], vec[6], vec[8] };
         Color color(vec[9], vec[10], vec[11]);
 
-        tempPolygons.emplace_back(v0[0], v0[1], v0[2], v1[0], v1[1], v1[2], v2[0], v2[1], v2[2], color);
+        tempPolygons.emplace_back(v0[0], v0[1], v0[2], v1[0], v1[1], v1[2], v2[0], v2[1], v2[2], color, vec[13], vec[12], vec[14]);
     }
 
     for (const auto& polygon : tempPolygons) {
-        std::vector<double> normal0_tmp = {0, 0, 0}; 
-        double normal0_count = 0;
+        double nx = polygon.nx; double ny = polygon.ny; double nz = polygon.nz;
+        std::vector<std::vector<double>> normals1; // уже использованные нормали
+        std::vector<std::vector<double>> normals2; // уже использованные нормали
+        std::vector<std::vector<double>> normals3; // уже использованные нормали
         
-        std::vector<double> normal1_tmp = {0, 0, 0}; 
-        double normal1_count = 0;
+        // ДАЛЕЕ ИДЕЯ ТАКАЯ: УСРЕДНЯТЬ НОРМАЛИ ПОСТЕПЕННО, ПОЭТОМУ ВРЕМЕННАЯ НОРМАЛЬ ЕСТЬ И ИХ СЧЕТЧИК
+        std::vector<double> normal0_tmp = {nx, ny, nz}; 
+        normals1.push_back({nx, ny, nz});
         
-        std::vector<double> normal2_tmp = {0, 0, 0}; 
-        double normal2_count = 0;
+        double normal0_count = 1;
+
+        std::vector<double> normal1_tmp = {nx, ny, nz}; 
+        normals2.push_back({nx, ny, nz});
+        double normal1_count = 1;
+
+        std::vector<double> normal2_tmp = {nx, ny, nz}; 
+        normals3.push_back({nx, ny, nz}); 
+        double normal2_count = 1;
 
         for (const auto& otherPolygon : tempPolygons) {
             if (&polygon != &otherPolygon) {
@@ -422,53 +474,66 @@ PolygonObject::PolygonObject(std::vector<std::vector<double>>& l) : _sphere(Calc
                     areVerticesEqual({polygon.x1, polygon.y1, polygon.z1}, {otherPolygon.x2, otherPolygon.y2, otherPolygon.z2}) ||
                     areVerticesEqual({polygon.x1, polygon.y1, polygon.z1}, {otherPolygon.x3, otherPolygon.y3, otherPolygon.z3})) 
                 {
-                    n0_tmp = formNormall({otherPolygon.x1, otherPolygon.y1, otherPolygon.z1}, {otherPolygon.x2, otherPolygon.y2, otherPolygon.z2}, {otherPolygon.x3, otherPolygon.y3, otherPolygon.z3});
-                    if (normal0_count >= 1)
-                        n0_tmp = alignNormall(n0_tmp, {polygon.x1, polygon.y1, polygon.z1});
+                    n0_tmp = {otherPolygon.nx, otherPolygon.ny, otherPolygon.nz};
+                    if (checkNormals(n0_tmp, normals1))
+                    {
+                        a1 = 1.0;
+                    }
                     eq_count++;
-                    a1 = 1.0;
                 }
                 
                 if (areVerticesEqual({polygon.x2, polygon.y2, polygon.z2}, {otherPolygon.x1, otherPolygon.y1, otherPolygon.z1}) ||
                     areVerticesEqual({polygon.x2, polygon.y2, polygon.z2}, {otherPolygon.x2, otherPolygon.y2, otherPolygon.z2}) ||
                     areVerticesEqual({polygon.x2, polygon.y2, polygon.z2}, {otherPolygon.x3, otherPolygon.y3, otherPolygon.z3})) 
                 {
-                    n1_tmp = formNormall({otherPolygon.x1, otherPolygon.y1, otherPolygon.z1}, {otherPolygon.x2, otherPolygon.y2, otherPolygon.z2}, {otherPolygon.x3, otherPolygon.y3, otherPolygon.z3});
-                    if (normal1_count >= 1)
-                        n1_tmp = alignNormall(n1_tmp, {polygon.x2, polygon.y2, polygon.z2});
+                    n1_tmp = {otherPolygon.nx, otherPolygon.ny, otherPolygon.nz};
+                    if (checkNormals(n1_tmp, normals2))
+                    {
+                        a2 = 1.0;
+                    }
                     eq_count++;
-                    a2 = 1.0;
                 }
                 if (areVerticesEqual({polygon.x3, polygon.y3, polygon.z3}, {otherPolygon.x1, otherPolygon.y1, otherPolygon.z1}) ||
                     areVerticesEqual({polygon.x3, polygon.y3, polygon.z3}, {otherPolygon.x2, otherPolygon.y2, otherPolygon.z2}) ||
                     areVerticesEqual({polygon.x3, polygon.y3, polygon.z3}, {otherPolygon.x3, otherPolygon.y3, otherPolygon.z3})) 
                 {
-                    n2_tmp = formNormall({otherPolygon.x1, otherPolygon.y1, otherPolygon.z1}, {otherPolygon.x2, otherPolygon.y2, otherPolygon.z2}, {otherPolygon.x3, otherPolygon.y3, otherPolygon.z3});
-                    if (normal2_count >= 1)
-                        n2_tmp = alignNormall(n2_tmp, {polygon.x3, polygon.y3, polygon.z3});
+                    n2_tmp = {otherPolygon.nx, otherPolygon.ny, otherPolygon.nz};
+                    if (checkNormals(n2_tmp, normals3))
+                    {
+                        a3 = 1.0;
+                    }
                     eq_count++;
-                    a3 = 1.0;
                 }
 
                 // Пропускаем полигон, совпадающий по всем вершинам
                 if (eq_count == 3) continue;
+                if (a1 > 0)
+                {
+                    normal0_tmp[0] += n0_tmp[0];
+                    normal0_tmp[1] += n0_tmp[1];
+                    normal0_tmp[2] += n0_tmp[2];
+                    normal0_count += a1;
+                    normals1.push_back({n0_tmp[0], n0_tmp[1], n0_tmp[2]});
+                }
+                if (a2 > 0)
+                {
+                    normal1_tmp[0] += n1_tmp[0];
+                    normal1_tmp[1] += n1_tmp[1];
+                    normal1_tmp[2] += n1_tmp[2];
+                    normal1_count += a2;
+                    normals2.push_back({n1_tmp[0], n1_tmp[1], n1_tmp[2]});
+                }
 
-                // Увеличиваем временные нормали для усреднения
-                normal0_tmp[0] += n0_tmp[0];
-                normal0_tmp[1] += n0_tmp[1];
-                normal0_tmp[2] += n0_tmp[2];
-                normal0_count += a1;
-
-                normal1_tmp[0] += n1_tmp[0];
-                normal1_tmp[1] += n1_tmp[1];
-                normal1_tmp[2] += n1_tmp[2];
-                normal1_count += a2;
-
-                normal2_tmp[0] += n2_tmp[0];
-                normal2_tmp[1] += n2_tmp[1];
-                normal2_tmp[2] += n2_tmp[2];
-                normal2_count += a3;
+                if (a3 > 0)
+                {
+                    normal2_tmp[0] += n2_tmp[0];
+                    normal2_tmp[1] += n2_tmp[1];
+                    normal2_tmp[2] += n2_tmp[2];
+                    normal2_count += a3;
+                    normals3.push_back({n2_tmp[0], n2_tmp[1], n2_tmp[2]});
+                }
             }
+        
         }
 
         // Усреднение временных нормалей для получения финальных нормалей вершин
