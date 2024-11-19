@@ -23,7 +23,7 @@
    <string>AirBallon</string>
   </property>
   <property name="layoutDirection">
-   <enum>Qt::LayoutDirection::LeftToRight</enum>
+   <enum>Qt::LeftToRight</enum>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout" stretch="5">
@@ -33,7 +33,7 @@
        <bool>true</bool>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgba(186, 215, 217, 1);</string>
+       <string notr="true">background-image : url(&quot;../Texture/Images/night.jpg&quot;);</string>
       </property>
      </widget>
     </item>

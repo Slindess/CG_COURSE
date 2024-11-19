@@ -35,6 +35,8 @@ set(SOURCE_FILES main.cpp MainWindow.cpp Drawer/QtDrawer.cpp
         Texture/BaseTexture.h Texture/BaseTexture.cpp
         Texture/Concrete/SimpleMountainTexture.h Texture/Concrete/SimpleMountainTexture.cpp
         Texture/Concrete/NoTexture.h Texture/Concrete/NoTexture.cpp
+        Texture/Concrete/SnowTexture.h Texture/Concrete/SnowTexture.cpp
+        Texture/Opener.h
         )
 
 # Укажите исполняемый файл и исходные файлы

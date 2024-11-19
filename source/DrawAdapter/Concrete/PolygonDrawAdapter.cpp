@@ -353,7 +353,7 @@ std::vector<double> interpolateNormals(const std::vector<double>& normalV1,
 
 void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std::shared_ptr<Camera>& camera, std::shared_ptr<QtDrawer> drawer, std::vector<std::vector<Color>> &buff)
 {
-    LightSource lightSource(50.0, -10.0, 20.0); // Источник света
+    LightSource lightSource(-100.0, 0.0, 0.0); // Источник света
 
     double specularExponent = 1.0;  // Определяет "резкость" бликов
     double specularStrength = 0.1;   // Влияние specular составляющей
@@ -415,15 +415,18 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
             if (!pixc.empty())
             {
                 int texX = static_cast<int>(
-                        baryCoords[0] * polygon->x1 +
-                        baryCoords[1] * polygon->x2 +
-                        baryCoords[2] * polygon->x3);
+            baryCoords[0] * 1 + 
+            baryCoords[1] * 1 + 
+            baryCoords[2] * 500);
+            
+int texY = static_cast<int>(
+            baryCoords[0] * 1 + 
+            baryCoords[1] * 500 + 
+            baryCoords[2] * 500);
 
-                int texY = static_cast<int>(
-                        baryCoords[0] * polygon->y1 +
-                        baryCoords[1] * polygon->y2 +
-                        baryCoords[2] * polygon->y3);
-
+// Нормализуем координаты на текстуре в диапазоне [0, texWidth] и [0, texHeight]
+texX = std::clamp(texX, 0, 500- 1);  // Ограничиваем в пределах ширины текстуры
+texY = std::clamp(texY, 0, 500 - 1); // Ограничиваем в пределах высоты текстуры
                 //std::cout << texX << " " << texY << "\n";
                 std::vector<int> pixelColor = polygon->texture->GetPixelColor(texX, texY);
                 if (!pixelColor.empty()) {
@@ -516,12 +519,12 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
             double reflectDotView = std::max(0.0, reflectDir[0] * viewDir[0] + reflectDir[1] * viewDir[1] + reflectDir[2] * viewDir[2]);
             double specularIntensity = pow(reflectDotView, specularExponent) * specularStrength;
 
-            /*
+            
             if (CheckShadow(lightDir, intersectionPoint, scene))
             {
-                diffuseIntensity *= 0.8;  // Слабая освещённость из-за тени
+                diffuseIntensity *= 0.3;  // Слабая освещённость из-за тени
                 specularIntensity = 0.0;  // Отсутствие бликов в тени
-            }*/
+            }
             
             // Общая освещённость с учётом diffuse и specular
             illuminatedColor.r = std::min(255.0, illuminatedColor.r * diffuseIntensity + 255 * specularIntensity);

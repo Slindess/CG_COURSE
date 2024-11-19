@@ -106,6 +106,7 @@ std::shared_ptr<PolygonObject> generateSphere(double radius) {
 
 Manager::Manager()
 {
+    std::cout << "НАЧАЛИ: \n";
     _scene = std::make_shared<Scene>();
     double cam_screen = 40.0;
     _camera = std::make_shared<Camera>(25.0, 15.0, cam_screen - 265, 25.0, 15.0, cam_screen);
@@ -138,58 +139,58 @@ void Manager::SetDrawer(std::shared_ptr<QtDrawer> drawer)
 
 void Manager::CamPlus()
 {
-    _camera->z_screen -= 5;
-    _camera->z_view -= 5;
+    _camera->z_screen -= 20;
+    _camera->z_view -= 20;
 }
 
 void Manager::CamMinus()
 {
-    _camera->z_screen += 5;
-    _camera->z_view += 5;
+    _camera->z_screen += 20;
+    _camera->z_view += 20;
 }
 
 void Manager::CamUp()
 {
-    _camera->x_screen += 5;
-    _camera->x_view += 5;
+    _camera->x_screen += 20;
+    _camera->x_view += 20;
 }
 
 void Manager::CamDown()
 {
-    _camera->x_screen -= 5;
-    _camera->x_view -= 5;
+    _camera->x_screen -= 20;
+    _camera->x_view -= 20;
 }
 
 void Manager::CamLeft()
 {
-    _camera->y_screen -= 5;
-    _camera->y_view -= 5;
+    _camera->y_screen -= 20;
+    _camera->y_view -= 20;
 }
 
 void Manager::CamRight()
 {
-    _camera->y_screen += 5;
-    _camera->y_view += 5;
+    _camera->y_screen += 20;
+    _camera->y_view += 20;
 }
 
 void Manager::CamPitchUp()
 {
-    _camera->pitch += 0.1;
+    _camera->pitch += 0.5;
 }
 
 void Manager::CamPitchDown()
 {
-    _camera->pitch -= 0.1;
+    _camera->pitch -= 0.5;
 }
 
 void Manager::CamYawLeft()
 {
-    _camera->yaw -= 0.1;
+    _camera->yaw -= 0.5;
 }
 
 void Manager::CamYawRight()
 {
-    _camera->yaw += 0.1;
+    _camera->yaw += 0.5;
 }
 
 void Manager::Manage()

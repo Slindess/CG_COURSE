@@ -8,10 +8,13 @@
 #include <QColor>
 #include <vector>
 #include <iostream>
-
+#include "Opener.h"
+/*
 std::vector<int> BaseTexture::GetPixelColor(int x, int y)
 {
-    QImage image = _image;
+    //QImage image = QImage(QString::fromStdString(_url));
+    Opener o = new Opener(GetType());
+    QImage image = o.GetImage();
     std::vector<int> colorVec;
     //std::cout << _url << "\n";
     //std::cout << image.width() << "\n";
@@ -24,7 +27,7 @@ std::vector<int> BaseTexture::GetPixelColor(int x, int y)
     }
 
     return colorVec;
-}
+}*/
 
 BaseTexture::~BaseTexture()
 {

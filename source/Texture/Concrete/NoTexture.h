@@ -13,6 +13,8 @@ class NoTexture : public BaseTexture
 {
 public:
     NoTexture() : BaseTexture("../Images/no.jpg") {}
+    virtual const std::type_info& GetType() {return typeid(*this);}
+    virtual std::vector<int> GetPixelColor(int x, int y) override;
 };
 
 

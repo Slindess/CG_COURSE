@@ -7,6 +7,7 @@
 #include "../Utils/Color.h"
 #include "../Texture/BaseTexture.h"
 #include "../Texture/Concrete/SimpleMountainTexture.h"
+#include "../Texture/Concrete/SnowTexture.h"
 
 std::vector<double> calculateNormall(const std::vector<double>& v0, const std::vector<double>& v1, const std::vector<double>& v2) {
     double nx = (v1[1] - v0[1]) * (v2[2] - v0[2]) - (v1[2] - v0[2]) * (v2[1] - v0[1]);
@@ -26,7 +27,7 @@ public:
 
     std::shared_ptr<PolygonObject> generateMountain() {
         std::vector<Polygon> polygons;
-        double rs = 1.3;
+        double rs = 3;
         std::vector<std::vector<double>> heights(_noiseSize * 10 / rs, std::vector<double>(_noiseSize * 10 /rs));
 
             // Генерация карты шума
@@ -35,7 +36,7 @@ public:
                 double x = i;
                 double y = j;
             
-                double height = (generateNoise(x, y) + 1) * 40.0; // Смещаем и масштабируем высоту
+                double height = (generateNoise(x, y) + 1) * 180.0; // Смещаем и масштабируем высоту
                 //std::cout << i / 0.1 << " " << j / 0.1 << " " << height << "\n";
                 // Сохраняем высоту в двумерном массиве
                 heights[i / (0.1 * rs)][j / (0.1 * rs)] = height; // Используем i и j для индексации
@@ -72,34 +73,46 @@ public:
                 double x4 = (double)(i + 1) * 0.1 * rs;
                 double y4 = (double)(j + 1)* 0.1 * rs;
 
-                x1 *= 10;
-                y1 *= 10;
-                x2 *= 10;
-                y2 *= 10;
-                x3 *= 10;
-                y3 *= 10;
-                x4 *= 10;
-                y4 *= 10;
-                x1 -= 40;
-                y1 -= 40;
-                x2 -= 40;
-                y2 -= 40;
-                x3 -= 40;
-                y3 -= 40;
-                x4 -= 40;
-                y4 -= 40;
+                double scaleX = 100;
+                double scaleY = 100;
+                double offsetX = 600;
+                double offsetY = 500;
+                double offsetH = 250;
+                x1 *= scaleX;
+                y1 *= scaleY;
+                x2 *= scaleX;
+                y2 *= scaleY;
+                x3 *= scaleX;
+                y3 *= scaleY;
+                x4 *= scaleX;
+                y4 *= scaleY;
+                x1 -= offsetX;
+                y1 -= offsetY;
+                x2 -= offsetX;
+                y2 -= offsetY;
+                x3 -= offsetX;
+                y3 -= offsetY;
+                x4 -= offsetX;
+                y4 -= offsetY;
                 //double x2 = x1 + 0.7;
                 //double y2 = y1 + 0.7;
                 Color mount = {160, 161, 163};
                 std::shared_ptr<BaseTexture> texture = std::make_shared<SimpleMountainTexture>();
+
+                if (h1 > (9 / 10.0) * maxHeight || h3 > (9 / 10.0) * maxHeight || h3 > (9 / 10.0) * maxHeight || h4 > (9 / 10.0) * maxHeight )
+                {
+                    texture = std::make_shared<SnowTexture>();
+                }
                 //Color snow = {160, 161, 163};
                 Color snow = {255, 255, 255};
                 //if (h1 < 25) continue;
                 Color result = (h1 > (9 / 10.0) * maxHeight || h3 > (9 / 10.0) * maxHeight || h3 > (9 / 10.0) * maxHeight || h4 > (9 / 10.0) * maxHeight ) ? snow : mount;
-                h1 = std::max(h1, h1) - 32.0;
-                h2 = std::max(h2, h2) - 32.0;
-                h3 = std::max(h3, h3) - 32.0;
-                h4 = std::max(h4, h4) - 32.0;
+                
+                
+                h1 = std::max(h1, h1) - offsetH;
+                h2 = std::max(h2, h2) - offsetH;
+                h3 = std::max(h3, h3) - offsetH;
+                h4 = std::max(h4, h4) - offsetH;
 
                 std::vector n1 = calculateNormall({x3, y3, h3}, {x1, y1, h1}, {x2, y2, h2});
                 std::vector n2 = calculateNormall({x2, y2, h2}, {x4, y4, h4}, {x3, y3, h3});

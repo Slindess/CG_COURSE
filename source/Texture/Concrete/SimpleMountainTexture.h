@@ -10,7 +10,9 @@
 class SimpleMountainTexture: public BaseTexture
 {
 public:
-    SimpleMountainTexture() : BaseTexture("/home/slindess/Рабочий\ стол/CG_COURSE/source/Texture/Images/blue-stone-texture.jpg") {}
+    SimpleMountainTexture() : BaseTexture("../Texture/Images/mount-3.jpg") {}
+    virtual const std::type_info& GetType() {return typeid(*this);}
+    virtual std::vector<int> GetPixelColor(int x, int y) override;
 };
 
 
