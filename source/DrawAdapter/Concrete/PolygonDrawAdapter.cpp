@@ -410,7 +410,8 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
                                                                { polygon->x3, polygon->y3, polygon->z3 });
 
             Color illuminatedColor = polygon->color;
-            auto pixc = polygon->texture->GetPixelColor(0,0);
+            auto pixc = polygon->texture->GetPixelColor(10, 10);
+            //std::cout << "OOO: " << polygon->texture->GetUrl() << "\n\n\n\n\n\n";
             if (!pixc.empty())
             {
                 int texX = static_cast<int>(
@@ -423,9 +424,10 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
                         baryCoords[1] * polygon->y2 +
                         baryCoords[2] * polygon->y3);
 
+                //std::cout << texX << " " << texY << "\n";
                 std::vector<int> pixelColor = polygon->texture->GetPixelColor(texX, texY);
-
                 if (!pixelColor.empty()) {
+                    //std::cout << "Внутри\n";
                     illuminatedColor.r = pixelColor[0];
                     illuminatedColor.g = pixelColor[1];
                     illuminatedColor.b = pixelColor[2];
@@ -560,7 +562,7 @@ void PolygonDrawAdapter::Draw(std::shared_ptr<Scene> scene, std::shared_ptr<Came
     auto start = std::chrono::high_resolution_clock::now();
     Color backgroundColor(-1, -1, -1);
     std::vector<std::vector<Color>> buff(camera->height, std::vector<Color>(camera->width, backgroundColor));  // БУФЕР КАДРА
-    const int numThreads = 8;
+    const int numThreads = 42;
     std::cout << "NUM of Threads: " << numThreads << "\n";
     std::vector<std::thread> threads;
 

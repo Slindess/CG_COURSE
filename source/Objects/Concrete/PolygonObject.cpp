@@ -420,7 +420,8 @@ PolygonObject::PolygonObject(std::vector<Polygon>& polygons) : _sphere(Calculate
             polygon.color,
             normal0[0], normal0[1], normal0[2],
             normal1[0], normal1[1], normal1[2],
-            normal2[0], normal2[1], normal2[2]
+            normal2[0], normal2[1], normal2[2],
+            polygon.texture
         ));
     }
 

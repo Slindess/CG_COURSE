@@ -7,13 +7,14 @@
 #include <QImage>
 #include <QColor>
 #include <vector>
+#include <iostream>
 
 std::vector<int> BaseTexture::GetPixelColor(int x, int y)
 {
-    QString imagePath = QString::fromStdString(_url);;
-    QImage image(imagePath);
+    QImage image = _image;
     std::vector<int> colorVec;
-
+    //std::cout << _url << "\n";
+    //std::cout << image.width() << "\n";
     if (x >= 0 && x < image.width() && y >= 0 && y < image.height())
     {
         QColor color = image.pixelColor(x, y);

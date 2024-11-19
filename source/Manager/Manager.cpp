@@ -114,7 +114,6 @@ Manager::Manager()
     std::shared_ptr<PerlinNoiseMountainGenerator> g = std::make_shared<PerlinNoiseMountainGenerator>(10, 10, 20);
     std::shared_ptr<PolygonObject> mountain = g->generateMountain();
     _scene->addObject(std::dynamic_pointer_cast<BaseObject>(mountain));
-    
 
     
     std::shared_ptr<PolygonObject> oxo = std::make_shared<PolygonObject>(

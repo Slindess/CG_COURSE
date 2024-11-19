@@ -10,7 +10,7 @@
 class SimpleMountainTexture: public BaseTexture
 {
 public:
-    SimpleMountainTexture() : BaseTexture("../Images/blue-stone-texture.jpg") {}
+    SimpleMountainTexture() : BaseTexture("/home/slindess/Рабочий\ стол/CG_COURSE/source/Texture/Images/blue-stone-texture.jpg") {}
 };
 
 

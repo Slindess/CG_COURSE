@@ -111,7 +111,8 @@ public:
 
             }
         }
-
+        //auto p = polygons[0];
+        //std::cout << p.texture->GetUrl() << "\n\n\n\n\n";
         return std::make_shared<PolygonObject>(polygons);
     }
 
