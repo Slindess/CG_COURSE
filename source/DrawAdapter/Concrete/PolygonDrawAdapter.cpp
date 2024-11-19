@@ -403,7 +403,34 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
             double imageX = physX;
             double imageY = physY;
 
+            // Вычисляем бариатрические координаты
+            std::vector<double> baryCoords = barycentricCoords(intersectionPoint,
+                                                               { polygon->x1, polygon->y1, polygon->z1 },
+                                                               { polygon->x2, polygon->y2, polygon->z2 },
+                                                               { polygon->x3, polygon->y3, polygon->z3 });
+
             Color illuminatedColor = polygon->color;
+            auto pixc = polygon->texture->GetPixelColor(0,0);
+            if (!pixc.empty())
+            {
+                int texX = static_cast<int>(
+                        baryCoords[0] * polygon->x1 +
+                        baryCoords[1] * polygon->x2 +
+                        baryCoords[2] * polygon->x3);
+
+                int texY = static_cast<int>(
+                        baryCoords[0] * polygon->y1 +
+                        baryCoords[1] * polygon->y2 +
+                        baryCoords[2] * polygon->y3);
+
+                std::vector<int> pixelColor = polygon->texture->GetPixelColor(texX, texY);
+
+                if (!pixelColor.empty()) {
+                    illuminatedColor.r = pixelColor[0];
+                    illuminatedColor.g = pixelColor[1];
+                    illuminatedColor.b = pixelColor[2];
+                }
+            }
 
             std::vector<double> v0 = { polygon->x1, polygon->y1, polygon->z1 };
             std::vector<double> v1 = { polygon->x2, polygon->y2, polygon->z2 };
@@ -418,12 +445,6 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
             std::vector<double> normalV2 = polygon->GetVertex2Normal();
             std::vector<double> normalV3 = polygon->GetVertex3Normal();
 
-            
-            // Вычисляем бариатрические координаты
-            std::vector<double> baryCoords = barycentricCoords(intersectionPoint, 
-                                                                { polygon->x1, polygon->y1, polygon->z1 }, 
-                                                                { polygon->x2, polygon->y2, polygon->z2 }, 
-                                                                { polygon->x3, polygon->y3, polygon->z3 });
 
 
             std::vector<double> interpolatedNormal = interpolateNormals(normalV1, normalV2, normalV3, baryCoords);
@@ -454,43 +475,7 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
             }
 
             //std::vector<double> normal = normalUnique;
-        
-            if (polygon->color.b != 104) goto jmp;
-            std::cout << v0[0] << " " << v0[1] << " " << v0[2] << "\n";
-            std::cout << v1[0] << " " << v1[1] << " " << v1[2] << "\n";
-            std::cout << v2[0] << " " << v2[1] << " " << v2[2] << "\n";
-            std::cout << "normal1: ";
-            for (const auto& value : normalV1) {
-                std::cout << value << " ";
-            }
-            std::cout << "\n";
 
-            std::cout << "normal2: ";
-            for (const auto& value : normalV2) {
-                std::cout << value << " ";
-            }
-            std::cout << "\n";
-
-            std::cout << "normal3: ";
-            for (const auto& value : normalV3) {
-                std::cout << value << " ";
-            }
-            std::cout << "\n";
-
-            std::cout << "normalUnique: ";
-            for (const auto& value : normalUnique) {
-                std::cout << value << " ";
-            }
-            std::cout << "\n";
-
-            // Вывод элементов вектора normal
-            std::cout << "normal: ";
-            for (const auto& value : normal) {
-                std::cout << value << " ";
-            }
-            std::cout << "\n-------\n"; 
-            // Направление света
-            jmp:
             std::vector<double> lightDir = lightSource.getDirection();
             double lightMagnitude = std::abs(sqrt(lightDir[0] * lightDir[0] + lightDir[1] * lightDir[1] + lightDir[2] * lightDir[2]));
             lightDir[0] /= lightMagnitude;
@@ -575,7 +560,7 @@ void PolygonDrawAdapter::Draw(std::shared_ptr<Scene> scene, std::shared_ptr<Came
     auto start = std::chrono::high_resolution_clock::now();
     Color backgroundColor(-1, -1, -1);
     std::vector<std::vector<Color>> buff(camera->height, std::vector<Color>(camera->width, backgroundColor));  // БУФЕР КАДРА
-    const int numThreads = 42;
+    const int numThreads = 8;
     std::cout << "NUM of Threads: " << numThreads << "\n";
     std::vector<std::thread> threads;
 

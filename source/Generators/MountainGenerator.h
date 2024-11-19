@@ -5,6 +5,8 @@
 #include <random>
 #include "../Objects/Concrete/PolygonObject.h" // Подключаем ваш класс PolygonObject
 #include "../Utils/Color.h"
+#include "../Texture/BaseTexture.h"
+#include "../Texture/Concrete/SimpleMountainTexture.h"
 
 std::vector<double> calculateNormall(const std::vector<double>& v0, const std::vector<double>& v1, const std::vector<double>& v2) {
     double nx = (v1[1] - v0[1]) * (v2[2] - v0[2]) - (v1[2] - v0[2]) * (v2[1] - v0[1]);
@@ -89,6 +91,7 @@ public:
                 //double x2 = x1 + 0.7;
                 //double y2 = y1 + 0.7;
                 Color mount = {160, 161, 163};
+                std::shared_ptr<BaseTexture> texture = std::make_shared<SimpleMountainTexture>();
                 //Color snow = {160, 161, 163};
                 Color snow = {255, 255, 255};
                 //if (h1 < 25) continue;
@@ -100,8 +103,8 @@ public:
 
                 std::vector n1 = calculateNormall({x3, y3, h3}, {x1, y1, h1}, {x2, y2, h2});
                 std::vector n2 = calculateNormall({x2, y2, h2}, {x4, y4, h4}, {x3, y3, h3});
-                polygons.emplace_back(h1, y1, x1, h2, y2, x2, h3, y3, x3, result, n1[0], n1[1], n1[2]);
-                polygons.emplace_back(h4, y4, x4, h2, y2, x2, h3, y3, x3, result, n2[0], n2[1], n2[2]);
+                polygons.emplace_back(h1, y1, x1, h2, y2, x2, h3, y3, x3, result, n1[0], n1[1], n1[2], texture);
+                polygons.emplace_back(h4, y4, x4, h2, y2, x2, h3, y3, x3, result, n2[0], n2[1], n2[2], texture);
                 //polygons.emplace_back(h1, y1, x1, h2, y1, x2, h3, y1, x1, result);
                 //polygons.emplace_back(h2, y1, x2, h4, y2, x2, h3, y2, x1, result);
 

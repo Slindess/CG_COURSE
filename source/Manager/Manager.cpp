@@ -52,8 +52,8 @@ std::vector<double> calculateNormal(const std::vector<double>& v0, const std::ve
 
 std::shared_ptr<PolygonObject> generateSphere(double radius) {
     std::vector<std::vector<double>> polygons;
-    double segments = 50;
-    double rings = 10;
+    double segments = 100;
+    double rings = 20;
     double pi = 3.14159265358979323846;
     double ofx = 10;
     double ofy = 20;
