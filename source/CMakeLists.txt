@@ -32,6 +32,7 @@ set(SOURCE_FILES main.cpp MainWindow.cpp Drawer/QtDrawer.cpp
         Scene/Scene.cpp Scene/Scene.h
         Light/Light.h
         Generators/MountainGenerator.h Generators/MountainGenerator.cpp
+        Generators/DiamondSquareMountainGenerator.h Generators/DiamondSquareMountainGenerator.cpp
         Texture/BaseTexture.h Texture/BaseTexture.cpp
         Texture/Concrete/SimpleMountainTexture.h Texture/Concrete/SimpleMountainTexture.cpp
         Texture/Concrete/NoTexture.h Texture/Concrete/NoTexture.cpp

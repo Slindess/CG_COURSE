@@ -353,7 +353,7 @@ std::vector<double> interpolateNormals(const std::vector<double>& normalV1,
 
 void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std::shared_ptr<Camera>& camera, std::shared_ptr<QtDrawer> drawer, std::vector<std::vector<Color>> &buff)
 {
-    LightSource lightSource(-100.0, 0.0, 0.0); // Источник света
+    LightSource lightSource(20.0, -20.0, 0.0); // Источник света
 
     double specularExponent = 1.0;  // Определяет "резкость" бликов
     double specularStrength = 0.1;   // Влияние specular составляющей
@@ -519,12 +519,12 @@ texY = std::clamp(texY, 0, 500 - 1); // Ограничиваем в предел
             double reflectDotView = std::max(0.0, reflectDir[0] * viewDir[0] + reflectDir[1] * viewDir[1] + reflectDir[2] * viewDir[2]);
             double specularIntensity = pow(reflectDotView, specularExponent) * specularStrength;
 
-            
+            /*
             if (CheckShadow(lightDir, intersectionPoint, scene))
             {
                 diffuseIntensity *= 0.3;  // Слабая освещённость из-за тени
                 specularIntensity = 0.0;  // Отсутствие бликов в тени
-            }
+            }*/
             
             // Общая освещённость с учётом diffuse и specular
             illuminatedColor.r = std::min(255.0, illuminatedColor.r * diffuseIntensity + 255 * specularIntensity);
@@ -565,7 +565,7 @@ void PolygonDrawAdapter::Draw(std::shared_ptr<Scene> scene, std::shared_ptr<Came
     auto start = std::chrono::high_resolution_clock::now();
     Color backgroundColor(-1, -1, -1);
     std::vector<std::vector<Color>> buff(camera->height, std::vector<Color>(camera->width, backgroundColor));  // БУФЕР КАДРА
-    const int numThreads = 42;
+    const int numThreads = 8;
     std::cout << "NUM of Threads: " << numThreads << "\n";
     std::vector<std::thread> threads;
 

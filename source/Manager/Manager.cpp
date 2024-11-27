@@ -8,6 +8,7 @@
 #include "../DrawAdapter/Concrete/CarcasDrawAdapter.h"
 #include "../DrawAdapter/Concrete/PolygonDrawAdapter.h"
 #include "../Generators/MountainGenerator.h"
+#include "../Generators/DiamondSquareMountainGenerator.h"
 #include <cmath>
 #include <iostream>
 
@@ -109,10 +110,11 @@ Manager::Manager()
     std::cout << "НАЧАЛИ: \n";
     _scene = std::make_shared<Scene>();
     double cam_screen = 40.0;
-    _camera = std::make_shared<Camera>(25.0, 15.0, cam_screen - 265, 25.0, 15.0, cam_screen);
+    _camera = std::make_shared<Camera>(25.0, 15.0, cam_screen - 265 + 40, 25.0, 15.0, cam_screen + 40);
     
     
-    std::shared_ptr<PerlinNoiseMountainGenerator> g = std::make_shared<PerlinNoiseMountainGenerator>(10, 10, 20);
+    //std::shared_ptr<PerlinNoiseMountainGenerator> g = std::make_shared<PerlinNoiseMountainGenerator>(10, 10, 20);
+    std::shared_ptr<DiamondSquareMountainGenerator> g = std::make_shared<DiamondSquareMountainGenerator>(17, 15);
     std::shared_ptr<PolygonObject> mountain = g->generateMountain();
     _scene->addObject(std::dynamic_pointer_cast<BaseObject>(mountain));
 
@@ -145,14 +147,14 @@ void Manager::CamPlus()
 
 void Manager::CamMinus()
 {
-    _camera->z_screen += 20;
-    _camera->z_view += 20;
+    _camera->z_screen += 10;
+    _camera->z_view += 10;
 }
 
 void Manager::CamUp()
 {
-    _camera->x_screen += 20;
-    _camera->x_view += 20;
+    _camera->x_screen += 10;
+    _camera->x_view += 10;
 }
 
 void Manager::CamDown()
@@ -163,14 +165,14 @@ void Manager::CamDown()
 
 void Manager::CamLeft()
 {
-    _camera->y_screen -= 20;
-    _camera->y_view -= 20;
+    _camera->y_screen -= 10;
+    _camera->y_view -= 10;
 }
 
 void Manager::CamRight()
 {
-    _camera->y_screen += 20;
-    _camera->y_view += 20;
+    _camera->y_screen += 10;
+    _camera->y_view += 10;
 }
 
 void Manager::CamPitchUp()
