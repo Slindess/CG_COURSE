@@ -374,7 +374,6 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
     double t0 = (camera->z_view - rayOrigin[2]) / rayDir[2];
     double tmin = 10000.0;
     double t = 0.0;
-
     for (const auto& object : scene->objects)
     {
         double sphereT;
