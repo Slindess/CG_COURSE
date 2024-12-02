@@ -42,6 +42,7 @@ public:
     PolygonObject(std::vector<std::initializer_list<double>>& l);
     PolygonObject(std::vector<Polygon>& polygons);
     PolygonObject(std::vector<std::vector<double>>& l);
+    PolygonObject(std::vector<Polygon>& polygons, int /*dummy*/);
     BoundingSphere Sphere() {return _sphere;};
     ~PolygonObject();
 

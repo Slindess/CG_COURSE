@@ -9,6 +9,7 @@
 #include "../DrawAdapter/Concrete/PolygonDrawAdapter.h"
 #include "../Generators/MountainGenerator.h"
 #include "../Generators/DiamondSquareMountainGenerator.h"
+#include "../Reader/Concrete/ObjReader.h"
 #include <cmath>
 #include <iostream>
 
@@ -110,12 +111,16 @@ Manager::Manager()
     std::cout << "НАЧАЛИ: \n";
     _scene = std::make_shared<Scene>();
     double cam_screen = 40.0;
-    _camera = std::make_shared<Camera>(25.0, 15.0, cam_screen - 265 + 40, 25.0, 15.0, cam_screen + 40);
+    _camera = std::make_shared<Camera>(25.0, 15.0, cam_screen - 265 + 60, 25.0, 15.0, cam_screen + 60);
     
     
     //std::shared_ptr<PerlinNoiseMountainGenerator> g = std::make_shared<PerlinNoiseMountainGenerator>(10, 10, 20);
-    std::shared_ptr<DiamondSquareMountainGenerator> g = std::make_shared<DiamondSquareMountainGenerator>(33, 5);
-    std::shared_ptr<PolygonObject> mountain = g->generateMountain();
+    std::shared_ptr<DiamondSquareMountainGenerator> g = std::make_shared<DiamondSquareMountainGenerator>(32, 15);
+    //std::shared_ptr<PolygonObject> mountain = g->generateMountain();
+    
+    std::shared_ptr<ObjReader> r = std::make_shared<ObjReader>();
+    std::shared_ptr<PolygonObject> mountain = r->Read("../Models/ballon.obj");
+
     _scene->addObject(std::dynamic_pointer_cast<BaseObject>(mountain));
     
     std::shared_ptr<PolygonObject> oxo = std::make_shared<PolygonObject>(

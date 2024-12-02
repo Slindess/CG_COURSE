@@ -314,6 +314,7 @@ PolygonObject::PolygonObject(std::vector<std::initializer_list<double>>& l) : _s
 
 PolygonObject::PolygonObject(std::vector<Polygon>& polygons) : _sphere(CalculateBoundingSphere())
 {
+    std::cout << "Размер массива: " << polygons.size() << "\n";
     for (const auto& polygon : polygons) {
         std::vector<std::vector<double>> normals1; // уже использованные нормали
         std::vector<std::vector<double>> normals2; // уже использованные нормали
@@ -557,6 +558,29 @@ PolygonObject::PolygonObject(std::vector<std::vector<double>>& l) : _sphere(Calc
     // Завершаем создание объекта
     _sphere = CalculateBoundingSphere();
 }
+
+PolygonObject::PolygonObject(std::vector<Polygon>& polygons, int /*dummy*/) 
+    : _sphere(CalculateBoundingSphere())
+{
+    std::cout << "Размер массива: " << polygons.size() << "\n";
+    
+    for (const auto& polygon : polygons) {
+        // Добавляем полигон с уже известными нормалями
+        _components.push_back(std::make_shared<Polygon>(
+            polygon.x1, polygon.y1, polygon.z1,
+            polygon.x2, polygon.y2, polygon.z2,
+            polygon.x3, polygon.y3, polygon.z3,
+            polygon.color,
+            polygon.n1x, polygon.n1y, polygon.n1z,
+            polygon.n2x, polygon.n2y, polygon.n2z,
+            polygon.n3x, polygon.n3y, polygon.n3z,
+            polygon.texture
+        ));
+    }
+
+    _sphere = CalculateBoundingSphere();
+}
+
 
 
 PolygonObject::~PolygonObject()
