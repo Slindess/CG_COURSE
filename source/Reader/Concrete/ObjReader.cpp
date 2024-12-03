@@ -7,6 +7,8 @@
 #include <iostream>
 
 #include "../../Utils/Color.h"
+#include "../../Texture/BaseTexture.h"
+#include "../../Texture/Concrete/SimpleMountainTexture.h"
 
 std::shared_ptr<PolygonObject> ObjReader::Read(std::string fileName)
 {
@@ -48,7 +50,7 @@ std::shared_ptr<PolygonObject> ObjReader::Read(std::string fileName)
             bool correct_polygon = true;
             for (int i = 0; i < 4; ++i) {
                 if (!(lineStream >> vertexData)) {
-                    throw std::runtime_error("Invalid face definition, not enough vertices.");
+                    //throw std::runtime_error("Invalid face definition, not enough vertices.");
                 }
 
                 
@@ -84,21 +86,27 @@ std::shared_ptr<PolygonObject> ObjReader::Read(std::string fileName)
 
             if (correct_polygon)
             {
-                polygons.push_back(*(new Polygon(polygon[0][1] * 10, polygon[0][0]* 10, polygon[0][2]* 10,
-                                                polygon[1][1] * 10, polygon[1][0]* 10, polygon[1][2]* 10,
-                                                polygon[2][1]* 10, polygon[2][0]* 10, polygon[2][2]* 10,
+                double scale = 0.1;
+                double push = 0;
+                std::shared_ptr<BaseTexture> texture = std::make_shared<SimpleMountainTexture>();
+                polygons.push_back(*(new Polygon(polygon[0][1] * scale, polygon[0][0]* scale, polygon[0][2]* scale + push,
+                                                polygon[1][1] * scale, polygon[1][0]* scale, polygon[1][2]* scale + push,
+                                                polygon[2][1]* scale, polygon[2][0]* scale, polygon[2][2]* scale + push,
                                                 *(new Color(160, 161, 163)), 
                                                 normals[0][1], normals[0][0], normals[0][2],
                                                 normals[1][1], normals[1][0], normals[1][2],
-                                                normals[2][1], normals[2][0], normals[2][2])));
+                                                normals[2][1], normals[2][0], normals[2][2], texture)));
                 
-                polygons.push_back(*(new Polygon(polygon[0][1] * 10, polygon[0][0]* 10, polygon[0][2]* 10,
-                                                polygon[3][1] * 10, polygon[3][0]* 10, polygon[3][2]* 10,
-                                                polygon[2][1]* 10, polygon[2][0]* 10, polygon[2][2]* 10,
-                                                *(new Color(160, 161, 163)), 
-                                                normals[0][1], normals[0][0], normals[0][2],
-                                                normals[3][1], normals[3][0], normals[3][2],
-                                                normals[2][1], normals[2][0], normals[2][2])));
+                if (polygons.size() > 3)
+                {
+                    polygons.push_back(*(new Polygon(polygon[0][1] * scale, polygon[0][0]* scale, polygon[0][2]* scale+ push,
+                                                    polygon[3][1] * scale, polygon[3][0]* scale, polygon[3][2]* scale+ push,
+                                                    polygon[2][1]* scale, polygon[2][0]* scale, polygon[2][2]* scale+ push,
+                                                    *(new Color(160, 161, 163)), 
+                                                    normals[0][1], normals[0][0], normals[0][2],
+                                                    normals[3][1], normals[3][0], normals[3][2],
+                                                    normals[2][1], normals[2][0], normals[2][2], texture)));
+                }
             }
         }
     }

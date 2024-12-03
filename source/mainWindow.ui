@@ -33,7 +33,7 @@
        <bool>true</bool>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-image : url(&quot;../Texture/Images/night.jpg&quot;);</string>
+       <string notr="true">background-image : url(&quot;../Texture/Images/sky.jpg&quot;);</string>
       </property>
      </widget>
     </item>

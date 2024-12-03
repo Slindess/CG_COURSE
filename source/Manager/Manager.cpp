@@ -114,14 +114,15 @@ Manager::Manager()
     _camera = std::make_shared<Camera>(25.0, 15.0, cam_screen - 265 + 60, 25.0, 15.0, cam_screen + 60);
     
     
-    //std::shared_ptr<PerlinNoiseMountainGenerator> g = std::make_shared<PerlinNoiseMountainGenerator>(10, 10, 20);
-    std::shared_ptr<DiamondSquareMountainGenerator> g = std::make_shared<DiamondSquareMountainGenerator>(32, 15);
+    std::shared_ptr<PerlinNoiseMountainGenerator> g = std::make_shared<PerlinNoiseMountainGenerator>(10, 10, 20);
+    //std::shared_ptr<DiamondSquareMountainGenerator> g = std::make_shared<DiamondSquareMountainGenerator>(65, 15);
     //std::shared_ptr<PolygonObject> mountain = g->generateMountain();
     
     std::shared_ptr<ObjReader> r = std::make_shared<ObjReader>();
-    std::shared_ptr<PolygonObject> mountain = r->Read("../Models/ballon.obj");
+    std::shared_ptr<PolygonObject> balloon = r->Read("../Models/mountain3.obj");
 
-    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(mountain));
+    //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(mountain));
+    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(balloon));
     
     std::shared_ptr<PolygonObject> oxo = std::make_shared<PolygonObject>(
         std::initializer_list<std::initializer_list<double>>{
