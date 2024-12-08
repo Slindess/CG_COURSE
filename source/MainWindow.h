@@ -34,6 +34,7 @@ private slots:
     void on_firstButton_clicked();
     void on_secondButton_clicked();
     void on_thirdButton_clicked();
+    void on_fourthButton_clicked();
 
 private:
     Ui::MainWindow *ui; // Указатель на сгенерированный класс из ui

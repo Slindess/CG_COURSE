@@ -293,6 +293,22 @@ void Manager::SetCameraPosition(int type)
         _scene->addObject(std::dynamic_pointer_cast<BaseObject>(_balloon));
 
     }
+    else if (type == 4)
+    {
+        auto sphere = _balloon->Sphere();
+        _camera->x_screen = sphere.center[0] + 50;
+        _camera->y_screen = sphere.center[1] + 15;
+        _camera->z_screen = sphere.center[2] - 65;
+
+        _camera->x_view = sphere.center[0] + 50;
+        _camera->y_view = sphere.center[1] + 15;
+        _camera->z_view = _camera->z_screen + 265;
+        std::cout << _camera->x_screen << " " << _camera->y_screen << " " << _camera->z_view << "\n";
+        std::cout << sphere.center[0] << " " << sphere.center[1] << " " << sphere.center[2] << "\n";
+         _scene->removeObject(_balloon);
+        _scene->addObject(std::dynamic_pointer_cast<BaseObject>(_balloon));
+
+    }
 
 }
 

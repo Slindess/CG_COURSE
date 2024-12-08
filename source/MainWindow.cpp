@@ -155,6 +155,12 @@ void MainWindow::on_thirdButton_clicked()
     manager->Manage();
 }
 
+void MainWindow::on_fourthButton_clicked()
+{
+    scene->clear();
+    manager->SetCameraPosition(4);
+    manager->Manage();
+}
 
 MainWindow::~MainWindow()
 {
