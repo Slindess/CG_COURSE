@@ -119,10 +119,10 @@ Manager::Manager()
     std::shared_ptr<PolygonObject> mountain = g->generateMountain();
     
     std::shared_ptr<ObjReader> r = std::make_shared<ObjReader>();
-    std::shared_ptr<PolygonObject> balloon = r->Read("../Models/balloon3.obj");
+    _balloon = r->Read("../Models/balloon3.obj");
 
     _scene->addObject(std::dynamic_pointer_cast<BaseObject>(mountain));
-    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(balloon));
+    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(_balloon));
     
     std::shared_ptr<PolygonObject> oxo = std::make_shared<PolygonObject>(
         std::initializer_list<std::initializer_list<double>>{
@@ -148,36 +148,48 @@ void Manager::CamPlus()
 {
     _camera->z_screen -= 20;
     _camera->z_view -= 20;
+    
+    _balloon->Move(0, 0, -20);
 }
 
 void Manager::CamMinus()
 {
     _camera->z_screen += 10;
     _camera->z_view += 10;
+
+    _balloon->Move(0, 0, 10);
 }
 
 void Manager::CamUp()
 {
     _camera->x_screen += 10;
     _camera->x_view += 10;
+
+    _balloon->Move(10, 0, 0);
 }
 
 void Manager::CamDown()
 {
     _camera->x_screen -= 20;
     _camera->x_view -= 20;
+
+    _balloon->Move(-20, 0, 0);
 }
 
 void Manager::CamLeft()
 {
-    _camera->y_screen -= 100;
-    _camera->y_view -= 100;
+    _camera->y_screen -= 20;
+    _camera->y_view -= 20;
+
+    _balloon->Move(0, -20, 0);
 }
 
 void Manager::CamRight()
 {
-    _camera->y_screen += 10;
-    _camera->y_view += 10;
+    _camera->y_screen += 20;
+    _camera->y_view += 20;
+
+    _balloon->Move(0, 20, 0);
 }
 
 void Manager::CamPitchUp()
@@ -203,7 +215,7 @@ void Manager::CamYawRight()
 void Manager::Manage()
 {
     //_scene->ClearScene();
-
+    
     std::shared_ptr<PolygonDrawAdapter> adapter = std::make_shared<PolygonDrawAdapter>(_drawer);
     adapter->Draw(_scene, _camera); 
 }
@@ -239,6 +251,49 @@ void Manager::setInfo(bool on)
 
     std::shared_ptr<PolygonObject> floor = generateFloor(-100.0, 100.0, -30.0, 30.0, 10.0);
     //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(floor));
+}
+
+void Manager::SetCameraPosition(int type)
+{
+    if (type == 1)
+    {
+        auto sphere = _balloon->Sphere();
+        
+        
+        _camera->x_screen = sphere.center[0] - 67;
+        _camera->y_screen = sphere.center[1] + 15;
+        _camera->z_screen = sphere.center[2] - 165;
+
+        _camera->x_view = sphere.center[0] - 67;
+        _camera->y_view = sphere.center[1] + 15;
+        _camera->z_view = _camera->z_screen + 265;
+        std::cout << _camera->x_screen << " " << _camera->y_screen << " " << _camera->z_view << "\n";
+        std::cout << sphere.center[0] << " " << sphere.center[1] << " " << sphere.center[2] << "\n";
+         _scene->removeObject(_balloon);
+        _scene->addObject(std::dynamic_pointer_cast<BaseObject>(_balloon));
+
+    }
+    else if (type == 2)
+    {
+        _scene->removeObject(_balloon);
+    }
+    else if (type == 3)
+    {
+        auto sphere = _balloon->Sphere();
+        _camera->x_screen = sphere.center[0] - 75;
+        _camera->y_screen = sphere.center[1];
+        _camera->z_screen = sphere.center[2] - 263;
+
+        _camera->x_view = sphere.center[0] - 75;
+        _camera->y_view = sphere.center[1];
+        _camera->z_view = _camera->z_screen + 265;
+        std::cout << _camera->x_screen << " " << _camera->y_screen << " " << _camera->z_view << "\n";
+        std::cout << sphere.center[0] << " " << sphere.center[1] << " " << sphere.center[2] << "\n";
+        _scene->removeObject(_balloon);
+        _scene->addObject(std::dynamic_pointer_cast<BaseObject>(_balloon));
+
+    }
+
 }
 
 Manager::~Manager() {}

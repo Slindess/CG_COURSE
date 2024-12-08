@@ -7,6 +7,7 @@
 #include "../Scene/Scene.h"
 #include "../Utils/SolutionImpl.h"
 #include "../Objects/BaseObject.h"
+#include "../Objects/Concrete/PolygonObject.h"
 #include "../DrawAdapter/BaseDrawAdapter.h"
 #include "../Camera/Camera.h"
 
@@ -26,6 +27,7 @@ public:
     void CamPitchDown();
     void CamYawLeft();
     void CamYawRight();
+    void SetCameraPosition(int type);  // Ну уже совсем минус-вайб
     void Manage();  // ЕГО МБ БУДЕТ ПО ТАЙМЕРУ ДЕРГАТЬ QT???
     ~Manager();
 
@@ -36,6 +38,7 @@ private:
     std::shared_ptr<Scene> _scene;
     std::shared_ptr<QtDrawer> _drawer;
     std::shared_ptr<Camera> _camera;
+    std::shared_ptr<PolygonObject> _balloon; // Пришлось пойти на это, потому что шар привязан к камере
     //std::shared_ptr<SolutionImpl<BaseObject, BaseDrawAdapter>> _solution;
 
     void setInfo(bool on);

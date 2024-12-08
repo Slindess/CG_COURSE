@@ -24,6 +24,17 @@ public:
 protected:
     void keyPressEvent(QKeyEvent *event) override;
 
+private slots:
+    void on_leftButton_clicked();
+    void on_rightButton_clicked();
+    void on_upButton_clicked();
+    void on_downButton_clicked();
+    void on_minusButton_clicked();
+    void on_plusButton_clicked();
+    void on_firstButton_clicked();
+    void on_secondButton_clicked();
+    void on_thirdButton_clicked();
+
 private:
     Ui::MainWindow *ui; // Указатель на сгенерированный класс из ui
     std::shared_ptr<QGraphicsScene> scene;

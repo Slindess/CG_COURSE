@@ -88,7 +88,73 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     }
 
     QWidget::keyPressEvent(event);
+
 }
+
+void MainWindow::on_leftButton_clicked()
+{
+    scene->clear();
+    manager->CamLeft();
+    manager->Manage();
+}
+
+void MainWindow::on_rightButton_clicked()
+{
+    scene->clear();
+    manager->CamRight();
+    manager->Manage();
+}
+
+void MainWindow::on_upButton_clicked()
+{
+    scene->clear();
+    manager->CamUp();
+    manager->Manage();
+}
+
+
+void MainWindow::on_downButton_clicked()
+{
+    scene->clear();
+    manager->CamDown();
+    manager->Manage();
+}
+
+void MainWindow::on_minusButton_clicked()
+{
+    scene->clear();
+    manager->CamMinus();
+    manager->Manage();
+}
+
+void MainWindow::on_plusButton_clicked()
+{
+    scene->clear();
+    manager->CamPlus();
+    manager->Manage();
+}
+
+void MainWindow::on_firstButton_clicked()
+{
+    scene->clear();
+    manager->SetCameraPosition(1);
+    manager->Manage();
+}
+
+void MainWindow::on_secondButton_clicked()
+{
+    scene->clear();
+    manager->SetCameraPosition(2);
+    manager->Manage();
+}
+
+void MainWindow::on_thirdButton_clicked()
+{
+    scene->clear();
+    manager->SetCameraPosition(3);
+    manager->Manage();
+}
+
 
 MainWindow::~MainWindow()
 {

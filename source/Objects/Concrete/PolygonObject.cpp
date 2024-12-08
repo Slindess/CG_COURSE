@@ -407,12 +407,21 @@ PolygonObject::PolygonObject(std::vector<Polygon>& polygons) : _sphere(Calculate
                 }
             }
         }
+        
+        if (normal0_count == 0)
+            normal0_count = 1;
+        
+        if (normal1_count == 0)
+            normal1_count = 1;
 
+        if (normal2_count == 0)
+            normal2_count = 1;
+            
         // Усреднение нормалей
         std::vector<double> normal0 = {normal0_tmp[0] / normal0_count, normal0_tmp[1] / normal0_count, normal0_tmp[2] / normal0_count}; 
         std::vector<double> normal1 = {normal1_tmp[0] / normal1_count, normal1_tmp[1] / normal1_count, normal1_tmp[2] / normal1_count}; 
         std::vector<double> normal2 = {normal2_tmp[0] / normal2_count, normal2_tmp[1] / normal2_count, normal2_tmp[2] / normal2_count}; 
-
+        
         // Добавляем полигон с рассчитанными нормалями
         _components.push_back(std::make_shared<Polygon>(
             polygon.x1, polygon.y1, polygon.z1,
@@ -581,7 +590,23 @@ PolygonObject::PolygonObject(std::vector<Polygon>& polygons, int /*dummy*/)
     _sphere = CalculateBoundingSphere();
 }
 
-
+void PolygonObject::Move(double x, double y, double z)
+{
+    for (auto c : _components)
+    {
+        auto p = std::dynamic_pointer_cast<Polygon>(c);
+        p->x1 += x;
+        p->x2 += x;
+        p->x3 += x;
+        p->y1 += y;
+        p->y2 += y;
+        p->y3 += y;
+        p->z1 += z;
+        p->z2 += z;
+        p->z3 += z;
+    }
+    _sphere = CalculateBoundingSphere();
+}
 
 PolygonObject::~PolygonObject()
 {

@@ -43,6 +43,7 @@ public:
     PolygonObject(std::vector<Polygon>& polygons);
     PolygonObject(std::vector<std::vector<double>>& l);
     PolygonObject(std::vector<Polygon>& polygons, int /*dummy*/);
+    void Move(double x, double y, double z);
     BoundingSphere Sphere() {return _sphere;};
     ~PolygonObject();
 

@@ -521,10 +521,15 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
             /*
             if (CheckShadow(lightDir, intersectionPoint, scene))
             {
-                diffuseIntensity *= 0.8;  // Слабая освещённость из-за тени
+                diffuseIntensity *= 0.2;  // Слабая освещённость из-за тени
                 specularIntensity = 0.0;  // Отсутствие бликов в тени
             }*/
-            
+            if (illuminatedColor.r == 255 && illuminatedColor.g == 255 && illuminatedColor.b == 255)
+            {
+                illuminatedColor.r = 0;
+                illuminatedColor.g = 255;
+                illuminatedColor.b = 0;
+            }
             // Общая освещённость с учётом diffuse и specular
             illuminatedColor.r = std::min(255.0, illuminatedColor.r * diffuseIntensity + 255 * specularIntensity);
             illuminatedColor.g = std::min(255.0, illuminatedColor.g * diffuseIntensity + 255 * specularIntensity);
