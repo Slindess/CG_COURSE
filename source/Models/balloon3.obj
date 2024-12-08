@@ -9,6 +9,10 @@ g Hot Air Balloon
 # object Hot Air Balloon
 #
 
+colorizeу 0 140 145 130 109
+colorize 0 140 94 75 47
+colorize 140 450 255 0 0
+
 v -55.53982 -0.73646975 55.53983
 v -77.62245 116.41243 77.62244
 v -55.53982 -0.73648787 -55.53981

@@ -353,7 +353,7 @@ std::vector<double> interpolateNormals(const std::vector<double>& normalV1,
 
 void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std::shared_ptr<Camera>& camera, std::shared_ptr<QtDrawer> drawer, std::vector<std::vector<Color>> &buff)
 {
-    LightSource lightSource(20.0, -20.0, 0.0); // Источник света
+    LightSource lightSource(20.0, -20.0, 20.0); // Источник света
 
     double specularExponent = 1.0;  // Определяет "резкость" бликов
     double specularStrength = 0.1;   // Влияние specular составляющей
@@ -414,18 +414,18 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
             if (!pixc.empty())
             {
                 int texX = static_cast<int>(
-            baryCoords[0] * 1 + 
-            baryCoords[1] * 1 + 
-            baryCoords[2] * 500);
-            
-int texY = static_cast<int>(
-            baryCoords[0] * 1 + 
-            baryCoords[1] * 500 + 
-            baryCoords[2] * 500);
+                    baryCoords[0] * 1 + 
+                    baryCoords[1] * 1 + 
+                    baryCoords[2] * 500);
+                
+                int texY = static_cast<int>(
+                    baryCoords[0] * 1 + 
+                    baryCoords[1] * 500 + 
+                    baryCoords[2] * 500);
 
-// Нормализуем координаты на текстуре в диапазоне [0, texWidth] и [0, texHeight]
-texX = std::clamp(texX, 0, 500- 1);  // Ограничиваем в пределах ширины текстуры
-texY = std::clamp(texY, 0, 500 - 1); // Ограничиваем в пределах высоты текстуры
+                // Нормализуем координаты на текстуре в диапазоне [0, texWidth] и [0, texHeight]
+                texX = std::clamp(texX, 0, 500- 1);  // Ограничиваем в пределах ширины текстуры
+                texY = std::clamp(texY, 0, 500 - 1); // Ограничиваем в пределах высоты текстуры
                 //std::cout << texX << " " << texY << "\n";
                 std::vector<int> pixelColor = polygon->texture->GetPixelColor(texX, texY);
                 if (!pixelColor.empty()) {
@@ -521,7 +521,7 @@ texY = std::clamp(texY, 0, 500 - 1); // Ограничиваем в предел
             /*
             if (CheckShadow(lightDir, intersectionPoint, scene))
             {
-                diffuseIntensity *= 0.3;  // Слабая освещённость из-за тени
+                diffuseIntensity *= 0.8;  // Слабая освещённость из-за тени
                 specularIntensity = 0.0;  // Отсутствие бликов в тени
             }*/
             
@@ -536,9 +536,9 @@ texY = std::clamp(texY, 0, 500 - 1); // Ограничиваем в предел
             {
                 std::lock_guard<std::mutex> lock(bufferMutex);
                 //std::unique_lock<std::mutex> lock(bufferMutex);
-                if (imageX + camera->width / 2 >= 0 && imageX + camera->width / 2 < buff.size() &&
-                    imageY + camera->height / 2 >= 0 && imageY + camera->height / 2 < buff[0].size()) {
-                    buff[imageX + camera->width / 2][imageY + camera->height / 2] = illuminatedColor;
+                if (x >= 0 && x < buff.size() &&
+                    y >= 0 && y < buff[0].size()) {
+                    buff[x][y] = illuminatedColor;
                 }
                 //lock.unlock();
             }
@@ -595,13 +595,15 @@ void PolygonDrawAdapter::Draw(std::shared_ptr<Scene> scene, std::shared_ptr<Came
             if (!buff[i][j].isBG())
             {
                 _drawer->setColor(buff[i][j]);
-                _drawer->drawPoint(j - camera->width / 2, -1*i + camera->height / 2);
+                //_drawer->drawPoint(j - camera->width / 2, -1*i + camera->height / 2);
+                _drawer->drawPoint(j, -1*i + camera->height);
+                //std::cout << j << " " << -1*i + camera->height << "\n";
             }
         }
     }
-    _drawer->setColor(0, 0, 255);
+    _drawer->setColor(255, 0, 0);
     _drawer->drawPoint(0, 0);
-    _drawer->drawPoint(camera->width / 2 - 10, camera->height / 2 - 10);
+    _drawer->drawPoint(480, 480);
 }
 
 

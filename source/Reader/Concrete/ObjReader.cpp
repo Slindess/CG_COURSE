@@ -9,12 +9,13 @@
 #include "../../Utils/Color.h"
 #include "../../Texture/BaseTexture.h"
 #include "../../Texture/Concrete/SimpleMountainTexture.h"
+#include "../../Texture/Concrete/NoTexture.h"
 
 std::shared_ptr<PolygonObject> ObjReader::Read(std::string fileName)
 {
     std::vector<std::vector<double>> v;
     std::vector<std::vector<double>> n;
-
+    std::vector<std::vector<int>> colorize;
     std::vector<Polygon> polygons;
     std::ifstream file(fileName);
     if (!file.is_open())
@@ -22,6 +23,7 @@ std::shared_ptr<PolygonObject> ObjReader::Read(std::string fileName)
         throw std::runtime_error("Unable to open file: " + fileName);
     }
     
+    int polygon_index = 0;
     std::string line;
     while (std::getline(file, line))
     {
@@ -35,6 +37,15 @@ std::shared_ptr<PolygonObject> ObjReader::Read(std::string fileName)
             lineStream >> vertex[0] >> vertex[1] >> vertex[2];
             v.push_back(vertex);
         } 
+        else if (prefix == "colorize")
+        {
+            int start;
+            int stop;
+            int r, g, b;
+            lineStream >> start >> stop >> r >> g >> b;
+            std::vector<int> color = {start, stop, r, g, b};
+            colorize.push_back(color);
+        }
         else if (prefix == "vn")
         {
             // Чтение нормали
@@ -88,11 +99,26 @@ std::shared_ptr<PolygonObject> ObjReader::Read(std::string fileName)
             {
                 double scale = 0.1;
                 double push = 0;
-                std::shared_ptr<BaseTexture> texture = std::make_shared<SimpleMountainTexture>();
+                int r = 160;
+                int g = 161;
+                int b = 163;
+
+                for (int i = 0; i < colorize.size(); i++)
+                {
+                    if (polygon_index > colorize[i][0] && polygon_index < colorize[i][1])
+                    {
+                        r = colorize[i][2];
+                        g = colorize[i][3];
+                        b = colorize[i][4];
+                        break;
+                    }
+                }
+
+                std::shared_ptr<BaseTexture> texture = std::make_shared<NoTexture>();
                 polygons.push_back(*(new Polygon(polygon[0][1] * scale, polygon[0][0]* scale, polygon[0][2]* scale + push,
                                                 polygon[1][1] * scale, polygon[1][0]* scale, polygon[1][2]* scale + push,
                                                 polygon[2][1]* scale, polygon[2][0]* scale, polygon[2][2]* scale + push,
-                                                *(new Color(160, 161, 163)), 
+                                                *(new Color(r, g, b)), 
                                                 normals[0][1], normals[0][0], normals[0][2],
                                                 normals[1][1], normals[1][0], normals[1][2],
                                                 normals[2][1], normals[2][0], normals[2][2], texture)));
@@ -102,12 +128,13 @@ std::shared_ptr<PolygonObject> ObjReader::Read(std::string fileName)
                     polygons.push_back(*(new Polygon(polygon[0][1] * scale, polygon[0][0]* scale, polygon[0][2]* scale+ push,
                                                     polygon[3][1] * scale, polygon[3][0]* scale, polygon[3][2]* scale+ push,
                                                     polygon[2][1]* scale, polygon[2][0]* scale, polygon[2][2]* scale+ push,
-                                                    *(new Color(160, 161, 163)), 
+                                                    *(new Color(r, g, b)), 
                                                     normals[0][1], normals[0][0], normals[0][2],
                                                     normals[3][1], normals[3][0], normals[3][2],
                                                     normals[2][1], normals[2][0], normals[2][2], texture)));
                 }
             }
+            polygon_index++;
         }
     }
     std::cout << polygons.size() << "\n";
