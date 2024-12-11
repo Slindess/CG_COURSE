@@ -48,14 +48,14 @@
    <widget class="QPushButton" name="upButton">
     <property name="geometry">
      <rect>
-      <x>490</x>
+      <x>500</x>
       <y>390</y>
       <width>51</width>
       <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">color: rgb(255, 255, 255);</string>
+     <string notr="true">color: rgb(255, 255, 255);border: 1px solid white;</string>
     </property>
     <property name="text">
      <string>^</string>
@@ -64,11 +64,14 @@
    <widget class="QPushButton" name="leftButton">
     <property name="geometry">
      <rect>
-      <x>540</x>
+      <x>550</x>
       <y>430</y>
       <width>51</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border: 1px solid white;</string>
     </property>
     <property name="text">
      <string>&lt;</string>
@@ -77,11 +80,14 @@
    <widget class="QPushButton" name="rightButton">
     <property name="geometry">
      <rect>
-      <x>590</x>
+      <x>600</x>
       <y>430</y>
       <width>51</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border: 1px solid white;</string>
     </property>
     <property name="text">
      <string>&gt;</string>
@@ -90,11 +96,14 @@
    <widget class="QPushButton" name="downButton">
     <property name="geometry">
      <rect>
-      <x>490</x>
+      <x>500</x>
       <y>430</y>
       <width>51</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border: 1px solid white;</string>
     </property>
     <property name="text">
      <string>v</string>
@@ -103,11 +112,14 @@
    <widget class="QPushButton" name="plusButton">
     <property name="geometry">
      <rect>
-      <x>590</x>
+      <x>600</x>
       <y>390</y>
       <width>51</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border: 1px solid white;</string>
     </property>
     <property name="text">
      <string>+</string>
@@ -116,11 +128,14 @@
    <widget class="QPushButton" name="minusButton">
     <property name="geometry">
      <rect>
-      <x>540</x>
+      <x>550</x>
       <y>390</y>
       <width>51</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border: 1px solid white;</string>
     </property>
     <property name="text">
      <string>-</string>
@@ -129,14 +144,14 @@
    <widget class="QPushButton" name="firstButton">
     <property name="geometry">
      <rect>
-      <x>490</x>
-      <y>10</y>
+      <x>500</x>
+      <y>20</y>
       <width>51</width>
       <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">color: rgb(255, 255, 255);</string>
+     <string notr="true">color: rgb(255, 255, 255); border: 1px solid white;</string>
     </property>
     <property name="text">
      <string>1</string>
@@ -145,14 +160,14 @@
    <widget class="QPushButton" name="secondButton">
     <property name="geometry">
      <rect>
-      <x>540</x>
-      <y>10</y>
+      <x>550</x>
+      <y>20</y>
       <width>51</width>
       <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">color: rgb(255, 255, 255);</string>
+     <string notr="true">color: rgb(255, 255, 255);border: 1px solid white;</string>
     </property>
     <property name="text">
      <string>2</string>
@@ -161,14 +176,14 @@
    <widget class="QPushButton" name="thirdButton">
     <property name="geometry">
      <rect>
-      <x>590</x>
-      <y>10</y>
+      <x>600</x>
+      <y>20</y>
       <width>51</width>
       <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">color: rgb(255, 255, 255);</string>
+     <string notr="true">color: rgb(255, 255, 255);border: 1px solid white;</string>
     </property>
     <property name="text">
      <string>3</string>
@@ -177,17 +192,242 @@
    <widget class="QPushButton" name="fourthButton">
     <property name="geometry">
      <rect>
-      <x>640</x>
-      <y>10</y>
+      <x>650</x>
+      <y>20</y>
       <width>51</width>
       <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">color: rgb(255, 255, 255);</string>
+     <string notr="true">color: rgb(255, 255, 255);border: 1px solid white;</string>
     </property>
     <property name="text">
      <string>4</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="snow">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>100</y>
+      <width>113</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: white; color: black;</string>
+    </property>
+    <property name="placeholderText">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>80</y>
+      <width>241</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Степень заснеженности от 0 до 1</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="snowButton">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>100</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border: 1px solid white;</string>
+    </property>
+    <property name="text">
+     <string>Ввести</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>150</y>
+      <width>241</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Средняя высота ландшафта</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="height">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>170</y>
+      <width>113</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: white; color: black;</string>
+    </property>
+    <property name="placeholderText">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="heightButton">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>170</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border: 1px solid white;</string>
+    </property>
+    <property name="text">
+     <string>Ввести</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="source">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>240</y>
+      <width>113</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: white; color: black;</string>
+    </property>
+    <property name="placeholderText">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="source_button">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>240</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border: 1px solid white;</string>
+    </property>
+    <property name="text">
+     <string>Ввести</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>220</y>
+      <width>231</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Карта высот</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="renderButton">
+    <property name="geometry">
+     <rect>
+      <x>660</x>
+      <y>440</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border: 1px solid white;</string>
+    </property>
+    <property name="text">
+     <string>Рендер</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="rockButton">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>310</y>
+      <width>51</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255); border: 1px solid white;</string>
+    </property>
+    <property name="text">
+     <string>1</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="sandButton">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>310</y>
+      <width>51</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);border: 1px solid white;</string>
+    </property>
+    <property name="text">
+     <string>2</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="jungleButton">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>310</y>
+      <width>51</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);border: 1px solid white;</string>
+    </property>
+    <property name="text">
+     <string>3</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>0</y>
+      <width>231</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Положение камеры</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>290</y>
+      <width>231</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Тип ланшафта</string>
     </property>
    </widget>
   </widget>
