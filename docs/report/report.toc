@@ -1,0 +1,15 @@
+\babel@toc {russian}{}\relax 
+\contentsline {chapter}{\numberline {1}Аналитическая часть}{3}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Алгоритмы удаления невидимых поверхностей или линий}{3}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Отражение}{3}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Модель освещения}{4}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Закраска}{6}{section.1.4}%
+\contentsline {section}{\numberline {1.5}Представление объектов сцены}{7}{section.1.5}%
+\contentsline {section}{\numberline {1.6}Сравнение алгоритмов удаления невидимых поверхностей и линий}{8}{section.1.6}%
+\contentsline {section}{\numberline {1.7}Генерация горного ландшафта}{8}{section.1.7}%
+\contentsline {section}{\numberline {1.8}Формализация задачи}{11}{section.1.8}%
+\contentsline {section}{\numberline {1.9}Вывод}{12}{section.1.9}%
+\contentsline {chapter}{\numberline {2}Конструкторская часть}{13}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Диаграмма классов}{13}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Алгоритм построения изображения}{15}{section.2.2}%
+\contentsline {chapter}{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}{15}{figure.caption.9}%

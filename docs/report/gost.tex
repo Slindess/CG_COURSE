@@ -5,19 +5,30 @@
 \usepackage{setspace}  % Пакет для изменения межстрочного интервала
 \usepackage{geometry}  % Пакет для настройки полей страниц
 \usepackage{amsmath}
+\usepackage{xcolor}
 
 \usepackage{titlesec}
 \titleformat{\section}
 	{\normalsize\bfseries}
 	{\thesection}
 	{1em}{}
-\titlespacing*{\chapter}{0pt}{-30pt}{8pt}
-\titlespacing*{\section}{\parindent}{*4}{*4}
-\titlespacing*{\subsection}{\parindent}{*4}{*4}
+\titlespacing*{\chapter}{1.5cm}{-22pt}{10pt}
+\titlespacing*{\section}{1.5cm}{\baselineskip}{\baselineskip}
+\titlespacing*{\subsection}{1.5cm}{\baselineskip}{\baselineskip}
 
 \usepackage{titlesec}
-\titleformat{\chapter}{\LARGE\bfseries}{\thechapter}{20pt}{\LARGE\bfseries}
+\titleformat{\chapter}{\Large\bfseries}{\thechapter}{20pt}{\Large\bfseries}
 \titleformat{\section}{\Large\bfseries}{\thesection}{20pt}{\Large\bfseries}
+
+\newcommand{\chaptercentered}[1]{
+	% Вот тут установить центрирование
+	\titleformat{\chapter}{\Large\bfseries\centering}{\thechapter}{20pt}{\Large\bfseries}
+    \chapter*{\MakeUppercase{#1}} % Центрирование заголовка
+    \addcontentsline{toc}{chapter}{#1} % Добавление главы в оглавление
+    \markboth{#1}{#1} % Обновление колонтитулов
+    % Убрать центрирование
+    \titleformat{\chapter}{\Large\bfseries}{\thechapter}{20pt}{\Large\bfseries}
+}
 
 % Настройка полей документа
 \geometry{
@@ -45,11 +56,10 @@
 \fancyhf{}  % Очищаем текущие настройки стиля
 \fancyfoot[C]{\thepage}  % Установка нумерации по центру внизу страницы
 %\thispagestyle{empty} - уберет нумерацию на конкретной странице (можно использовать на титульнике).
+\renewcommand{\headrulewidth}{0pt}
 
 
 \usepackage{caption}
-\captionsetup{labelsep=endash}
-\captionsetup[figure]{name={Рисунок}}
 % Картинки
 \usepackage{pgfplots}
 \usetikzlibrary{datavisualization}
@@ -59,12 +69,15 @@
 
 % Команды добавления изображений
 \usepackage{float}
-\newcommand{\imgscheme}[2]{
-	\begin{figure}[H]
-		\center{\includegraphics[width=\textwidth, height=200mm, width=170mm, keepaspectratio]{img/#1}}
-		\caption{#2}
-		\label{img/#1}
-	\end{figure}
+% Команда добавления изображений с параметром ширины
+\captionsetup[figure]{name={Рисунок}, justification=centering, singlelinecheck=true, labelsep=endash}
+\newcommand{\imgscheme}[3][\textwidth]{ % Первый аргумент - ширина по умолчанию
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=#1, height=200mm, keepaspectratio]{img/#2} % Используем переданную ширину
+        \caption{#3}
+        \label{img/#2}
+    \end{figure}
 }
 
 \newcommand{\imggraph}[2]{
@@ -75,15 +88,15 @@
 	\end{figure}
 }
 
-\usepackage[justification=centering]{caption} % Настройка подписей float объектов
-
 
 \usepackage{csvsimple}
 
 
 \usepackage{svg}
 
-
+% Переименуем
+%\renewcommand{\contentsname}{Содержание}
+\titleformat{\bibname}{\Large\bfseries}{\chapter}{20pt}{\Large\bfseries}
 
 
 % Листинги кода
@@ -103,11 +116,15 @@
     numbersep=5pt,                    % Расстояние от номеров строк до кода
     frame=single,                     % Рамка вокруг листинга
     tabsize=2,                        % Размер табуляции
-    captionpos=b,                     % Позиция заголовка (внизу)
+    captionpos=t,                     % Позиция заголовка (внизу)
     breaklines=true,                  % Перенос строк
     breakatwhitespace=true,           % Перенос строк по пробелам
     backgroundcolor=\color{white},    % Цвет фона
 }
+
+\makeatletter
+\def\@biblabel#1{#1. }
+\makeatother
 
 \lstset{
 	literate=
@@ -178,7 +195,3 @@
 	{Ю}{{\selectfont\char222}}1
 	{Я}{{\selectfont\char223}}1
 }
-
-\usepackage{booktabs}
-\usepackage{array}
-\renewcommand{\arraystretch}{1.5}
