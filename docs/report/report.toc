@@ -11,5 +11,11 @@
 \contentsline {section}{\numberline {1.9}Вывод}{12}{section.1.9}%
 \contentsline {chapter}{\numberline {2}Конструкторская часть}{13}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Диаграмма классов}{13}{section.2.1}%
-\contentsline {section}{\numberline {2.2}Алгоритм построения изображения}{15}{section.2.2}%
-\contentsline {chapter}{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}{15}{figure.caption.9}%
+\contentsline {section}{\numberline {2.2}Алгоритм построения изображения}{14}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Математические основы алгоритмов}{17}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Математические основы алгоритмов}{18}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Параметрическое уравнение луча}{18}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Параметрическое уравнение треугольника}{19}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.3}Алгоритм пересечения}{19}{subsection.2.4.3}%
+\contentsline {section}{\numberline {2.5}Вывод}{20}{section.2.5}%
+\contentsline {chapter}{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}{20}{section.2.5}%
