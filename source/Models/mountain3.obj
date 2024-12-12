@@ -8,6 +8,11 @@ g Mountain
 #
 # object Mountain
 #
+normals_bad
+scale 7
+push_down 1700
+push_back 1500
+push_left 1000
 
 v 96.70776 0.030561576 181.41661
 v 46.527054 -0.06461392 165.02385

@@ -19,7 +19,7 @@ std::vector<double> normalizer(const std::vector<double>& vec) {
     return vec; // Если длина нулевая, возвращаем нулевой вектор
 }
 
-std::shared_ptr<PolygonObject> ObjReader::Read(std::string fileName)
+std::shared_ptr<PolygonObject> ObjReader::Read(std::string fileName, int type)
 {
     std::vector<std::vector<double>> v;
     std::vector<std::vector<double>> n;
@@ -30,9 +30,12 @@ std::shared_ptr<PolygonObject> ObjReader::Read(std::string fileName)
     {
         throw std::runtime_error("Unable to open file: " + fileName);
     }
-    
     int polygon_index = 0;
     int bad_normals = 0;
+    double scale = 0.1;
+    double push_down = 0;
+    double push_back = 0;
+    double push_left = 0;
     std::string line;
     while (std::getline(file, line))
     {
@@ -111,7 +114,7 @@ std::shared_ptr<PolygonObject> ObjReader::Read(std::string fileName)
 
             if (correct_polygon)
             {
-                double scale = 0.1;
+                //double scale = 0.1;
                 double push = 0;
                 int r = 160;
                 int g = 161;
@@ -128,24 +131,23 @@ std::shared_ptr<PolygonObject> ObjReader::Read(std::string fileName)
                     }
                 }
 
-                std::shared_ptr<BaseTexture> texture = std::make_shared<NoTexture>();
+                std::shared_ptr<BaseTexture> texture = textureFactories.find(type)->second();
                 
                 if (!bad_normals)
                 {
-
-                    polygons.push_back(*(new Polygon(polygon[0][1] * scale, polygon[0][0]* scale, polygon[0][2]* scale + push,
-                                                    polygon[1][1] * scale, polygon[1][0]* scale, polygon[1][2]* scale + push,
-                                                    polygon[2][1]* scale, polygon[2][0]* scale, polygon[2][2]* scale + push,
+                    polygons.push_back(*(new Polygon(polygon[0][1] * scale - push_down, polygon[0][0]* scale- push_left, polygon[0][2]* scale - push_back,
+                                                    polygon[1][1] * scale - push_down, polygon[1][0]* scale- push_left, polygon[1][2]* scale - push_back,
+                                                    polygon[2][1]* scale - push_down, polygon[2][0]* scale- push_left, polygon[2][2]* scale - push_back,
                                                     *(new Color(r, g, b)), 
                                                     normals[0][1], normals[0][0], normals[0][2],
                                                     normals[1][1], normals[1][0], normals[1][2],
                                                     normals[2][1], normals[2][0], normals[2][2], texture)));
                     
-                    if (polygons.size() > 3)
+                    if (polygon.size() > 3)
                     {
-                        polygons.push_back(*(new Polygon(polygon[0][1] * scale, polygon[0][0]* scale, polygon[0][2]* scale+ push,
-                                                        polygon[3][1] * scale, polygon[3][0]* scale, polygon[3][2]* scale+ push,
-                                                        polygon[2][1]* scale, polygon[2][0]* scale, polygon[2][2]* scale+ push,
+                        polygons.push_back(*(new Polygon(polygon[0][1] * scale - push_down, polygon[0][0]* scale- push_left, polygon[0][2]* scale- push_back,
+                                                        polygon[3][1] * scale - push_down, polygon[3][0]* scale- push_left, polygon[3][2]* scale- push_back,
+                                                        polygon[2][1]* scale - push_down, polygon[2][0]* scale- push_left, polygon[2][2]* scale- push_back,
                                                         *(new Color(r, g, b)), 
                                                         normals[0][1], normals[0][0], normals[0][2],
                                                         normals[3][1], normals[3][0], normals[3][2],
@@ -154,18 +156,18 @@ std::shared_ptr<PolygonObject> ObjReader::Read(std::string fileName)
                 }
                 else
                 {
-
-                        polygons.push_back(*(new Polygon(polygon[0][1] * scale, polygon[0][0]* scale, polygon[0][2]* scale + push,
-                                                    polygon[1][1] * scale, polygon[1][0]* scale, polygon[1][2]* scale + push,
-                                                    polygon[2][1]* scale, polygon[2][0]* scale, polygon[2][2]* scale + push,
+                        
+                        polygons.push_back(*(new Polygon(polygon[0][1] * scale - push_down, polygon[0][0]* scale- push_left, polygon[0][2]* scale - push_back,
+                                                    polygon[1][1] * scale - push_down, polygon[1][0]* scale- push_left, polygon[1][2]* scale - push_back,
+                                                    polygon[2][1]* scale - push_down, polygon[2][0]* scale- push_left, polygon[2][2]* scale - push_back,
                                                     *(new Color(r, g, b)), 
                                                     normals[0][1], normals[0][0], normals[0][2],
                                                     texture)));
                     if (polygon.size() > 3)
                     {
-                        polygons.push_back(*(new Polygon(polygon[0][1] * scale, polygon[0][0]* scale, polygon[0][2]* scale+ push,
-                                                        polygon[3][1] * scale, polygon[3][0]* scale, polygon[3][2]* scale+ push,
-                                                        polygon[2][1]* scale, polygon[2][0]* scale, polygon[2][2]* scale+ push,
+                        polygons.push_back(*(new Polygon(polygon[0][1] * scale - push_down, polygon[0][0]* scale- push_left, polygon[0][2]* scale - push_back,
+                                                        polygon[3][1] * scale - push_down, polygon[3][0]* scale- push_left, polygon[3][2]* scale - push_back,
+                                                        polygon[2][1]* scale - push_down, polygon[2][0]* scale- push_left, polygon[2][2]* scale - push_back,
                                                         *(new Color(r, g, b)), 
                                                         normals[0][1], normals[0][0], normals[0][2],
                                                         texture)));
@@ -178,6 +180,22 @@ std::shared_ptr<PolygonObject> ObjReader::Read(std::string fileName)
         else if(prefix == "normals_bad")
         {
             bad_normals = 1;
+        }
+        else if(prefix == "scale")
+        {
+            lineStream >> scale;
+        }
+        else if(prefix == "push_down")
+        {
+            lineStream >> push_down;
+        }
+        else if(prefix == "push_back")
+        {
+            lineStream >> push_back;
+        }
+        else if(prefix == "push_left")
+        {
+            lineStream >> push_left;
         }
     }
     std::cout << polygons.size() << "\n";

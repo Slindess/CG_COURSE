@@ -12,6 +12,7 @@
 #include "Drawer/QtDrawer.h"
 #include "ui_mainWindow.h"
 #include "Manager/Manager.h"
+#include <QTimer>
 
 class MainWindow : public QMainWindow
 {
@@ -23,6 +24,8 @@ public:
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
+    QTimer *timer = new QTimer(this);
+    int melt_coef = 0;
 
 private slots:
     void on_leftButton_clicked();
@@ -35,6 +38,14 @@ private slots:
     void on_secondButton_clicked();
     void on_thirdButton_clicked();
     void on_fourthButton_clicked();
+    void on_renderButton_clicked();
+    void on_rockButton_clicked();
+    void on_sandButton_clicked();
+    void on_jungleButton_clicked();
+    void on_heightButton_clicked();
+    void on_sourceButton_clicked();
+    void on_snowButton_clicked();
+    void melt();
 
 private:
     Ui::MainWindow *ui; // Указатель на сгенерированный класс из ui

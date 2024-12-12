@@ -37,6 +37,8 @@ set(SOURCE_FILES main.cpp MainWindow.cpp Drawer/QtDrawer.cpp
         Texture/Concrete/SimpleMountainTexture.h Texture/Concrete/SimpleMountainTexture.cpp
         Texture/Concrete/NoTexture.h Texture/Concrete/NoTexture.cpp
         Texture/Concrete/SnowTexture.h Texture/Concrete/SnowTexture.cpp
+        Texture/Concrete/SandTexture.h Texture/Concrete/SandTexture.cpp
+        Texture/Concrete/JungleTexture.h Texture/Concrete/JungleTexture.cpp
         Texture/Opener.h
         Reader/BaseReader.h Reader/BaseReader.cpp
         Reader/Concrete/ObjReader.h Reader/Concrete/ObjReader.cpp

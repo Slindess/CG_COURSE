@@ -311,7 +311,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="source_button">
+   <widget class="QPushButton" name="sourceButton">
     <property name="geometry">
      <rect>
       <x>620</x>

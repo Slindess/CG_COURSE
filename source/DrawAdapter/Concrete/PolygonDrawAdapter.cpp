@@ -11,9 +11,11 @@
 #include <limits>
 #include <iostream>
 #include <thread>
+#include <random>
 #include <mutex> // Не забудьте добавить этот заголовок
 // Определяем мьютекс для синхронизации
 std::mutex bufferMutex;
+std::random_device rd;
 
 double calculateAngle(const std::vector<double>& a, const std::vector<double>& b) {
     // Скалярное произведение векторов
@@ -355,7 +357,7 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
 {
     LightSource lightSource(20.0, -20.0, 20.0); // Источник света
 
-    double specularExponent = 1.0;  // Определяет "резкость" бликов
+    double specularExponent = 10.0;  // Определяет "резкость" бликов
     double specularStrength = 0.1;   // Влияние specular составляющей
     
 
@@ -410,7 +412,7 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
 
             Color illuminatedColor = polygon->color;
             auto pixc = polygon->texture->GetPixelColor(10, 10);
-            //std::cout << "OOO: " << polygon->texture->GetUrl() << "\n\n\n\n\n\n";
+
             if (!pixc.empty())
             {
                 int texX = static_cast<int>(
@@ -433,6 +435,17 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
                     illuminatedColor.r = pixelColor[0];
                     illuminatedColor.g = pixelColor[1];
                     illuminatedColor.b = pixelColor[2];
+                    
+                    /*
+                    std::mt19937 gen(rd());
+                    std::uniform_int_distribution<> distrib(1, 10);
+                    int random_number = distrib(gen);
+                    if (random_number >= 7)
+                    {
+                        illuminatedColor.r = 255;
+                        illuminatedColor.g = 255;
+                        illuminatedColor.b = 255;
+                    }*/
                 }
             }
 
@@ -501,7 +514,7 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
             //std::cout << dotProduct << " " << intensity << "\n";
 
             // Устанавливаем минимальный уровень освещенности
-            double minIntensity = 0.0;
+            double minIntensity = 0.1;
             double diffuseIntensity = std::max(intensity, minIntensity);
 
             // Вычисляем отражённое направление (reflectDir)
@@ -521,10 +534,10 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
             /*
             if (CheckShadow(lightDir, intersectionPoint, scene))
             {
-                diffuseIntensity *= 0.2;  // Слабая освещённость из-за тени
+                diffuseIntensity *= 0.8;  // Слабая освещённость из-за тени
                 specularIntensity = 0.0;  // Отсутствие бликов в тени
             }*/
-            //diffuseIntensity *= (1 - t);
+
             // Общая освещённость с учётом diffuse и specular
             illuminatedColor.r = std::min(255.0, illuminatedColor.r * diffuseIntensity + 255 * specularIntensity);
             illuminatedColor.g = std::min(255.0, illuminatedColor.g * diffuseIntensity + 255 * specularIntensity);

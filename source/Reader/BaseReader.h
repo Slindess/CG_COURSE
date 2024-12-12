@@ -11,7 +11,7 @@
 class BaseReader
 {
 public:
-    virtual std::shared_ptr<PolygonObject> Read(std::string fileName) = 0;  // Не делайте так никогда.
+    virtual std::shared_ptr<PolygonObject> Read(std::string fileName, int type) = 0;  // Не делайте так никогда.
     virtual ~BaseReader() = 0;
 };
 

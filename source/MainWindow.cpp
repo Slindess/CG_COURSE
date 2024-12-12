@@ -1,6 +1,9 @@
 #include "MainWindow.h"
 #include "Drawer/QtDrawer.h"
 #include "Manager/Manager.h"
+#include <iostream>
+#include <thread>
+#include <chrono>
 
 MainWindow::MainWindow(QWidget *parent)
 : QMainWindow(parent)
@@ -18,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
     manager = std::make_shared<Manager>();
     manager->SetDrawer(drawer);
     scene->clear();
-    manager->Manage();
+    //manager->Manage();
 
     //drawer->drawLine(0, 0, 400, 400);
 }
@@ -86,6 +89,11 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         manager->CamYawRight();
         manager->Manage();
     }
+    else if (event->key() == Qt::Key_M)
+    {
+        connect(timer, &QTimer::timeout, this, &MainWindow::melt);
+        timer->start(5000);
+    }
 
     QWidget::keyPressEvent(event);
 
@@ -136,31 +144,89 @@ void MainWindow::on_plusButton_clicked()
 
 void MainWindow::on_firstButton_clicked()
 {
-    scene->clear();
     manager->SetCameraPosition(1);
-    manager->Manage();
 }
 
 void MainWindow::on_secondButton_clicked()
 {
-    scene->clear();
     manager->SetCameraPosition(2);
-    manager->Manage();
 }
 
 void MainWindow::on_thirdButton_clicked()
 {
-    scene->clear();
     manager->SetCameraPosition(3);
-    manager->Manage();
 }
 
 void MainWindow::on_fourthButton_clicked()
 {
-    scene->clear();
     manager->SetCameraPosition(4);
+}
+
+void MainWindow::on_renderButton_clicked()
+{
+    scene->clear();
     manager->Manage();
 }
+
+void MainWindow::on_rockButton_clicked()
+{
+    manager->ResetLandScape(1);
+}
+
+
+void MainWindow::on_sandButton_clicked()
+{
+    manager->ResetLandScape(2);
+}
+
+void MainWindow::on_jungleButton_clicked()
+{
+    manager->ResetLandScape(3);
+}
+
+void MainWindow::on_heightButton_clicked()
+{
+    bool ok;
+    int value = ui->height->text().toInt(&ok);
+    if (ok)
+    {
+        manager->ResetHeight(value);
+    }
+}
+
+
+void MainWindow::on_sourceButton_clicked()
+{
+    manager->Source(ui->source->text().toStdString());
+}
+
+void MainWindow::on_snowButton_clicked()
+{
+    bool ok;
+    int value = ui->snow->text().toInt(&ok);
+    if (ok)
+    {
+        melt_coef = value;
+        manager->Snow(value);
+    }
+}
+
+void MainWindow::melt()
+{
+    if (melt_coef == 10)
+        melt_coef = 6;
+    manager->Snow(melt_coef, 1);
+    on_renderButton_clicked();
+    
+    melt_coef -= 2;
+    if (melt_coef < 0)
+    {
+        manager->Snow(0);
+        on_renderButton_clicked();
+        timer->stop();
+    }
+}
+
 
 MainWindow::~MainWindow()
 {

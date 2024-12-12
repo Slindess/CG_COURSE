@@ -11,6 +11,7 @@
 #include "../Generators/DiamondSquareMountainGenerator.h"
 #include "../Reader/Concrete/ObjReader.h"
 #include <cmath>
+#include <random>
 #include <iostream>
 
 std::shared_ptr<PolygonObject> generateFloor(double startX, double endX, double startZ, double endZ, double step) {
@@ -109,6 +110,10 @@ std::shared_ptr<PolygonObject> generateSphere(double radius) {
 Manager::Manager()
 {
     std::cout << "НАЧАЛИ: \n";
+    textureFactories[1] = []() {return std::make_shared<SimpleMountainTexture>();};
+    textureFactories[2] = []() {return std::make_shared<SandTexture>();};
+    textureFactories[3] = []() {return std::make_shared<JungleTexture>();};
+
     _scene = std::make_shared<Scene>();
     double cam_screen = 40.0;
     _camera = std::make_shared<Camera>(25.0, 15.0, cam_screen - 265 + 60, 25.0, 15.0, cam_screen + 60);
@@ -116,12 +121,12 @@ Manager::Manager()
     
     std::shared_ptr<PerlinNoiseMountainGenerator> g = std::make_shared<PerlinNoiseMountainGenerator>(10, 10, 20);
     //std::shared_ptr<DiamondSquareMountainGenerator> g = std::make_shared<DiamondSquareMountainGenerator>(65, 15);
-    std::shared_ptr<PolygonObject> mountain = g->generateMountain();
+    _landScape = g->generateMountain(landscape_type, height, snow);
     
     std::shared_ptr<ObjReader> r = std::make_shared<ObjReader>();
-    _balloon = r->Read("../Models/balloon3.obj");
+    _balloon = r->Read("../Models/balloon3.obj", 0);
 
-    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(mountain));
+    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(_landScape));
     _scene->addObject(std::dynamic_pointer_cast<BaseObject>(_balloon));
     
     std::shared_ptr<PolygonObject> oxo = std::make_shared<PolygonObject>(
@@ -309,7 +314,81 @@ void Manager::SetCameraPosition(int type)
         _scene->addObject(std::dynamic_pointer_cast<BaseObject>(_balloon));
 
     }
+}
 
+void Manager::ResetLandScape(int type)
+{
+    landscape_type = type;
+    _scene->removeObject(_landScape);
+    std::shared_ptr<PerlinNoiseMountainGenerator> g = std::make_shared<PerlinNoiseMountainGenerator>(10, 10, 20);
+    //std::shared_ptr<DiamondSquareMountainGenerator> g = std::make_shared<DiamondSquareMountainGenerator>(65, 15);
+    _landScape = g->generateMountain(landscape_type, height, snow);
+    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(_landScape));
+}
+
+void Manager::ResetHeight(int heightt)
+{
+    height = heightt;
+    _scene->removeObject(_landScape);
+    std::shared_ptr<PerlinNoiseMountainGenerator> g = std::make_shared<PerlinNoiseMountainGenerator>(10, 10, 20);
+    //std::shared_ptr<DiamondSquareMountainGenerator> g = std::make_shared<DiamondSquareMountainGenerator>(65, 15);
+    _landScape = g->generateMountain(landscape_type, height, snow);
+    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(_landScape));
+}
+
+void Manager::Source(std::string source)
+{
+    _scene->removeObject(_landScape);
+    std::shared_ptr<ObjReader> r = std::make_shared<ObjReader>();
+    _landScape = r->Read("../Models/" + source, landscape_type);
+    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(_landScape));
+}
+
+void Manager::Snow(int snoww, int melting)
+{
+
+    snow = snoww;
+
+    if (!melting)
+    {
+        for (const auto& component : _landScape->GetComponents())
+        {
+                auto polygon = std::dynamic_pointer_cast<Polygon>(component);
+                if (!polygon) continue;
+
+                polygon->texture = textureFactories.find(landscape_type)->second();;
+
+        }
+    }
+
+   for (const auto& component : _landScape->GetComponents())
+   {
+        auto polygon = std::dynamic_pointer_cast<Polygon>(component);
+        if (!polygon) continue;
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::uniform_int_distribution<> distrib(1, 10);
+            int random_number = distrib(gen);
+            if (melting)
+            {
+                if (std::dynamic_pointer_cast<SnowTexture>(polygon->texture))
+                {
+                    if (random_number < 10 - snow)
+                    {
+                        polygon->texture = textureFactories.find(landscape_type)->second();
+                    }
+                }
+            }
+            else
+            {
+                if (random_number > 10 - snow)
+                {
+                    polygon->texture = std::make_shared<SnowTexture>();
+                }
+            }
+    }
+
+    std::cout << "MYSNIW: " << snow; 
 }
 
 Manager::~Manager() {}

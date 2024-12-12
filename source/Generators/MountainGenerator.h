@@ -8,6 +8,10 @@
 #include "../Texture/BaseTexture.h"
 #include "../Texture/Concrete/SimpleMountainTexture.h"
 #include "../Texture/Concrete/SnowTexture.h"
+#include "../Texture/Concrete/SandTexture.h"
+#include "../Texture/Concrete/JungleTexture.h"
+#include <map>
+#include <functional>
 
 std::vector<double> calculateNormall(const std::vector<double>& v0, const std::vector<double>& v1, const std::vector<double>& v2) {
     double nx = (v1[1] - v0[1]) * (v2[2] - v0[2]) - (v1[2] - v0[2]) * (v2[1] - v0[1]);
@@ -23,9 +27,13 @@ public:
         : _gridSize(gridSize), _noiseSize(noiseSize), _scale(scale) {
         //initializeGradientGrid();
         island();
+
+        textureFactories[1] = []() {return std::make_shared<SimpleMountainTexture>();};
+        textureFactories[2] = []() {return std::make_shared<SandTexture>();};
+        textureFactories[3] = []() {return std::make_shared<JungleTexture>();};
     }
 
-    std::shared_ptr<PolygonObject> generateMountain() {
+    std::shared_ptr<PolygonObject> generateMountain(int type, int avgheight, int snow) {
         std::vector<Polygon> polygons;
         double rs = 3;
         std::vector<std::vector<double>> heights(_noiseSize * 10 / rs, std::vector<double>(_noiseSize * 10 /rs));
@@ -36,7 +44,7 @@ public:
                 double x = i;
                 double y = j;
             
-                double height = (generateNoise(x, y) + 1) * 180.0; // Смещаем и масштабируем высоту
+                double height = (generateNoise(x, y) + 1) * avgheight; // Смещаем и масштабируем высоту
                 //std::cout << i / 0.1 << " " << j / 0.1 << " " << height << "\n";
                 // Сохраняем высоту в двумерном массиве
                 heights[i / (0.1 * rs)][j / (0.1 * rs)] = height; // Используем i и j для индексации
@@ -75,9 +83,11 @@ public:
 
                 double scaleX = 100;
                 double scaleY = 100;
-                double offsetX = 600;
+
+                double offsetX = 500;
                 double offsetY = 500;
-                double offsetH = 250;
+                double offsetH = avgheight * 1.3888888;
+
                 x1 *= scaleX;
                 y1 *= scaleY;
                 x2 *= scaleX;
@@ -97,12 +107,23 @@ public:
                 //double x2 = x1 + 0.7;
                 //double y2 = y1 + 0.7;
                 Color mount = {160, 161, 163};
-                std::shared_ptr<BaseTexture> texture = std::make_shared<SimpleMountainTexture>();
+                //std::shared_ptr<BaseTexture> texture = std::make_shared<SimpleMountainTexture>();
+                std::shared_ptr<BaseTexture> texture = textureFactories.find(type)->second();
 
+                /*
+                std::random_device rd;
+                std::mt19937 gen(rd());
+                std::uniform_int_distribution<> distrib(1, 10);
+                int random_number = distrib(gen);
+                if (random_number > 10 - snow)
+                {
+                    texture = std::make_shared<SnowTexture>();
+                }*/
+                /*
                 if (h1 > (9 / 10.0) * maxHeight || h3 > (9 / 10.0) * maxHeight || h3 > (9 / 10.0) * maxHeight || h4 > (9 / 10.0) * maxHeight )
                 {
                     texture = std::make_shared<SnowTexture>();
-                }
+                }*/
                 //Color snow = {160, 161, 163};
                 Color snow = {255, 255, 255};
                 //if (h1 < 25) continue;
@@ -277,5 +298,7 @@ private:
         // Финальная интерполяция по оси y
         return lerp(interpX1, interpX2, v);
     }
+
+    std::map<int, std::function<std::shared_ptr<BaseTexture>()>> textureFactories;
 };
 
