@@ -501,9 +501,9 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
             //std::cout << dotProduct << " " << intensity << "\n";
 
             // Устанавливаем минимальный уровень освещенности
-            double minIntensity = 0.2;
+            double minIntensity = 0.0;
             double diffuseIntensity = std::max(intensity, minIntensity);
-            
+
             // Вычисляем отражённое направление (reflectDir)
             std::vector<double> reflectDir = {
                     2 * dotProduct * normal[0] - lightDir[0],
@@ -524,7 +524,7 @@ void ProccessPixel(int x, int y, const std::shared_ptr<Scene>& scene, const std:
                 diffuseIntensity *= 0.2;  // Слабая освещённость из-за тени
                 specularIntensity = 0.0;  // Отсутствие бликов в тени
             }*/
-
+            //diffuseIntensity *= (1 - t);
             // Общая освещённость с учётом diffuse и specular
             illuminatedColor.r = std::min(255.0, illuminatedColor.r * diffuseIntensity + 255 * specularIntensity);
             illuminatedColor.g = std::min(255.0, illuminatedColor.g * diffuseIntensity + 255 * specularIntensity);
