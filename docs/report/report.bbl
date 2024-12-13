@@ -1,0 +1,69 @@
+\begin{thebibliography}{1}
+\def\selectlanguageifdefined#1{
+\expandafter\ifx\csname date#1\endcsname\relax
+\else\language\csname l@#1\endcsname\fi}
+\ifx\undefined\url\def\url#1{{\small #1}}\else\fi
+\ifx\undefined\BibUrl\def\BibUrl#1{\url{#1}}\else\fi
+\ifx\undefined\BibAnnote\long\def\BibAnnote#1{(#1)}\else\fi
+\ifx\undefined\BibEmph\def\BibEmph#1{\emph{#1}}\else\fi
+
+\bibitem{gabriel}
+\selectlanguageifdefined{russian}
+Гамбетта~Габриел. Рейтрейсинг и
+  растеризация.
+\newblock 1-е {изд.}
+\newblock Санкт-Петербург: Питер, 2022.{}
+
+\bibitem{pharr}
+\selectlanguageifdefined{russian}
+Pharr~Matt, Jakob~Wenzel, Humphreys~Greg. Physically Based Rendering: From
+  Theory to Implementation.
+\newblock 3-е {изд.}
+\newblock San Francisco: Morgan Kaufmann, 2016.{}
+
+\bibitem{real_time}
+\selectlanguageifdefined{russian}
+Akenine-Möller~Tomas, Haines~Eric, Hoffman~Naty. Real-Time Rendering.
+\newblock 4-е {изд.}
+\newblock Boca Raton: A K Peters/CRC Press, 2018.{}
+
+\bibitem{sherley}
+\selectlanguageifdefined{russian}
+Shirley~Peter. Fundamentals of Computer Graphics.
+\newblock 5-е {изд.}
+\newblock CRC Press, 2021.{}
+
+\bibitem{cpp}
+\selectlanguageifdefined{russian}
+Briggs~Will. C++20 for Lazy Programmers: Quick, Easy, and Fun C++ for
+  Beginners.
+\newblock Apress, 2020.{}
+
+\bibitem{qt5}
+\selectlanguageifdefined{russian}
+Eng~Lee~Zhi. Hands-On GUI Programming with C++ and Qt5.
+\newblock 1-е {изд.}
+\newblock Birmingham, UK: Packt Publishing, 2018.{}
+
+\bibitem{Ubuntu}
+\selectlanguageifdefined{russian}
+Ubuntu Documentation.
+\newblock 2024.
+\newblock Дата обращения: 13 декабря 2024. URL:
+  https://docs.ubuntu.com/.{}
+
+\bibitem{Intel}
+\selectlanguageifdefined{russian}
+Intel Core i5-10400F Processor.
+\newblock 2024.
+\newblock Дата обращения: 13 декабря 2024. URL:
+  https://www.intel.com/content/www/us/en/products/sku/199278/intel-core-i510400f-processor-12m-cache-up-to-4-30-ghz/specifications.html.{}
+
+\bibitem{Chrono}
+\selectlanguageifdefined{russian}
+std::chrono - C++ Reference.
+\newblock 2024.
+\newblock Дата обращения: 13 декабря 2024. URL:
+  https://en.cppreference.com/w/cpp/chrono.{}
+
+\end{thebibliography}
