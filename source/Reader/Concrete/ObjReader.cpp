@@ -24,11 +24,13 @@ std::shared_ptr<PolygonObject> ObjReader::Read(std::string fileName, int type)
     std::vector<std::vector<double>> v;
     std::vector<std::vector<double>> n;
     std::vector<std::vector<int>> colorize;
+    std::shared_ptr<PolygonObject> polygonObject;
     std::vector<Polygon> polygons;
     std::ifstream file(fileName);
     if (!file.is_open())
     {
-        throw std::runtime_error("Unable to open file: " + fileName);
+        std::cout << "Не найден файл: " << fileName << "\n";
+        return polygonObject;
     }
     int polygon_index = 0;
     int bad_normals = 0;
@@ -198,9 +200,8 @@ std::shared_ptr<PolygonObject> ObjReader::Read(std::string fileName, int type)
             lineStream >> push_left;
         }
     }
-    std::cout << polygons.size() << "\n";
+    //std::cout << polygons.size() << "\n";
 
-    std::shared_ptr<PolygonObject> polygonObject;
     if (bad_normals)
     {
         polygonObject = std::make_shared<PolygonObject>(polygons);

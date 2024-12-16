@@ -37,79 +37,18 @@ std::shared_ptr<PolygonObject> generateFloor(double startX, double endX, double 
         }
     }
 
-    std::cout << "Generated " << polygons.size() << " triangles." << "\n"; // Лог
+    //std::cout << "Generated " << polygons.size() << " triangles." << "\n"; // Лог
 
     // Создаем PolygonObject из сгенерированных полигонов
     return std::make_shared<PolygonObject>(polygons);
 }
 
-
-// Функция для вычисления нормали к треугольнику
-std::vector<double> calculateNormal(const std::vector<double>& v0, const std::vector<double>& v1, const std::vector<double>& v2) {
-    double nx = (v1[1] - v0[1]) * (v2[2] - v0[2]) - (v1[2] - v0[2]) * (v2[1] - v0[1]);
-    double ny = (v1[2] - v0[2]) * (v2[0] - v0[0]) - (v1[0] - v0[0]) * (v2[2] - v0[2]);
-    double nz = (v1[0] - v0[0]) * (v2[1] - v0[1]) - (v1[1] - v0[1]) * (v2[0] - v0[0]);
-    double length = -1; //std::sqrt(nx * nx + ny * ny + nz * nz);
-    return {nx / length, ny / length, nz / length};
-}
-
-std::shared_ptr<PolygonObject> generateSphere(double radius) {
-    std::vector<std::vector<double>> polygons;
-    double segments = 100;
-    double rings = 20;
-    double pi = 3.14159265358979323846;
-    double ofx = 10;
-    double ofy = 20;
-    double ofz = 20;
-
-    // Перебираем кольца (latitude)
-    for (int i = 0; i < rings; ++i) {
-        double theta1 = pi * i / rings; // Текущий угол кольца
-        double theta2 = pi * (i + 1) / rings; // Следующий угол кольца
-
-        // Координаты по высоте (y) для текущего и следующего колец
-        double y1 = radius * cos(theta1);
-        double y2 = radius * cos(theta2);
-
-        // Радиусы текущего и следующего колец
-        double radius1 = radius * sin(theta1);
-        double radius2 = radius * sin(theta2);
-
-        // Перебираем сегменты для каждого кольца (longitude)
-        for (int j = 0; j < segments; ++j) {
-            double phi1 = 2 * pi * j / segments; // Текущий угол сегмента
-            double phi2 = 2 * pi * (j + 1) / segments; // Следующий угол сегмента
-
-            // Вычисляем координаты четырех вершин
-            std::vector<double> v0 = { radius1 * cos(phi1) + ofx, y1 + ofy, radius1 * sin(phi1) + ofz };
-            std::vector<double> v1 = { radius1 * cos(phi2) + ofx, y1 + ofy, radius1 * sin(phi2) + ofz };
-            std::vector<double> v2 = { radius2 * cos(phi1) + ofx, y2 + ofy, radius2 * sin(phi1) + ofz };
-            std::vector<double> v3 = { radius2 * cos(phi2) + ofx, y2 + ofy, radius2 * sin(phi2) + ofz };
-
-            // Вычисляем нормали для каждого треугольника
-            auto normal1 = calculateNormal(v0, v2, v1);
-            auto normal2 = calculateNormal(v1, v2, v3);
-
-            Color color(235, 111, 77); // Цвет полигона
-
-            // Добавляем полигоны с нормалями
-            polygons.push_back({v0[0], v0[1], v0[2], v2[0], v2[1], v2[2], v1[0], v1[1], v1[2], color.r, color.g, color.b,
-                                normal1[0], normal1[1], normal1[2]});
-            polygons.push_back({v1[0], v1[1], v1[2], v2[0], v2[1], v2[2], v3[0], v3[1], v3[2], color.r, color.g, color.b,
-                                normal2[0], normal2[1], normal2[2]});
-        }
-    }
-
-    std::cout << "Generated " << polygons.size() << " triangles for the sphere." << "\n"; // Лог
-
-    return std::make_shared<PolygonObject>(polygons);
-}
-
-
-
 Manager::Manager()
 {
-    std::cout << "НАЧАЛИ: \n";
+    std::cout << "Начальные настройки для генерации: \n";
+    std::cout << "Тип ланшдафта: " << landscape_type << "\n";
+    std::cout << "Средняя высота: " << height << "\n";
+    std::cout << "Заснеженность: " << snow << "\n";
     textureFactories[1] = []() {return std::make_shared<SimpleMountainTexture>();};
     textureFactories[2] = []() {return std::make_shared<SandTexture>();};
     textureFactories[3] = []() {return std::make_shared<JungleTexture>();};
@@ -136,10 +75,6 @@ Manager::Manager()
         }
 
     );
-    //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(oxo));
-
-    //std::shared_ptr<PolygonObject> floor = generateSphere(5);
-    //_scene->addObject(std::dynamic_pointer_cast<BaseObject>(floor));
 
    setInfo(true);
 }
@@ -314,6 +249,8 @@ void Manager::SetCameraPosition(int type)
         _scene->addObject(std::dynamic_pointer_cast<BaseObject>(_balloon));
 
     }
+
+    std::cout << "Новая позиция камеры: " << type << "\n";
 }
 
 void Manager::ResetLandScape(int type)
@@ -324,6 +261,7 @@ void Manager::ResetLandScape(int type)
     //std::shared_ptr<DiamondSquareMountainGenerator> g = std::make_shared<DiamondSquareMountainGenerator>(65, 15);
     _landScape = g->generateMountain(landscape_type, height, snow);
     _scene->addObject(std::dynamic_pointer_cast<BaseObject>(_landScape));
+    std::cout << "Новый тип: " << type << "\n";
 }
 
 void Manager::ResetHeight(int heightt)
@@ -334,6 +272,7 @@ void Manager::ResetHeight(int heightt)
     //std::shared_ptr<DiamondSquareMountainGenerator> g = std::make_shared<DiamondSquareMountainGenerator>(65, 15);
     _landScape = g->generateMountain(landscape_type, height, snow);
     _scene->addObject(std::dynamic_pointer_cast<BaseObject>(_landScape));
+    std::cout << "Новая высота: " << heightt << "\n";
 }
 
 void Manager::Source(std::string source)
@@ -341,7 +280,8 @@ void Manager::Source(std::string source)
     _scene->removeObject(_landScape);
     std::shared_ptr<ObjReader> r = std::make_shared<ObjReader>();
     _landScape = r->Read("../Models/" + source, landscape_type);
-    _scene->addObject(std::dynamic_pointer_cast<BaseObject>(_landScape));
+    if (_landScape != nullptr)
+        _scene->addObject(std::dynamic_pointer_cast<BaseObject>(_landScape));
 }
 
 void Manager::Snow(int snoww, int melting)

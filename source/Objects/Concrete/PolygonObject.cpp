@@ -148,7 +148,7 @@ PolygonObject::PolygonObject(std::initializer_list<std::initializer_list<double>
 
             if (eq_count == 3) continue; // Та же самая вершина
 
-            if (a3 > 0) std::cout << n2_tmp[0] << " " << n2_tmp[1] << " " << n2_tmp[2] << "A\n";
+            //if (a3 > 0) std::cout << n2_tmp[0] << " " << n2_tmp[1] << " " << n2_tmp[2] << "A\n";
             if (a1 > 0)
             {
                 normal0_tmp[0] += n0_tmp[0];
@@ -184,7 +184,7 @@ PolygonObject::PolygonObject(std::initializer_list<std::initializer_list<double>
         std::vector<double> normal2 = {normal2_tmp[0] / normal2_count, normal2_tmp[1] / normal2_count, normal2_tmp[2] / normal2_count}; 
         
         //std::cout << v0[0] << " " << v0[1] << " " << v0[2] << "\n";
-        std::cout << normal2_count << " " << normal2[0] << " " << normal2[1] << " " << normal2[2] << "j\n\n";
+        //std::cout << normal2_count << " " << normal2[0] << " " << normal2[1] << " " << normal2[2] << "j\n\n";
         _components.push_back(std::make_shared<Polygon>(v0[0], v0[1], v0[2], v1[0], v1[1], v1[2], v2[0], v2[1], v2[2], color,
                                                     normal0[0], normal0[1], normal0[2],
                                                     normal1[0], normal1[1], normal1[2],
@@ -314,7 +314,6 @@ PolygonObject::PolygonObject(std::vector<std::initializer_list<double>>& l) : _s
 
 PolygonObject::PolygonObject(std::vector<Polygon>& polygons) : _sphere(CalculateBoundingSphere())
 {
-    std::cout << "Размер массива: " << polygons.size() << "\n";
     for (const auto& polygon : polygons) {
         std::vector<std::vector<double>> normals1; // уже использованные нормали
         std::vector<std::vector<double>> normals2; // уже использованные нормали
@@ -571,7 +570,6 @@ PolygonObject::PolygonObject(std::vector<std::vector<double>>& l) : _sphere(Calc
 PolygonObject::PolygonObject(std::vector<Polygon>& polygons, int /*dummy*/) 
     : _sphere(CalculateBoundingSphere())
 {
-    std::cout << "Размер массива: " << polygons.size() << "\n";
     
     for (const auto& polygon : polygons) {
         // Добавляем полигон с уже известными нормалями

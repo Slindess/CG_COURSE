@@ -1,26 +1,27 @@
 \babel@toc {russian}{}\relax 
-\contentsline {chapter}{ВВЕДЕНИЕ}{3}{chapter*.2}%
-\contentsline {chapter}{\numberline {1}Аналитическая часть}{4}{chapter.1}%
-\contentsline {section}{\numberline {1.1}Алгоритмы удаления невидимых поверхностей или линий}{4}{section.1.1}%
-\contentsline {section}{\numberline {1.2}Отражение}{7}{section.1.2}%
-\contentsline {section}{\numberline {1.3}Модель освещения}{8}{section.1.3}%
-\contentsline {section}{\numberline {1.4}Закраска}{10}{section.1.4}%
-\contentsline {section}{\numberline {1.5}Представление объектов сцены}{11}{section.1.5}%
-\contentsline {section}{\numberline {1.6}Сравнение алгоритмов удаления невидимых поверхностей и линий}{12}{section.1.6}%
-\contentsline {section}{\numberline {1.7}Генерация горного ландшафта}{12}{section.1.7}%
-\contentsline {section}{\numberline {1.8}Формализация задачи}{15}{section.1.8}%
-\contentsline {section}{\numberline {1.9}Вывод}{16}{section.1.9}%
-\contentsline {chapter}{\numberline {2}Конструкторская часть}{17}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Алгоритм построения изображения}{17}{section.2.1}%
-\contentsline {section}{\numberline {2.2}Математические основы алгоритмов}{19}{section.2.2}%
-\contentsline {section}{\numberline {2.3}Вывод}{21}{section.2.3}%
-\contentsline {chapter}{\numberline {3}Технологическая часть}{22}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Средства реализации}{22}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Диаграмма классов}{22}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Пример работы программы}{23}{section.3.3}%
-\contentsline {chapter}{\numberline {4}Исследовательская часть}{31}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Технические характеристики}{31}{section.4.1}%
-\contentsline {section}{\numberline {4.2}Зависимость времени создания изображения от количества потоков}{31}{section.4.2}%
-\contentsline {section}{\numberline {4.3}Вывод}{33}{section.4.3}%
-\contentsline {chapter}{ЗАКЛЮЧЕНИЕ}{34}{chapter*.26}%
-\contentsline {chapter}{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}{35}{chapter*.27}%
+\contentsline {chapter}{ВВЕДЕНИЕ}{4}{}%
+\contentsline {chapter}{\numberline {1}Аналитическая часть}{5}{}%
+\contentsline {section}{\numberline {1.1}Алгоритмы удаления невидимых поверхностей или линий}{5}{}%
+\contentsline {section}{\numberline {1.2}Отражение}{6}{}%
+\contentsline {section}{\numberline {1.3}Модель освещения}{6}{}%
+\contentsline {section}{\numberline {1.4}Закраска}{7}{}%
+\contentsline {section}{\numberline {1.5}Представление объектов сцены}{8}{}%
+\contentsline {section}{\numberline {1.6}Сравнение алгоритмов удаления невидимых поверхностей и линий}{9}{}%
+\contentsline {section}{\numberline {1.7}Генерация горного ландшафта}{9}{}%
+\contentsline {section}{\numberline {1.8}Формализация задачи}{12}{}%
+\contentsline {section}{\numberline {1.9}Вывод}{13}{}%
+\contentsline {chapter}{\numberline {2}Конструкторская часть}{14}{}%
+\contentsline {section}{\numberline {2.1}Алгоритм построения изображения}{14}{}%
+\contentsline {section}{\numberline {2.2}Математические основы алгоритмов}{16}{}%
+\contentsline {section}{\numberline {2.3}Вывод}{18}{}%
+\contentsline {chapter}{\numberline {3}Технологическая часть}{19}{}%
+\contentsline {section}{\numberline {3.1}Средства реализации}{19}{}%
+\contentsline {section}{\numberline {3.2}Диаграмма классов}{19}{}%
+\contentsline {section}{\numberline {3.3}Пример работы программы}{20}{}%
+\contentsline {chapter}{\numberline {4}Исследовательская часть}{28}{}%
+\contentsline {section}{\numberline {4.1}Технические характеристики}{28}{}%
+\contentsline {section}{\numberline {4.2}Зависимость времени создания изображения от количества потоков}{28}{}%
+\contentsline {section}{\numberline {4.3}Вывод}{30}{}%
+\contentsline {chapter}{ЗАКЛЮЧЕНИЕ}{31}{}%
+\contentsline {chapter}{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}{32}{}%
+\contentsline {chapter}{ПРИЛОЖЕНИЕ А}{33}{}%

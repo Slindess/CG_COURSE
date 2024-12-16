@@ -577,7 +577,7 @@ void PolygonDrawAdapter::Draw(std::shared_ptr<Scene> scene, std::shared_ptr<Came
     auto start = std::chrono::high_resolution_clock::now();
     Color backgroundColor(-1, -1, -1);
     std::vector<std::vector<Color>> buff(camera->height, std::vector<Color>(camera->width, backgroundColor));  // БУФЕР КАДРА
-    const int numThreads = 42;
+    const int numThreads = 8;
     std::cout << "NUM of Threads: " << numThreads << "\n";
     std::vector<std::thread> threads;
 
