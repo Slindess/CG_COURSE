@@ -11,7 +11,7 @@ Warning--entry type for "Intel" isn't style-file defined
 --line 50 of file source.bib
 You've used 9 entries,
             2964 wiz_defined-function locations,
-            719 strings with 6205 characters,
+            720 strings with 6209 characters,
 and the built_in function-call counts, 2039 in all, are:
 = -- 290
 > -- 49

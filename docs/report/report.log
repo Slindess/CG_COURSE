@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2023.9.18)  16 DEC 2024 04:04
+This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2023.9.18)  17 DEC 2024 02:57
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1070,27 +1070,9 @@ Underfull \hbox (badness 2080) in paragraph at lines 24--25
  []
 
 
-Underfull \hbox (badness 6110) in paragraph at lines 24--25
-\TU/TimesNewRoman(0)/m/n/14.4 сцены с использованием современных методов компью
-терной графики,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 24--25
-\TU/TimesNewRoman(0)/m/n/14.4 обеспечивающей качественное изображение сцены с у
-четом световых
- []
-
-
-Underfull \hbox (badness 5203) in paragraph at lines 30--31
-[]\TU/TimesNewRoman(0)/m/n/14.4 в качестве неподвижного источника освещения дол
-жно выступать
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 31--32
-[]\TU/TimesNewRoman(0)/m/n/14.4 требуется провести исследование времени работы 
-программы от
+Underfull \hbox (badness 5490) in paragraph at lines 30--31
+[]\TU/TimesNewRoman(0)/m/n/14.4 провести исследование времени работы программы 
+от количества
  []
 
 [4
@@ -1098,78 +1080,72 @@ Underfull \hbox (badness 10000) in paragraph at lines 31--32
 ]
 Глава 1.
 
-Underfull \hbox (badness 10000) in paragraph at lines 35--35
+Underfull \hbox (badness 10000) in paragraph at lines 34--34
  |[]\TU/TimesNewRoman(0)/b/n/20.74 Алгоритмы удаления невидимых
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 36--37
+Underfull \hbox (badness 10000) in paragraph at lines 35--36
 []\TU/TimesNewRoman(0)/m/n/14.4 Для корректного отображения объектов необходимо
  обеспечить
  []
 
 
-Underfull \hbox (badness 2213) in paragraph at lines 36--37
+Underfull \hbox (badness 2213) in paragraph at lines 35--36
 \TU/TimesNewRoman(0)/m/n/14.4 удаление невидимых поверхностей и линий. Поверхно
 сти объекта могут
  []
 
 
-Underfull \hbox (badness 1968) in paragraph at lines 38--39
+Underfull \hbox (badness 1968) in paragraph at lines 37--38
 []\TU/TimesNewRoman(0)/m/n/14.4 Алгоритм Робертса работает в объектном простран
 стве. В первую
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 38--39
+Underfull \hbox (badness 10000) in paragraph at lines 37--38
 \TU/TimesNewRoman(0)/m/n/14.4 После чего оставшиеся грани выпуклого многранника
  сравниваются
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 38--39
+Underfull \hbox (badness 10000) in paragraph at lines 37--38
 \TU/TimesNewRoman(0)/m/n/14.4 с оставщимися гранями другого выпуклого многогран
 ника. Если же
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 41--42
-[]\TU/TimesNewRoman(0)/m/n/14.4 Алгоритм, использующий Z-буффер, работает в про
-странстве
+Underfull \hbox (badness 10000) in paragraph at lines 40--41
+[]\TU/TimesNewRoman(0)/m/n/14.4 Алгоритм, использующий Z-буфер, работает в прос
+транстве
  []
 
 
-Underfull \hbox (badness 2351) in paragraph at lines 41--42
-\TU/TimesNewRoman(0)/m/n/14.4 с глубиной, записанной в буффере. Основной недост
-аток – потребление
- []
-
-
-Underfull \hbox (badness 1270) in paragraph at lines 47--49
+Underfull \hbox (badness 1270) in paragraph at lines 46--48
 \TU/TimesNewRoman(0)/m/n/14.4 на пересечение с объектом 3D сцены. В точке перес
 ечения определяется
  []
 
 
-Underfull \hbox (badness 1728) in paragraph at lines 47--49
+Underfull \hbox (badness 1728) in paragraph at lines 46--48
 \TU/TimesNewRoman(0)/m/n/14.4 тестовые лучи из точки пересечения к источникам с
 вета, если тестовый
  []
 
 
-Underfull \hbox (badness 3449) in paragraph at lines 55--57
+Underfull \hbox (badness 3449) in paragraph at lines 54--56
 []\TU/TimesNewRoman(0)/m/n/14.4 Прямое освещение объекта происходит равномерным
  количеством
  []
 
 
-Underfull \hbox (badness 1552) in paragraph at lines 55--57
+Underfull \hbox (badness 1552) in paragraph at lines 54--56
 \TU/TimesNewRoman(0)/m/n/14.4 освещение. Матовые поверхности (дерево, камень, ш
 тукатурка) отражают
  []
 
 
-Underfull \hbox (badness 2503) in paragraph at lines 55--57
+Underfull \hbox (badness 2503) in paragraph at lines 54--56
 \TU/TimesNewRoman(0)/m/n/14.4 более мягкими. При таком отражении положение набл
 юдателя не имеет
  []
@@ -1177,97 +1153,97 @@ Underfull \hbox (badness 2503) in paragraph at lines 55--57
 [5
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 58--61
+Underfull \hbox (badness 10000) in paragraph at lines 57--60
 []\TU/TimesNewRoman(0)/m/n/14.4 Окружающий свет не имеет направления. Его интен
 сивность
  []
 
 
-Underfull \hbox (badness 6910) in paragraph at lines 58--61
+Underfull \hbox (badness 6910) in paragraph at lines 57--60
 \TU/TimesNewRoman(0)/m/n/14.4 определяется cвойствами материалов поверхностей о
 бъектов, а именно
  []
 
 
-Underfull \hbox (badness 1502) in paragraph at lines 62--64
+Underfull \hbox (badness 1502) in paragraph at lines 61--63
 []\TU/TimesNewRoman(0)/m/n/14.4 Зеркальное отражение создает яркие пятна на объ
 ектах, исходя из
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 68--69
+Underfull \hbox (badness 10000) in paragraph at lines 67--68
 []\TU/TimesNewRoman(0)/m/n/14.4 Локальные модели освещения учитывают световые э
 ффекты,
  []
 
 
-Underfull \hbox (badness 1735) in paragraph at lines 68--69
+Underfull \hbox (badness 1735) in paragraph at lines 67--68
 \TU/TimesNewRoman(0)/m/n/14.4 В таких моделях освещённость пикселей определяетс
 я в зависимости от
  []
 
 
-Underfull \hbox (badness 5533) in paragraph at lines 68--69
+Underfull \hbox (badness 5533) in paragraph at lines 67--68
 \TU/TimesNewRoman(0)/m/n/14.4 типами отражения (диффузного, зеркального, окружа
 ющего). Локальные
  []
 
 [6]
-Underfull \hbox (badness 2591) in paragraph at lines 72--73
+Underfull \hbox (badness 2591) in paragraph at lines 71--72
 \TU/TimesNewRoman(0)/m/n/14.4 из источника, но и отраженные лучи от других объе
 ктов. В результате
  []
 
 
-Underfull \hbox (badness 2970) in paragraph at lines 72--73
+Underfull \hbox (badness 2970) in paragraph at lines 71--72
 \TU/TimesNewRoman(0)/m/n/14.4 получаются более реалистичные изображения, создан
 ие которых требует
  []
 
 
-Underfull \hbox (badness 3118) in paragraph at lines 80--81
+Underfull \hbox (badness 3118) in paragraph at lines 79--80
 \TU/TimesNewRoman(0)/m/n/14.4 вершинами полигона. Для каждой вершины вычисляетс
 я цвет с учётом
  []
 
 
-Underfull \hbox (badness 3323) in paragraph at lines 80--81
+Underfull \hbox (badness 3323) in paragraph at lines 79--80
 \TU/TimesNewRoman(0)/m/n/14.4 освещенности (диффузного, зеркального и окружающе
 го света), а затем
  []
 
 
-Underfull \hbox (badness 2050) in paragraph at lines 82--83
+Underfull \hbox (badness 2050) in paragraph at lines 81--82
 []\TU/TimesNewRoman(0)/m/n/14.4 Закраска Фонга — это более сложный метод, в кот
 ором нормали
  []
 
 
-Underfull \hbox (badness 2134) in paragraph at lines 82--83
+Underfull \hbox (badness 2134) in paragraph at lines 81--82
 \TU/TimesNewRoman(0)/m/n/14.4 от закраски Гуро, где цвет интерполируется по пов
 ерхности, в закраске
  []
 
 
-Underfull \hbox (badness 1147) in paragraph at lines 82--83
+Underfull \hbox (badness 1147) in paragraph at lines 81--82
 \TU/TimesNewRoman(0)/m/n/14.4 моделировать освещенность, учитывая не только диф
 фузное и зеркальное
  []
 
 
-Underfull \hbox (badness 1303) in paragraph at lines 84--85
+Underfull \hbox (badness 1303) in paragraph at lines 83--84
 \TU/TimesNewRoman(0)/m/n/14.4 поверхности, что позволяет точно моделировать осв
 ещенность и плавные
  []
 
 
-Underfull \hbox (badness 1259) in paragraph at lines 84--85
+Underfull \hbox (badness 1259) in paragraph at lines 83--84
 \TU/TimesNewRoman(0)/m/n/14.4 с перпендикулярными гранями (например, кубов или 
 объектов с резкими
  []
 
 
-Underfull \hbox (badness 1803) in paragraph at lines 84--85
+Underfull \hbox (badness 1803) in paragraph at lines 83--84
 \TU/TimesNewRoman(0)/m/n/14.4 к визуальным артефактам и неестественным перехода
 м цвета, из-за чего
  []
@@ -1276,119 +1252,119 @@ Underfull \hbox (badness 1803) in paragraph at lines 84--85
 File: img/phong_cube_cut.png Graphic file (type bmp)
 <img/phong_cube_cut.png>
 
-Underfull \hbox (badness 7379) in paragraph at lines 89--90
+Underfull \hbox (badness 7379) in paragraph at lines 88--89
 []\TU/TimesNewRoman(0)/m/n/14.4 Объекты сцены в 3D–графике часто представляют с
 обой набор
  []
 
 
-Underfull \hbox (badness 4181) in paragraph at lines 89--90
+Underfull \hbox (badness 4181) in paragraph at lines 88--89
 \TU/TimesNewRoman(0)/m/n/14.4 полигональных поверхностей, которые используются 
 для аппроксимации
  []
 
 
-Underfull \hbox (badness 3354) in paragraph at lines 89--90
+Underfull \hbox (badness 3354) in paragraph at lines 88--89
 \TU/TimesNewRoman(0)/m/n/14.4 сложных форм. Одним из наиболее распространённых 
 типов полигонов
  []
 
 
-Underfull \hbox (badness 2158) in paragraph at lines 91--92
+Underfull \hbox (badness 2158) in paragraph at lines 90--91
 []\TU/TimesNewRoman(0)/m/n/14.4 Для того чтобы правильно вычислять освещенность
  и отображать
  []
 
 
-Underfull \hbox (badness 1527) in paragraph at lines 91--92
+Underfull \hbox (badness 1527) in paragraph at lines 90--91
 \TU/TimesNewRoman(0)/m/n/14.4 световые эффекты на поверхности, каждому полигону
  требуется задавать
  []
 
 [8]
-Underfull \hbox (badness 10000) in paragraph at lines 93--93
+Underfull \hbox (badness 10000) in paragraph at lines 92--92
  |[]\TU/TimesNewRoman(0)/b/n/20.74 Сравнение алгоритмов удаления
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 107--107
+Underfull \hbox (badness 10000) in paragraph at lines 106--106
 []\TU/TimesNewRoman(0)/m/n/12 Временная
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 109--109
+Underfull \hbox (badness 10000) in paragraph at lines 108--108
 []\TU/TimesNewRoman(0)/m/n/12 Подготовка
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 109--109
+Underfull \hbox (badness 10000) in paragraph at lines 108--108
 []\TU/TimesNewRoman(0)/m/n/12 Разбиение
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 109--109
+Underfull \hbox (badness 10000) in paragraph at lines 108--108
 \TU/TimesNewRoman(0)/m/n/12 на выпуклые
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 111--111
+Underfull \hbox (badness 10000) in paragraph at lines 110--110
 []\TU/TimesNewRoman(0)/m/n/12 Дополнительная
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 113--113
+Underfull \hbox (badness 10000) in paragraph at lines 112--112
 []\TU/TimesNewRoman(0)/m/n/12 Простота
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 115--115
+Underfull \hbox (badness 10000) in paragraph at lines 114--114
 []\TU/TimesNewRoman(0)/m/n/12 Параллельные
  []
 
 
-Underfull \hbox (badness 2837) in paragraph at lines 121--122
+Underfull \hbox (badness 2837) in paragraph at lines 120--121
 []\TU/TimesNewRoman(0)/m/n/14.4 Шум Перлина был предложен Кеном Перлином в 1983
  году для
  []
 
 
-Underfull \hbox (badness 1997) in paragraph at lines 121--122
+Underfull \hbox (badness 1997) in paragraph at lines 120--121
 \TU/TimesNewRoman(0)/m/n/14.4 генерации процедурных текстур и ландшафтов в комп
 ьютерной графике.
  []
 
 
-Underfull \hbox (badness 3029) in paragraph at lines 121--122
+Underfull \hbox (badness 3029) in paragraph at lines 120--121
 \TU/TimesNewRoman(0)/m/n/14.4 Ландшафт выглядит естественным благодаря наличию 
 в нем случайных
  []
 
 
-Underfull \hbox (badness 2351) in paragraph at lines 123--124
+Underfull \hbox (badness 2351) in paragraph at lines 122--123
 []\TU/TimesNewRoman(0)/m/n/14.4 На генерируемой карте выбирается сетка, в узлах
  которой нужно
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 123--124
+Underfull \hbox (badness 10000) in paragraph at lines 122--123
 \TU/TimesNewRoman(0)/m/n/14.4 сгенерировать векторы градиентов функции изменени
 я высоты. Все
  []
 
 [9]
-Underfull \hbox (badness 7685) in paragraph at lines 132--133
+Underfull \hbox (badness 7685) in paragraph at lines 131--132
 []\TU/TimesNewRoman(0)/m/n/14.4 Для каждой точки внутри ячейки сетки вычисляетс
 я смещение
  []
 
 
-Underfull \hbox (badness 5504) in paragraph at lines 139--140
+Underfull \hbox (badness 5504) in paragraph at lines 138--139
 []\TU/TimesNewRoman(0)/m/n/14.4 Для каждой из четырех ближайших точек сетки рас
 считывается
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 153--154
+Underfull \hbox (badness 10000) in paragraph at lines 152--153
 []\TU/TimesNewRoman(0)/m/n/14.4 Для плавного перехода между точками применяется
  функция
  []
@@ -1402,13 +1378,13 @@ File: img/wb_simple_perlin_z.png Graphic file (type bmp)
 File: img/idef0-1.png Graphic file (type bmp)
 <img/idef0-1.png>
  [12]
-Underfull \hbox (badness 5711) in paragraph at lines 174--175
+Underfull \hbox (badness 5711) in paragraph at lines 173--174
 []\TU/TimesNewRoman(0)/m/n/14.4 Ввиду того, что глобальная модель освещения тре
 бует больших
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 174--175
+Underfull \hbox (badness 10000) in paragraph at lines 173--174
 \TU/TimesNewRoman(0)/m/n/14.4 вычислительных затрат, было решено использовать л
 окальную модель
  []
@@ -1425,32 +1401,32 @@ File: img/alg-1.png Graphic file (type bmp)
 File: img/alg-2.png Graphic file (type bmp)
 <img/alg-2.png>
  [15] [16]
-Underfull \hbox (badness 1616) in paragraph at lines 203--204
+Underfull \hbox (badness 1616) in paragraph at lines 202--203
 \TU/TimesNewRoman(0)/m/n/14.4 систему уравнений, которая выражает пересечение д
 вух параметрических
  []
 
 
-Underfull \hbox (badness 6625) in paragraph at lines 205--206
+Underfull \hbox (badness 6625) in paragraph at lines 204--205
 []\TU/TimesNewRoman(0)/m/n/14.4 Для вычисления пересечения вычисляется детермин
 ант матрицы,
  []
 
 [17]
-Underfull \hbox (badness 1533) in paragraph at lines 230--231
+Underfull \hbox (badness 1533) in paragraph at lines 229--230
 []\TU/TimesNewRoman(0)/m/n/14.4 Если детерминант матрицы $[]\OT1/cmr/m/n/14.4 (
 \OML/cmm/m/it/14.4 A\OT1/cmr/m/n/14.4 )$ \TU/TimesNewRoman(0)/m/n/14.4 не равен
  нулю, то вычисляется
  []
 
 
-Underfull \hbox (badness 6944) in paragraph at lines 230--231
+Underfull \hbox (badness 6944) in paragraph at lines 229--230
 \TU/TimesNewRoman(0)/m/n/14.4 параметр $\OML/cmm/m/it/14.4 t$\TU/TimesNewRoman(
 0)/m/n/14.4 , который определяет расстояние от начала луча до точки
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 243--244
+Underfull \hbox (badness 10000) in paragraph at lines 242--243
 \TU/TimesNewRoman(0)/m/n/14.4 задачу рендеринга изображения, и математические о
 сновы алгоритма,
  []
@@ -1458,7 +1434,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 243--244
 [18]
 Глава 3.
 
-Underfull \hbox (badness 1442) in paragraph at lines 247--249
+Underfull \hbox (badness 1442) in paragraph at lines 246--248
 []\TU/TimesNewRoman(0)/m/n/14.4 В качестве языка программирования для реализаци
 и программного
  []
@@ -1474,10 +1450,10 @@ File: img/8.png Graphic file (type bmp)
 File: img/2.png Graphic file (type bmp)
 <img/2.png>
  [21]
-File: img/3.png Graphic file (type bmp)
-<img/3.png>
-File: img/4.png Graphic file (type bmp)
-<img/4.png>
+File: img/10.png Graphic file (type bmp)
+<img/10.png>
+File: img/14.png Graphic file (type bmp)
+<img/14.png>
  [22] [23]
 File: img/5.png Graphic file (type bmp)
 <img/5.png>
@@ -1489,29 +1465,29 @@ File: img/7.png Graphic file (type bmp)
  [26] [27]
 Глава 4.
 
-Underfull \hbox (badness 4518) in paragraph at lines 276--278
+Underfull \hbox (badness 4518) in paragraph at lines 275--277
 []\TU/TimesNewRoman(0)/m/n/14.4 Технические характеристики устройства, на котор
 ом выполнялись
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 284--284
+Underfull \hbox (badness 10000) in paragraph at lines 283--283
  |[]\TU/TimesNewRoman(0)/b/n/20.74 Зависимость времени создания
  []
 
 
-Underfull \hbox (badness 3525) in paragraph at lines 285--287
+Underfull \hbox (badness 3525) in paragraph at lines 284--286
 \TU/TimesNewRoman(0)/m/n/14.4 от количества используемых потоков. Для каждого з
 начения количества
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 295--295
+Underfull \hbox (badness 10000) in paragraph at lines 294--294
 []\TU/TimesNewRoman(0)/m/n/12 Количество
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 295--296
+Underfull \hbox (badness 10000) in paragraph at lines 294--295
 []\TU/TimesNewRoman(0)/m/n/12 Время выполнения
  []
 
@@ -1523,37 +1499,37 @@ File: img/research.png Graphic file (type bmp)
 [28
 
 ] [29] [30]
-Underfull \hbox (badness 1097) in paragraph at lines 330--331
+Underfull \hbox (badness 1097) in paragraph at lines 329--330
 []\TU/TimesNewRoman(0)/m/n/14.4 В рамках данной работы была решена задача визуа
 лизации сцены,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 330--331
+Underfull \hbox (badness 10000) in paragraph at lines 329--330
 \TU/TimesNewRoman(0)/m/n/14.4 включающей воздушный шар и горный ландшафт, с исп
 ользованием
  []
 
 
-Underfull \hbox (badness 4156) in paragraph at lines 332--333
+Underfull \hbox (badness 4156) in paragraph at lines 331--332
 []\TU/TimesNewRoman(0)/m/n/14.4 Для достижения поставленной цели была разработа
 на программа
  []
 
 
-Underfull \hbox (badness 1281) in paragraph at lines 332--333
+Underfull \hbox (badness 1281) in paragraph at lines 331--332
 \TU/TimesNewRoman(0)/m/n/14.4 для визуализации горного ландшафта с высоты полет
 а воздушного шара.
  []
 
 
-Underfull \hbox (badness 1215) in paragraph at lines 332--333
+Underfull \hbox (badness 1215) in paragraph at lines 331--332
 \TU/TimesNewRoman(0)/m/n/14.4 от количества потоков, что позволило выявить возм
 ожности оптимизации
  []
 
 
-Underfull \hbox (badness 6047) in paragraph at lines 334--335
+Underfull \hbox (badness 6047) in paragraph at lines 333--334
 \TU/TimesNewRoman(0)/m/n/14.4 и воздушного шара. Выполненный анализ времени раб
 оты программы
  []
@@ -1582,7 +1558,7 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
  ) 
 Here is how much of TeX's memory you used:
  33892 strings out of 478200
- 895734 string characters out of 5836171
+ 895752 string characters out of 5836171
  1856018 words of memory out of 5000000
  53484 multiletter control sequences out of 15000+600000
  518043 words of font info for 72 fonts, out of 8000000 for 9000

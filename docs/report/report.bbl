@@ -39,11 +39,11 @@ Briggs~Will. C++20 for Lazy Programmers: Quick, Easy, and Fun C++ for
   Beginners.
 \newblock Apress, 2020.{}
 
-\bibitem{qt5}
+\bibitem{qt6}
 \selectlanguageifdefined{russian}
-Eng~Lee~Zhi. Hands-On GUI Programming with C++ and Qt5.
-\newblock 1-е {изд.}
-\newblock Birmingham, UK: Packt Publishing, 2018.{}
+Eng~Lee~Zhi. Hands-On GUI Programming with C++ and Qt6.
+\newblock 2-е {изд.}
+\newblock Birmingham, UK: Packt Publishing, 2022.{}
 
 \bibitem{Ubuntu}
 \selectlanguageifdefined{russian}
